@@ -81,17 +81,23 @@
     <Compile Include="Assets\Cainos\Pixel Art Top Down - Basic\Script\LayerTrigger.cs" />
     <Compile Include="Assets\Scripts\Character\Follow.cs" />
     <Compile Include="Assets\SPUM\Sample\Script\PlayerObj.cs" />
+    <Compile Include="Assets\Scripts\ScriptableObject\BagPieceData.cs" />
     <Compile Include="Assets\Scripts\Character\Player.cs" />
     <Compile Include="Assets\Scripts\UI\HUD.cs" />
     <Compile Include="Assets\SPUM\Script\SPUM_SpriteList.cs" />
     <Compile Include="Assets\SPUM\Sample\Script\PlayerManager.cs" />
     <Compile Include="Assets\Scripts\Character\Character.cs" />
     <Compile Include="Assets\SPUM\Script\SPUM_HorseSpriteList.cs" />
+    <Compile Include="Assets\Scripts\UI\Piece.cs" />
     <Compile Include="Assets\Scripts\Manager\Achive Manager.cs" />
+    <Compile Include="Assets\Scripts\ScriptableObject\ItemData.cs" />
     <Compile Include="Assets\Scripts\Manager\PoolManager.cs" />
     <Compile Include="Assets\Scripts\Item\Item.cs" />
     <Compile Include="Assets\Scripts\Item\Gear.cs" />
     <Compile Include="Assets\SPUM\Script\SPUM_Prefabs.cs" />
+    <Compile Include="Assets\Scripts\BagPieceSpawner.cs" />
+    <Compile Include="Assets\Scripts\UI\EquipmentUI.cs" />
+    <Compile Include="Assets\Scripts\UI\BagPieceUI.cs" />
     <Compile Include="Assets\Cainos\Pixel Art Top Down - Basic\Script\CameraFollow.cs" />
     <Compile Include="Assets\SPUM\Script\Ect\SpritePos.cs" />
   </ItemGroup>
