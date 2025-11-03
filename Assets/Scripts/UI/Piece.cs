@@ -48,23 +48,12 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         
     }
 
-    public void SetItemParent(GameObject item)
+    public virtual void Activeslot(Vector2Int gridPos, GameObject item, InventorySlot slot)
     {
 
-        // 인벤토리 창에 있는경우 (구매를 한 상태)
-        // 둘 수 없는 위치에 뒀을 경우 -> 기존의 위치로 돌아감(뺄때의 상태를 저장)
-
-        // 인벤토리 밖에 뒀을 경우 -> 창고로 들어감
-        rectTransform.anchoredPosition = originalPosition;
     }
 
-    public virtual void ReturnToOriginalSlot(Vector2Int gridPos, GameObject item, InventorySlot slot)
-    {
-        //아이템의 기존 저장값을 가져와서 되돌려야함 -> 드래그 비긴을 했을때 자신의 상태를 pop하니까 다시 stack을 하게 해야함
-        //스택은 인벤토리 슬롯에 있음 인벤토리 슬롯의 스택에 다시 넣어야함
-    }
-
-
+    //샵이나 창고에 있는 아이템을 옮길때 사용되는 함수
     public void OnEndDrag(PointerEventData eventData)
     {
         canvasGroup.blocksRaycasts = true;
@@ -82,6 +71,7 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         else { }
     }
 
+    //인벤토리 슬롯에 있는 아이템을 옮길때 사용되는 함수
     public void OnEndDrag(PointerEventData eventData, GameObject item, InventorySlot slot)
     {
         canvasGroup.blocksRaycasts = true;
@@ -94,14 +84,9 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         {
             Vector2Int gridPos = ConvertToGrid(localPoint);
 
-            Activeslot(gridPos);
+            Activeslot(gridPos, item, slot);
         }
-        else
-        {
-            Vector2Int gridPos = ConvertToGrid(localPoint);
-
-            ReturnToOriginalSlot(gridPos, item, slot);
-        }
+        else { }
     }
 
     private Vector2Int ConvertToGrid(Vector2 localPoint)

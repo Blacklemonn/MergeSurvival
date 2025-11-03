@@ -20,6 +20,7 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IBeginDragHand
     private Stack<GameObject> slotItemList = new();
     private GameObject itemObj;
     private RectTransform rectTransform;
+    public Vector2 originAnchorPos;
 
     private Canvas canvas;
     private bool CanDrag;
@@ -99,6 +100,7 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IBeginDragHand
         {
             //없을경우 현재 위치에 슬롯에 맞는 가방 생성
             rectTransform = popItem().GetComponent<RectTransform>();
+            originAnchorPos = rectTransform.anchoredPosition;
 
             itemObj.transform.parent = inventoryManager.tempItemStorage.transform;
 
@@ -116,6 +118,7 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IBeginDragHand
 
             //없을경우 현재 위치에 슬롯에 맞는 가방 생성
             rectTransform = popItem().GetComponent<RectTransform>();
+            originAnchorPos = rectTransform.anchoredPosition;
 
             itemObj.transform.parent = inventoryManager.tempItemStorage.transform;
 
@@ -144,17 +147,16 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IBeginDragHand
         //가방일경우
         if (slotItemList.Count == 0)
         {
-            Debug.Log(itemObj);
-            Debug.Log(this.GetComponent<InventorySlot>());
-            itemObj.GetComponent<EquipmentUI>().OnEndDrag(eventData);
-            //엔드 드래그에서 되돌아가는 경우 인벤토리 슬롯의 스택으로 되돌아와야함
-        }
-        //가방일경우
-        else if (slotItemList.Count == 1)
-        {
             itemObj.GetComponent<BagPieceUI>().OnEndDrag(eventData, itemObj, this.GetComponent<InventorySlot>());
         }
+        //아이템일경우
+        else if (slotItemList.Count == 1)
+        {
+            itemObj.GetComponent<EquipmentUI>().OnEndDrag(eventData, itemObj, this.GetComponent<InventorySlot>());
+        }
         else { }
+
+
 
         CanDrag = false;
     }
