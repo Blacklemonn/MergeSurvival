@@ -18,7 +18,7 @@ public class BagPieceUI : Piece
         else
         {
             Debug.Log("인벤토리 밖에 존재함");
-            inventoryManager.ActiveSlots(gridPos, gameObject);
+            rectTransform.anchoredPosition = originalPosition;
         }
     }
 
@@ -28,7 +28,7 @@ public class BagPieceUI : Piece
 
         if (inventoryManager.CanSlotActivate(gridPos, pieceData.width, pieceData.height))
         {
-
+            //현재 가져온 slot과 활성화 시키려는 slot이 같으면 ReturnToOriginalSlot을 실행
             if (slot == inventoryManager.slots[gridPos.x, gridPos.y].GetComponent<InventorySlot>())
             {
                 ReturnToOriginalSlot(item, slot);
@@ -37,8 +37,7 @@ public class BagPieceUI : Piece
 
             //조각의 이미지 가방 활성화
             inventoryManager.ActiveSlots(gridPos, gameObject);
-            Debug.Log("ActiveInventory");
-            //현재 가져온 slot과 활성화 시키려는 slot이 같으면 ReturnToOriginalSlot을 실행
+
         }
         else
         {

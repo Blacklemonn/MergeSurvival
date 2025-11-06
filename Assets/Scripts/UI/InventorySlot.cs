@@ -6,10 +6,11 @@ using UnityEngine.UI;
 
 public class InventorySlot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler ,IDragHandler, IEndDragHandler
 {
+    [HideInInspector]
     //슬롯의 아이템이 활성화 상태인가
     public bool isOccupied = false;
-    //슬롯의 가방이 활성화 상태인가
     [HideInInspector]
+    //슬롯의 가방이 활성화 상태인가
     public bool isActive = false;
     public Image itemIcon;
     public Vector2Int gridPosition;
@@ -93,6 +94,14 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IBeginDragHand
     {
         //dragStart
 
+        //시작 클릭 위치값을 가져와서 인벤토리 매니저의 prevLocationPos에 저장해야함
+        Vector2 localPoint;
+        RectTransform invenPanalRectTrans = this.GetComponentInParent<RectTransform>();
+        //piece에서 convertToGrid같은 걸로 값을 가져와야함
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            invenPanalRectTrans, eventData.position, eventData.pressEventCamera, out localPoint);
+        //값 x, y가 비긴했을때의 좌표값임
+
         Debug.Log("OnBeginDrag");
 
         //클릭된 슬롯창에 아이템이 있는지 없는지 확인
@@ -155,8 +164,6 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IBeginDragHand
             itemObj.GetComponent<EquipmentUI>().OnEndDrag(eventData, itemObj, this.GetComponent<InventorySlot>());
         }
         else { }
-
-
 
         CanDrag = false;
     }
