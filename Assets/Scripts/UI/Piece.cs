@@ -10,10 +10,7 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
     protected RectTransform rectTransform;
     private CanvasGroup canvasGroup;
     private Canvas canvas;
-    private RectTransform expansionArea;
-
-    //인벤에 위치시킬때 아이템을 가운데로 보정해주는 값
-    private Vector2 correctionPos;
+    private RectTransform invenPanelRectTrans;
 
     protected InventoryManager inventoryManager;
 
@@ -30,7 +27,7 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
     {
         //inventoryManager
         inventoryManager = GameObject.FindObjectOfType<InventoryManager>();
-        expansionArea = inventoryManager.slotParent.GetComponent<RectTransform>();
+        invenPanelRectTrans = inventoryManager.slotParent.GetComponent<RectTransform>();
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -45,6 +42,7 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
     {
         //마우스를 따라 이동
         rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
+        
     }
 
     public virtual void Activeslot(Vector2Int gridPos)
@@ -64,7 +62,7 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         Vector2 localPoint;
         //만약 마우스가 인벤토리창 안에 있을경우
         if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
-            expansionArea, eventData.position, eventData.pressEventCamera, out localPoint))
+            invenPanelRectTrans, eventData.position, eventData.pressEventCamera, out localPoint))
         {
             Vector2Int gridPos = ConvertToGrid(localPoint);
 
@@ -88,7 +86,7 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         Vector2 localPoint;
         //만약 마우스가 인벤토리창 안에 있을경우
         if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
-            expansionArea, eventData.position, eventData.pressEventCamera, out localPoint))
+            invenPanelRectTrans, eventData.position, eventData.pressEventCamera, out localPoint))
         {
             Vector2Int gridPos = ConvertToGrid(localPoint);
 
@@ -100,7 +98,7 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
     //인벤토리 패널 그리드의 몇번째줄 몇칸인지 알려줌
     public Vector2Int ConvertToGrid(Vector2 localPoint)
     {
-        GridLayoutGroup grid = expansionArea.GetComponent<GridLayoutGroup>();
+        GridLayoutGroup grid = invenPanelRectTrans.GetComponent<GridLayoutGroup>();
 
         float cellWidth = grid.cellSize.x;
         float cellHeight = grid.cellSize.y;
@@ -111,21 +109,14 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         int constraintCount = grid.constraintCount;
         int ChildCount = grid.GetComponent<RectTransform>().transform.childCount;
 
-        Vector2 tempPos;
-
         if (grid.childAlignment == TextAnchor.UpperLeft)
         {
             Debug.Log(grid.childAlignment);
-            float offsetX = expansionArea.rect.width * expansionArea.pivot.x + (grid.padding.left);
-            float offsetY = expansionArea.rect.height * expansionArea.pivot.y - (grid.padding.top);
+            float offsetX = invenPanelRectTrans.rect.width * invenPanelRectTrans.pivot.x + (grid.padding.left);
+            float offsetY = invenPanelRectTrans.rect.height * invenPanelRectTrans.pivot.y - (grid.padding.top);
 
             float relativeX = localPoint.x - offsetX;
             float relativeY = -(localPoint.y - offsetY); // y는 위에서 아래로 내려가니까 부호 반전
-
-            tempPos = new Vector2(relativeX % (cellWidth + spacingX), relativeY % (cellHeight + spacingY));
-            //뒀을때 가운데 기준으로 얼만큼 떨어져 있는지 확인하고
-            //아이템의 위치를 가운데로 보정시켜줘야함
-            correctionPos = new Vector2(cellWidth/2, cellHeight/2) - tempPos;
 
                 int x = Mathf.FloorToInt(relativeX / (cellWidth + spacingX));
             int y = Mathf.FloorToInt(relativeY / (cellHeight + spacingY));
@@ -134,7 +125,7 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         }
         else if (grid.childAlignment == TextAnchor.MiddleCenter)
         {
-            Debug.Log(grid.childAlignment);
+            //Debug.Log(grid.childAlignment);
 
             //constcount의 값을 2로 나누어 수평 오프셋값 설정
             //constcount의 값으로 자식값을 나누고 +1 한 값을 2로 나누어 수직 오프셋값 설정
@@ -145,13 +136,11 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
             float relativeX = localPoint.x - offsetX;
             float relativeY = -(localPoint.y - offsetY); // y는 위에서 아래로 내려가니까 부호 반전
 
-            tempPos = new Vector2(relativeX % (cellWidth + spacingX), relativeY % (cellHeight + spacingY));
-            //뒀을때 가운데 기준으로 얼만큼 떨어져 있는지 확인하고
-            //아이템의 위치를 가운데로 보정시켜줘야함
-            correctionPos = new Vector2(cellWidth / 2, cellHeight / 2) - tempPos;
-
             int x = Mathf.FloorToInt(relativeX / (cellWidth + spacingX));
             int y = Mathf.FloorToInt(relativeY / (cellHeight + spacingY));
+
+            //시작 위치는 invenPanelRectTrans 의 중앙에서 offset만큼 더하면됨
+            Debug.Log(rectTransform.anchoredPosition = new Vector2(invenPanelRectTrans.rect.width, -invenPanelRectTrans.rect.height) / 2 + new Vector2(offsetX, offsetY));
 
 
             return new Vector2Int(x, y);

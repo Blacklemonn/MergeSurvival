@@ -41,7 +41,7 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IBeginDragHand
 
     public void stackItem(GameObject item)
     {
-        Debug.Log(item);
+        //Debug.Log(item);
         slotItemList.Push(item);
         item.SetActive(false);
     }
@@ -102,7 +102,7 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IBeginDragHand
             invenPanalRectTrans, eventData.position, eventData.pressEventCamera, out localPoint);
         //값 x, y가 비긴했을때의 좌표값임
 
-        Debug.Log("OnBeginDrag");
+        //Debug.Log("OnBeginDrag");
 
         //클릭된 슬롯창에 아이템이 있는지 없는지 확인
         if (isOccupied)
@@ -129,8 +129,8 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IBeginDragHand
             rectTransform = popItem().GetComponent<RectTransform>();
             originAnchorPos = rectTransform.anchoredPosition;
 
-            itemObj.transform.parent = inventoryManager.tempItemStorage.transform;
-
+            itemObj.transform.SetParent(inventoryManager.tempItemStorage.transform);
+            
             //슬롯의 가방 크기에 맞게 비활성화
             ClearInventory();
             
@@ -145,6 +145,7 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IBeginDragHand
 
         //마우스를 따라 이동
         rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
+        //Debug.Log(rectTransform.anchoredPosition);
     }
 
 

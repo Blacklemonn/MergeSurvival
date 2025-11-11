@@ -87,7 +87,7 @@ public class InventoryManager : MonoBehaviour
         InventorySlot slot = slotParent.GetChild(i).GetComponent<InventorySlot>();
         slot.ActiveInventory();
         slot.stackItem(item);
-        item.transform.parent = itemStorage.transform;
+        item.transform.SetParent(itemStorage.transform);
     }
 
     public void PlacePiece(Vector2Int gridPos, ItemData itemdata, GameObject item)

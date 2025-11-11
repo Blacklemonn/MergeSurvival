@@ -48,9 +48,10 @@ public class BagPieceUI : Piece
 
     public void ReturnToOriginalSlot(GameObject item, InventorySlot slot)
     {
+        Debug.Log("Return");
         slot.ActiveInventory();
         slot.stackItem(item);
-        item.transform.parent = inventoryManager.itemStorage.transform;
+        item.transform.SetParent(inventoryManager.itemStorage.transform);
         item.GetComponent<RectTransform>().anchoredPosition = slot.originAnchorPos;
     }
 }
