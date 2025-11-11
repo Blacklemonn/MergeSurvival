@@ -37,7 +37,7 @@ public class BagPieceUI : Piece
 
             //조각의 이미지 가방 활성화
             inventoryManager.ActiveSlots(gridPos, gameObject);
-
+            rectTransform.anchoredPosition = vec2Offset+ (correctionValue * new Vector2(gridPos.x, -gridPos.y-1));
         }
         else
         {

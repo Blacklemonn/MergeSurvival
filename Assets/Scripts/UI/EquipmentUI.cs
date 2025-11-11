@@ -40,6 +40,7 @@ public class EquipmentUI : Piece
 
             //조각의 이미지 가방 활성화
             inventoryManager.PlacePiece(gridPos, itemData, gameObject);
+            rectTransform.anchoredPosition = vec2Offset + (correctionValue * new Vector2(gridPos.x, -gridPos.y - 1));
 
             //슬롯의 중앙에서 얼마나 떨어진 위치를 드래그 했는지 가져오고 현재 둔 슬롯의 중앙에서 얼마나 떨어진지 위치를 가져와서 두 거리의 차이를 계산
 

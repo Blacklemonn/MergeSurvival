@@ -11,23 +11,37 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
     private CanvasGroup canvasGroup;
     private Canvas canvas;
     private RectTransform invenPanelRectTrans;
+    protected Vector2 vec2Offset;
+    protected Vector2 correctionValue;
 
     protected InventoryManager inventoryManager;
 
     protected Vector2 originalPosition;
 
+    private GridLayoutGroup grid;
+    private float cellWidth;
+    private float cellHeight;
+    private float spacingX;
+    private float spacingY;
+    private int constraintCount;
+    private int ChildCount;
+
     void Awake()
     {
+        inventoryManager = GameObject.FindObjectOfType<InventoryManager>();
+        invenPanelRectTrans = inventoryManager.slotParent.GetComponent<RectTransform>();
+        grid = invenPanelRectTrans.GetComponent<GridLayoutGroup>();
+        cellWidth = grid.cellSize.x;
+        cellHeight = grid.cellSize.y;
+        spacingX = grid.spacing.x;
+        spacingY = grid.spacing.y;
+        constraintCount = grid.constraintCount;
+
+        ChildCount = grid.GetComponent<RectTransform>().transform.childCount;
+        correctionValue = new Vector2(cellWidth, cellHeight);
         rectTransform = GetComponent<RectTransform>();
         canvasGroup = GetComponent<CanvasGroup>();
         canvas = GetComponentInParent<Canvas>();
-    }
-
-    private void Start()
-    {
-        //inventoryManager
-        inventoryManager = GameObject.FindObjectOfType<InventoryManager>();
-        invenPanelRectTrans = inventoryManager.slotParent.GetComponent<RectTransform>();
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -98,35 +112,25 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
     //인벤토리 패널 그리드의 몇번째줄 몇칸인지 알려줌
     public Vector2Int ConvertToGrid(Vector2 localPoint)
     {
-        GridLayoutGroup grid = invenPanelRectTrans.GetComponent<GridLayoutGroup>();
-
-        float cellWidth = grid.cellSize.x;
-        float cellHeight = grid.cellSize.y;
-
-        float spacingX = grid.spacing.x;
-        float spacingY = grid.spacing.y;
-
-        int constraintCount = grid.constraintCount;
-        int ChildCount = grid.GetComponent<RectTransform>().transform.childCount;
+        Debug.Log(grid.childAlignment);
 
         if (grid.childAlignment == TextAnchor.UpperLeft)
         {
-            Debug.Log(grid.childAlignment);
             float offsetX = invenPanelRectTrans.rect.width * invenPanelRectTrans.pivot.x + (grid.padding.left);
             float offsetY = invenPanelRectTrans.rect.height * invenPanelRectTrans.pivot.y - (grid.padding.top);
 
             float relativeX = localPoint.x - offsetX;
             float relativeY = -(localPoint.y - offsetY); // y는 위에서 아래로 내려가니까 부호 반전
 
-                int x = Mathf.FloorToInt(relativeX / (cellWidth + spacingX));
+            int x = Mathf.FloorToInt(relativeX / (cellWidth + spacingX));
             int y = Mathf.FloorToInt(relativeY / (cellHeight + spacingY));
+
+            vec2Offset = new Vector2(offsetX, offsetY) + new Vector2(cellWidth / 2, cellHeight / 2);
 
             return new Vector2Int(x, y);
         }
         else if (grid.childAlignment == TextAnchor.MiddleCenter)
         {
-            //Debug.Log(grid.childAlignment);
-
             //constcount의 값을 2로 나누어 수평 오프셋값 설정
             //constcount의 값으로 자식값을 나누고 +1 한 값을 2로 나누어 수직 오프셋값 설정
             //2를 먼저 나누면 소수점이 사라지니까 크기를 먼저 곱할것
@@ -140,8 +144,7 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
             int y = Mathf.FloorToInt(relativeY / (cellHeight + spacingY));
 
             //시작 위치는 invenPanelRectTrans 의 중앙에서 offset만큼 더하면됨
-            Debug.Log(rectTransform.anchoredPosition = new Vector2(invenPanelRectTrans.rect.width, -invenPanelRectTrans.rect.height) / 2 + new Vector2(offsetX, offsetY));
-
+            vec2Offset = new Vector2(invenPanelRectTrans.rect.width, -invenPanelRectTrans.rect.height) / 2 + new Vector2(offsetX, offsetY) + new Vector2(cellWidth/2,cellHeight/2);
 
             return new Vector2Int(x, y);
         }
