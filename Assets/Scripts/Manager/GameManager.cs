@@ -16,12 +16,12 @@ public class GameManager : MonoBehaviour
     public float maxHealth = 100;
     public int level;
     public int kill;
-    public int exp;
+    public int _money;
     public int[] nextExp = { 10, 30, 60, 100, 150, 120, 280, 360, 450, 600 };
     [Header("# Game Object")]
     public PoolManager poolManager;
     public Player player;
-    public LevelUp uiLevelUp;
+    public Shop shop;
     public Result uiResult;
     public GameObject enemyCleaner;
 
@@ -36,7 +36,7 @@ public class GameManager : MonoBehaviour
         health = maxHealth;
 
         player.gameObject.SetActive(true);
-        uiLevelUp.Select(playerId % 2);    //무기선택
+        shop.Select(playerId % 2);    //무기선택
         Resume();
 
         AudioManager.instance.PlayBGM(true);
@@ -60,6 +60,8 @@ public class GameManager : MonoBehaviour
 
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Lose);
     }
+
+    //게임 이겼을때 불러오셈
     public void GameVictory()
     {
         StartCoroutine(GameVictoryRoutine());
@@ -97,24 +99,24 @@ public class GameManager : MonoBehaviour
             if (gameTime > maxGameTime)
             {
                 gameTime = maxGameTime;
-                GameVictory();
+                shop.Show();
             }
         }
     }
 
-    public void GetEXP()
+    public void GetMoney(int money)
     {
         if(!isLive)
             return;
 
-        exp++;
+        _money += money;
 
-        if (exp >= nextExp[Mathf.Min(level, nextExp.Length-1)])
-        {
-            level++;
-            exp = 0;
-            uiLevelUp.Show();
-        }
+        //if (exp >= nextExp[Mathf.Min(level, nextExp.Length-1)])
+        //{
+        //    level++;
+        //    exp = 0;
+        //    StageClear.Show();
+        //}
     }
 
     public void Stop()

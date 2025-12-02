@@ -1,171 +1,93 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
-public class InventorySlot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler ,IDragHandler, IEndDragHandler
+public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    [HideInInspector]
-    //슬롯의 아이템이 활성화 상태인가
-    public bool isOccupied = false;
-    [HideInInspector]
-    //슬롯의 가방이 활성화 상태인가
-    public bool isActive = false;
-    public Image itemIcon;
-    public Vector2Int gridPosition;
-
-    public Sprite UnLockSlotImage;
-    public Sprite LockSlotImage;
-
-    private Stack<GameObject> slotItemList = new();
-    private GameObject itemObj;
-    private RectTransform rectTransform;
-    public Vector2 originAnchorPos;
-
+    private RectTransform item;
     private Canvas canvas;
-    private bool CanDrag;
-    private InventoryManager inventoryManager;
+
+    [SerializeField]
+    private GameObject itemTemp;
+
+    private bool isItem;
 
     private void Awake()
     {
         canvas = GetComponentInParent<Canvas>();
-        inventoryManager = FindAnyObjectByType<InventoryManager>();
     }
 
-    private void Start()
+    private void OnEnable()
     {
-        ClearItem();
-        ClearInventory();
-    }
-
-    public void stackItem(GameObject item)
-    {
-        //Debug.Log(item);
-        slotItemList.Push(item);
-        item.SetActive(false);
-    }
-    public GameObject popItem()
-    {
-        if(slotItemList.Count <= 0)
-            return null;
-
-        itemObj = slotItemList.Pop();
-        itemObj.SetActive(true);
-
-        return itemObj;
-    }
-
-    public void ActiveInventory()
-    {
-        isActive = true;
-        GetComponent<Image>().sprite = UnLockSlotImage;
-    }
-
-    public void ClearInventory()
-    {
-        isActive = false;
-        GetComponent<Image>().sprite = LockSlotImage;
-    }
-
-    public void AddItem(Sprite icon)
-    {
-        isOccupied = true;
-        itemIcon.sprite = icon;
-        itemIcon.enabled = true;
-        GetComponentInChildren<Image>().sprite = icon;
-    }
-
-    public void ClearItem()
-    {
-        isOccupied = false;
-        itemIcon.sprite = null;
-        itemIcon.enabled = false;
-        GetComponentInChildren<Image>().sprite = UnLockSlotImage;
-    }
-
-    //어떤 슬롯을 클릭했는지 시각화 or 나중에 아이템 설명 UI를 띄우기
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        Debug.Log("OnPointerClick");
+        itemTemp = GameObject.Find("ItemTemp");
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        //dragStart
+        if (transform.childCount == 0)
+            return;
 
-        //시작 클릭 위치값을 가져와서 인벤토리 매니저의 prevLocationPos에 저장해야함
-        Vector2 localPoint;
-        RectTransform invenPanalRectTrans = this.GetComponentInParent<RectTransform>();
-        //piece에서 convertToGrid같은 걸로 값을 가져와야함
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(
-            invenPanalRectTrans, eventData.position, eventData.pressEventCamera, out localPoint);
-        //값 x, y가 비긴했을때의 좌표값임
+        Transform itemObj;
 
-        //Debug.Log("OnBeginDrag");
+        isItem = transform.childCount == 2 ? true : false;
 
-        //클릭된 슬롯창에 아이템이 있는지 없는지 확인
-        if (isOccupied)
+        if (itemObj = transform.GetChild(transform.childCount - 1) as Transform)
         {
-            //없을경우 현재 위치에 슬롯에 맞는 가방 생성
-            rectTransform = popItem().GetComponent<RectTransform>();
-            originAnchorPos = rectTransform.anchoredPosition;
-
-            itemObj.transform.parent = inventoryManager.tempItemStorage.transform;
-
-            //슬롯의 아이템 빈칸으로 변경
-            ClearItem();
-
-            CanDrag = true;
-        }
-        else
-        {
-            //가방이 비활성화된 상태일 경우 아무일도 일어나지 않음
-            if (!isActive)
-                return;
-
-
-            //없을경우 현재 위치에 슬롯에 맞는 가방 생성
-            rectTransform = popItem().GetComponent<RectTransform>();
-            originAnchorPos = rectTransform.anchoredPosition;
-
-            itemObj.transform.SetParent(inventoryManager.tempItemStorage.transform);
-            
-            //슬롯의 가방 크기에 맞게 비활성화
-            ClearInventory();
-            
-            CanDrag = true;
+            item = itemObj.GetComponent<RectTransform>();
+            itemObj.SetParent(itemTemp.transform);
+            //item.gameObject.SetActive(true);
         }
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        if(!CanDrag)
+        if (item == null)
             return;
-
-        //마우스를 따라 이동
-        rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
-        //Debug.Log(rectTransform.anchoredPosition);
+        
+        item.anchoredPosition += eventData.delta / canvas.scaleFactor;
     }
-
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (!CanDrag)
+        if (item == null)
             return;
 
-        //가방일경우
-        if (slotItemList.Count == 0)
-        {
-            itemObj.GetComponent<BagPieceUI>().OnEndDrag(eventData, itemObj, this.GetComponent<InventorySlot>());
-        }
-        //아이템일경우
-        else if (slotItemList.Count == 1)
-        {
-            itemObj.GetComponent<EquipmentUI>().OnEndDrag(eventData, itemObj, this.GetComponent<InventorySlot>());
-        }
-        else { }
+        var underCursor = eventData.pointerCurrentRaycast.gameObject;
 
-        CanDrag = false;
+        if (!underCursor.GetComponent<InventorySlot>())
+        {
+            item.transform.SetParent(this.transform);
+            item.anchoredPosition = Vector3.zero;
+            return;
+        }
+
+        //Debug.Log(underCursor.name);
+
+        if (isItem)
+        {
+            //창고 창으로 뒀을때 아이템 효과 제거
+
+
+            //들고있는 오브젝트가 아이템
+            //자식이 1개있어야 적용됨
+            if (underCursor.transform.childCount == 1)
+            {
+                item.transform.SetParent(underCursor.transform);
+            }
+            else
+                item.transform.SetParent(this.transform);
+        }
+        else
+        {
+            //들고있는 오브젝트가 가방
+            //자식이 0개있어야 적용됨
+            if (underCursor.transform.childCount == 0)
+                item.transform.SetParent(underCursor.transform);
+            else
+                item.transform.SetParent(this.transform);
+        }
+        item.anchoredPosition = Vector3.zero;
+        item = null;
     }
 }

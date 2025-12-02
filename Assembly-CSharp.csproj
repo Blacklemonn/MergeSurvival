@@ -62,7 +62,6 @@
   <ItemGroup>
     <Compile Include="Assets\Cainos\Pixel Art Top Down - Basic\Script\TopDownCharacterController.cs" />
     <Compile Include="Assets\Scripts\Character\Enemy.cs" />
-    <Compile Include="Assets\Scripts\Manager\InventoryManager.cs" />
     <Compile Include="Assets\Scripts\Character\Scanner.cs" />
     <Compile Include="Assets\Scripts\UI\Result.cs" />
     <Compile Include="Assets\Scripts\UI\InventorySlot.cs" />
@@ -72,7 +71,6 @@
     <Compile Include="Assets\SPUM\Script\SPUM_Button.cs" />
     <Compile Include="Assets\Cainos\Pixel Art Top Down - Basic\Script\PropsAltar.cs" />
     <Compile Include="Assets\Cainos\Pixel Art Top Down - Basic\Script\SpriteColorAnimation.cs" />
-    <Compile Include="Assets\Scripts\UI\LevelUp.cs" />
     <Compile Include="Assets\Scripts\Manager\AudioManager.cs" />
     <Compile Include="Assets\Scripts\Manager\GameManager.cs" />
     <Compile Include="Assets\Scripts\Character\Hand.cs" />
@@ -80,7 +78,6 @@
     <Compile Include="Assets\Cainos\Pixel Art Top Down - Basic\Script\LayerTrigger.cs" />
     <Compile Include="Assets\Scripts\Character\Follow.cs" />
     <Compile Include="Assets\SPUM\Sample\Script\PlayerObj.cs" />
-    <Compile Include="Assets\Scripts\ScriptableObject\BagPieceData.cs" />
     <Compile Include="Assets\Scripts\Character\Player.cs" />
     <Compile Include="Assets\Scripts\UI\HUD.cs" />
     <Compile Include="Assets\SPUM\Script\SPUM_SpriteList.cs" />
@@ -95,8 +92,7 @@
     <Compile Include="Assets\Scripts\Item\Gear.cs" />
     <Compile Include="Assets\SPUM\Script\SPUM_Prefabs.cs" />
     <Compile Include="Assets\Scripts\BagPieceSpawner.cs" />
-    <Compile Include="Assets\Scripts\UI\EquipmentUI.cs" />
-    <Compile Include="Assets\Scripts\UI\BagPieceUI.cs" />
+    <Compile Include="Assets\Scripts\UI\Shop.cs" />
     <Compile Include="Assets\Cainos\Pixel Art Top Down - Basic\Script\CameraFollow.cs" />
     <Compile Include="Assets\SPUM\Script\Ect\SpritePos.cs" />
   </ItemGroup>

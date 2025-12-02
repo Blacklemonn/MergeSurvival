@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
-    //무가 ID
+    //무기 ID
     public int id;
     //프리펩 ID
     public int prefabId;

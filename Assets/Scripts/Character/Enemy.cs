@@ -19,6 +19,8 @@ public class Enemy : MonoBehaviour
     private Animator anim;
     private Collider2D col;
 
+    private int money = 1;
+
     WaitForFixedUpdate wait;
 
     private void Awake()
@@ -97,7 +99,7 @@ public class Enemy : MonoBehaviour
             spriter.sortingOrder  = 1; 
             anim.SetBool("Dead", true);
             GameManager.instance.kill++;
-            GameManager.instance.GetEXP();
+            GameManager.instance.GetMoney(money);
 
             if (GameManager.instance.isLive)
                 AudioManager.instance.PlaySfx(AudioManager.Sfx.Dead);

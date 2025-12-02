@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Item", menuName = "Scriptable Object/ItemData")]
 public class ItemData : ScriptableObject
 {
-    public enum ItemType { Melee, Range, Glove, Shoe, Heal}
+    public enum ItemType { Melee, Range, Glove, Shoe, Heal, Bag}
 
     [Header("# Main Info")]
     public ItemType itemType;
@@ -16,6 +16,7 @@ public class ItemData : ScriptableObject
     [TextArea]
     public string itemDesc;
     public Sprite itemIcon;
+    public Sprite displayIcon;
 
     [Header("# Level Data")]
     public float baseDamage;
