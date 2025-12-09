@@ -4088,17 +4088,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isLive: 0
   gameTime: 0
-  maxGameTime: 20
+  maxGameTime: 2
   playerId: 0
   health: 0
   maxHealth: 100
   level: 0
   kill: 0
-  exp: 0
+  _money: 0
   nextExp: 0100000002000000030000000400000005000000060000000700000008000000090000000a000000
   poolManager: {fileID: 316257127}
   player: {fileID: 1372885755}
-  uiLevelUp: {fileID: 104775347}
+  shop: {fileID: 0}
   uiResult: {fileID: 307385853}
   enemyCleaner: {fileID: 1603741815}
 --- !u!4 &1008736941

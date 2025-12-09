@@ -11,8 +11,11 @@ public class ItemData : ScriptableObject
     public ItemType itemType;
     public int itemId;
     public string itemName;
+    public int itemPrice; 
+    public int itemQuantity; //아이템 개수
     public int width; // 가로크기
     public int height; // 세로크기
+
     [TextArea]
     public string itemDesc;
     public Sprite itemIcon;
@@ -21,8 +24,8 @@ public class ItemData : ScriptableObject
     [Header("# Level Data")]
     public float baseDamage;
     public int baseCount;
-    public float[] damages;
-    public int[] counts;
+    //public float[] damages;
+    //public int[] counts;
 
     [Header("# Weapon")]
     public GameObject projectile;

@@ -1,8 +1,10 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Rendering.UI;
 using UnityEngine.UI;
+using static Cinemachine.DocumentationSortingAttribute;
 
-public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
 {
     public ItemData itemData;
 
@@ -15,16 +17,22 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
     private Sprite display;
     private Sprite panel;
 
+    [SerializeField]
+    private ItemDesc itemdesc;
+
+    private Shop shop;
+
     void Awake()
     {
+        shop = GetComponentInParent<Shop>();
         rect = GetComponent<RectTransform>();
         canvasGroup = GetComponent<CanvasGroup>();
         canvas = GetComponentInParent<Canvas>();
     }
     private void Start()
     {
-        if(itemData != null)
-        ChangeItemData(itemData);
+        if (itemData != null)
+            ChangeItemData(itemData);
     }
 
     public void ChangeItemData(ItemData data)
@@ -41,6 +49,8 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         siblingIndex = rect.GetSiblingIndex();
 
         canvasGroup.blocksRaycasts = false;
+
+        //undercurser를 가져와서 밑에있는 인벤토리창에 적용되는곳을 하이라이트 시켜야함
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -52,9 +62,30 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
     public void OnEndDrag(PointerEventData eventData)
     {
         var underCursor = eventData.pointerCurrentRaycast.gameObject;
+
+        //언더커서의 오브젝트가 인벤슬롯일경우만 실행
+        if (underCursor.GetComponent<InventorySlot>() == null)
+        {
+            rect.anchoredPosition = Vector2.zero;
+            canvasGroup.blocksRaycasts = true;
+            return;
+        }
+
         var slot = underCursor.GetComponent<InventorySlot>();
 
         //Debug.Log(slot == null ? "null" : slot.name);
+
+        //플레이어가 가지고 있는돈이 아이템의 금액보다 적은지 아닌지
+        //플레이어의 금액 감소 -> 데이타의 itemPrice에서 가져오기
+        if (GameManager.instance.UseMoney(itemData.itemPrice))
+        {
+            GameManager.instance.UseMoney(itemData.itemPrice);
+        }
+        else
+        {
+            CantBuyItem();
+            return;
+        }
 
         //내가들고있는 가방이 아이템일경우와 가방일경우를 나눠서 적용
         if (itemData.itemType == ItemData.ItemType.Bag)
@@ -65,9 +96,7 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
             }
             else
             {
-                rect.SetParent(parent);
-                rect.SetSiblingIndex(siblingIndex);
-                canvasGroup.blocksRaycasts = true;
+                CantBuyItem();
             }
         }
         else
@@ -76,13 +105,11 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
             {
                 rect.SetParent(underCursor.transform);
                 //플레이어에게 아이템 효과 적용
-
+                shop.ApplyItem(itemData);
             }
             else
             {
-                rect.SetParent(parent);
-                rect.SetSiblingIndex(siblingIndex);
-                canvasGroup.blocksRaycasts = true;
+                CantBuyItem();
             }
         }
 
@@ -91,5 +118,20 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         bool isOnSlot = transform.parent.GetComponent<InventorySlot>() != null;
         //Debug.Log(isOnSlot);
         GetComponent<Image>().sprite = isOnSlot ? panel : display;
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (itemdesc.gameObject.activeSelf)
+            itemdesc.gameObject.SetActive(false);
+        else
+            itemdesc.ShowDesc();
+    }
+
+    public void CantBuyItem()
+    {
+        rect.SetParent(parent);
+        rect.SetSiblingIndex(siblingIndex);
+        canvasGroup.blocksRaycasts = true;
     }
 }

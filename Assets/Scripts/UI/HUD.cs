@@ -6,7 +6,7 @@ using static Cinemachine.DocumentationSortingAttribute;
 
 public class HUD : MonoBehaviour
 {
-    public enum InfoType { Exp, Level, Kill, Time, Health}
+    public enum InfoType { Money, Kill, Time, Health}
     public InfoType type;
 
     Text myText;
@@ -15,20 +15,22 @@ public class HUD : MonoBehaviour
     private void Awake()
     {
         myText = GetComponent<Text>();
-        mySlider = GetComponent<Slider>();
+        if (GetComponent<Slider>() != null)
+            mySlider = GetComponent<Slider>();
     }
 
     private void LateUpdate()
     {
         switch (type)
         {
-            case InfoType.Exp:
-                float curExp = GameManager.instance._money;
-                float maxExp = GameManager.instance.nextExp[Mathf.Min(GameManager.instance.level, GameManager.instance.nextExp.Length - 1)];
-                mySlider.value = curExp / maxExp;
-                break;
-            case InfoType.Level:
-                myText.text = string.Format("Lv.{0:F0}", GameManager.instance.level);
+            //case InfoType.Money:
+            //    float curExp = GameManager.instance._money;
+            //    //float maxExp = GameManager.instance.nextExp[Mathf.Min(GameManager.instance.level, GameManager.instance.nextExp.Length - 1)];
+            //    //mySlider.value = curExp / maxExp;
+            //    break;
+            case InfoType.Money:
+                float curMoney = GameManager.instance._money;
+                myText.text = string.Format("{0:F0}", GameManager.instance._money);
                 break;
             case InfoType.Time:
                 float remainTime = GameManager.instance.maxGameTime - GameManager.instance.gameTime;

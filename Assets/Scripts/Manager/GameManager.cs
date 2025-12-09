@@ -9,15 +9,14 @@ public class GameManager : MonoBehaviour
     [Header("# Game Control")]
     public bool isLive;
     public float gameTime;
-    public float maxGameTime = 2 * 10f;
+    public float maxGameTime = 2f;
     [Header("# Player Info")]
     public int playerId;
     public float health;
     public float maxHealth = 100;
-    public int level;
     public int kill;
     public int _money;
-    public int[] nextExp = { 10, 30, 60, 100, 150, 120, 280, 360, 450, 600 };
+    //public int[] nextExp = { 10, 30, 60, 100, 150, 120, 280, 360, 450, 600 };
     [Header("# Game Object")]
     public PoolManager poolManager;
     public Player player;
@@ -34,6 +33,9 @@ public class GameManager : MonoBehaviour
     {
         playerId = id;
         health = maxHealth;
+        _money = 0;
+
+        shop.ItemInit();
 
         player.gameObject.SetActive(true);
         shop.Select(playerId % 2);    //무기선택
@@ -98,8 +100,8 @@ public class GameManager : MonoBehaviour
         {
             if (gameTime > maxGameTime)
             {
-                gameTime = maxGameTime;
                 shop.Show();
+                gameTime = maxGameTime;
             }
         }
     }
@@ -119,15 +121,29 @@ public class GameManager : MonoBehaviour
         //}
     }
 
+    public bool UseMoney(int money)
+    {
+        if ((0 > _money-money))
+        {
+            return false;
+        }
+        else
+        {
+            _money -= money;
+            return true;
+        }
+    }
     public void Stop()
     {
         isLive = false;
+        
         Time.timeScale = 0;
     }
 
     public void Resume()
     {
         isLive =true;
+        gameTime = 0;
         Time.timeScale = 1;
     }
 }

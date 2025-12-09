@@ -1,24 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Cinemachine.DocumentationSortingAttribute;
 
 public class Shop : MonoBehaviour
 {
-    public Item item;
-
     //하위아이템으로 생성될 아이템
     [SerializeField]
     private GameObject[] shopGoods;
-
     [SerializeField]
     private ItemData[] itemDatas;
-
     [SerializeField]
     private GameObject prefab;
 
+    public Weapon weapon;
+    public Gear gear;
+
     public void Show()
     {
-        gameObject.SetActive(true);
+        this.gameObject.SetActive(true);
+        ReRoll();
         GameManager.instance.Stop();
         AudioManager.instance.PlaySfx(AudioManager.Sfx.LevelUp);
         AudioManager.instance.EffectBGM(true);
@@ -31,9 +32,12 @@ public class Shop : MonoBehaviour
         AudioManager.instance.EffectBGM(false);
     }
 
-    public void Select(int index)
+    public void ItemInit()
     {
-        item.OnClick();
+        foreach (var item in itemDatas)
+        {
+            item.itemQuantity = 0;
+        }
     }
 
     //4개의 게임 오브젝트 하위로 아이템 랜덤생성
@@ -44,14 +48,19 @@ public class Shop : MonoBehaviour
         {
             int rand = Random.Range(0, itemDatas.Length);
 
-            Piece goodsPiece = shopGoods[i].GetComponentInChildren<Piece>();
+            Piece goodsPiece;
+            
             //자식으로 게임 오브젝트가 있는지?(piece스크립트
-            if (shopGoods[i].transform.childCount == 0)
+             if (shopGoods[i].transform.childCount == 0)
             {
                 //없을경우 -> 오브젝트 생성후 피스의 아이템 데이타 랜덤 돌린거 넣어주기
-                Instantiate(prefab, shopGoods[i].transform);
+                goodsPiece = Instantiate(prefab, shopGoods[i].transform).GetComponentInChildren<Piece>();
+                goodsPiece.gameObject.GetComponent<CanvasGroup>().blocksRaycasts = true;
             }
-            else { }
+            else
+            {
+                goodsPiece = shopGoods[i].GetComponentInChildren<Piece>();
+            }
 
             //Debug.Log(goodsPiece.gameObject.name);
 
@@ -59,4 +68,61 @@ public class Shop : MonoBehaviour
         }
     }
 
+    public void Select(int CharNum)
+    {
+        ApplyItem(itemDatas[CharNum]);
+    }
+
+    //인벤토리슬롯으로 옮겨야하나??
+    public void ApplyItem(ItemData itemData)
+    {
+        switch (itemData.itemType)
+        {
+            case ItemData.ItemType.Melee:
+            case ItemData.ItemType.Range:
+                //플레이어 오브젝트 자식으로 웨폰의 아이템 타입이 있는지 확인
+                Weapon[] weapons = GameManager.instance.player.gameObject.GetComponentsInChildren<Weapon>();
+
+                for (int i = 0; i < weapons.Length; i++)
+                {
+                    if (weapons[i].id == itemData.itemId)
+                    {
+                        weapon = weapons[i];
+                    }
+                }
+
+                if (itemData.itemQuantity == 0)
+                {
+                    GameObject newWeapon = new GameObject();
+                    weapon = newWeapon.AddComponent<Weapon>();
+
+                    Debug.Log(weapon);
+
+                    weapon.Init(itemData);
+                }
+                else
+                {
+                    weapon.CountUp();
+                }
+                itemData.itemQuantity++;
+                break;
+            case ItemData.ItemType.Glove:
+            case ItemData.ItemType.Shoe:
+                if (itemData.itemQuantity == 0)
+                {
+                    GameObject newGear = new GameObject();
+                    gear = newGear.AddComponent<Gear>();
+                    gear.Init(itemData);
+                }
+                else
+                {
+                    gear.CountUp();
+                }
+                itemData.itemQuantity++;
+                break;
+            case ItemData.ItemType.Heal:
+                GameManager.instance.health = GameManager.instance.maxHealth;
+                break;
+        }
+    }
 }

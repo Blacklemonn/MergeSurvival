@@ -1,11 +1,12 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
 {
-    private RectTransform item;
+    private RectTransform itemRect;
     private Canvas canvas;
 
     [SerializeField]
@@ -34,7 +35,7 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
         if (itemObj = transform.GetChild(transform.childCount - 1) as Transform)
         {
-            item = itemObj.GetComponent<RectTransform>();
+            itemRect = itemObj.GetComponent<RectTransform>();
             itemObj.SetParent(itemTemp.transform);
             //item.gameObject.SetActive(true);
         }
@@ -42,25 +43,31 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     public void OnDrag(PointerEventData eventData)
     {
-        if (item == null)
+        if (itemRect == null)
             return;
-        
-        item.anchoredPosition += eventData.delta / canvas.scaleFactor;
+
+        itemRect.anchoredPosition += eventData.delta / canvas.scaleFactor;
+
+        //undercurser를 가져와서 밑에있는 인벤토리창에 적용되는곳을 하이라이트 시켜야함
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (item == null)
+        if (itemRect == null)
             return;
 
         var underCursor = eventData.pointerCurrentRaycast.gameObject;
 
         if (!underCursor.GetComponent<InventorySlot>())
         {
-            item.transform.SetParent(this.transform);
-            item.anchoredPosition = Vector3.zero;
+            itemRect.transform.SetParent(this.transform);
+            itemRect.anchoredPosition = Vector3.zero;
             return;
         }
+
+        //언더커서의 오브젝트가 창고창일때 실행
+
+        //언더커서의 오브젝트가 상점창일때 실행
 
         //Debug.Log(underCursor.name);
 
@@ -68,26 +75,34 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         {
             //창고 창으로 뒀을때 아이템 효과 제거
 
-
             //들고있는 오브젝트가 아이템
             //자식이 1개있어야 적용됨
             if (underCursor.transform.childCount == 1)
             {
-                item.transform.SetParent(underCursor.transform);
+                itemRect.transform.SetParent(underCursor.transform);
             }
             else
-                item.transform.SetParent(this.transform);
+                itemRect.transform.SetParent(this.transform);
         }
         else
         {
             //들고있는 오브젝트가 가방
             //자식이 0개있어야 적용됨
             if (underCursor.transform.childCount == 0)
-                item.transform.SetParent(underCursor.transform);
+                itemRect.transform.SetParent(underCursor.transform);
             else
-                item.transform.SetParent(this.transform);
+                itemRect.transform.SetParent(this.transform);
         }
-        item.anchoredPosition = Vector3.zero;
-        item = null;
+        itemRect.anchoredPosition = Vector3.zero;
+        itemRect = null;
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (transform.childCount == 2)
+        {
+            transform.GetChild(1).GetComponent<Piece>().OnPointerClick(eventData);
+        }
+        else { }
     }
 }

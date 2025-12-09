@@ -16,14 +16,14 @@ public class Gear : MonoBehaviour
 
         //Property Set
         type = data.itemType;
-        rate = data.damages[0];
+        rate = data.baseDamage;
 
         ApplyGear();
     }
 
-    public void LevelUp(float rate)
+    public void CountUp()
     {
-        this.rate = rate;
+        this.rate += rate;
         ApplyGear();
     }
 
@@ -61,7 +61,7 @@ public class Gear : MonoBehaviour
     }
     private void SpeedUp()
     {
-        float speed = 3 * Character.Speed;
+        float speed = Character.Speed;
         GameManager.instance.player.speed = speed + speed * rate;
     }
 }

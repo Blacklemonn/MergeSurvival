@@ -15,19 +15,14 @@ MonoBehaviour:
   itemType: 3
   itemId: 3
   itemName: "\uC804\uD22C\uC7A5\uD654"
+  itemPrice: 0
+  itemQuantity: 9
   width: 1
   height: 1
   itemDesc: "\uC774\uB3D9\uC18D\uB3C4 {0}% \uC99D\uAC00"
   itemIcon: {fileID: -966295699, guid: d71a3dc7aa20fad4f9a99fc76a9254ba, type: 3}
   displayIcon: {fileID: -966295699, guid: d71a3dc7aa20fad4f9a99fc76a9254ba, type: 3}
-  baseDamage: 0
+  baseDamage: 0.1
   baseCount: 0
-  damages:
-  - 0.1
-  - 0.2
-  - 0.3
-  - 0.4
-  - 0.5
-  counts: 0000000000000000000000000000000000000000
   projectile: {fileID: 0}
   hand: {fileID: 0}

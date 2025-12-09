@@ -47,10 +47,9 @@ public class Weapon : MonoBehaviour
         }
     }
 
-    public void LevelUp(float damage, int count)
+    public void CountUp()
     {
-        this.damage = damage;
-        this.count += count;
+        this.count += 1;
 
         if (id == 0)
             Place();
