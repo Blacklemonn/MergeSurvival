@@ -16,7 +16,7 @@ MonoBehaviour:
   itemId: 2
   itemName: "\uD14C\uD06C\uB2C8\uCEEC \uC7A5\uAC11"
   itemPrice: 0
-  itemQuantity: 8
+  itemQuantity: 0
   width: 1
   height: 1
   itemDesc: "\uC5F0\uC0AC\uC18D\uB3C4 {0}% \uC99D\uAC00"

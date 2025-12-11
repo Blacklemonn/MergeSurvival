@@ -16,6 +16,7 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
     private int siblingIndex;
     private Sprite display;
     private Sprite panel;
+    private GameObject itemTemp;
 
     [SerializeField]
     private ItemDesc itemdesc;
@@ -28,11 +29,21 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         rect = GetComponent<RectTransform>();
         canvasGroup = GetComponent<CanvasGroup>();
         canvas = GetComponentInParent<Canvas>();
+        itemTemp = GameManager.instance.itemTemp;
     }
     private void Start()
     {
         if (itemData != null)
             ChangeItemData(itemData);
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            rect.anchoredPosition = Vector2.zero;
+            Debug.Log(rect.anchoredPosition);
+        }
     }
 
     public void ChangeItemData(ItemData data)
@@ -45,36 +56,31 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        itemdesc.gameObject.SetActive(false);
+
         parent = rect.parent;
         siblingIndex = rect.GetSiblingIndex();
+        gameObject.transform.SetParent(itemTemp.transform);
 
         canvasGroup.blocksRaycasts = false;
 
-        //undercurser를 가져와서 밑에있는 인벤토리창에 적용되는곳을 하이라이트 시켜야함
+        //창고에서 인벤토리창이나 상점창으로 옮길때
+        if (GetComponentInParent<Storage>())
+        {
+            transform.parent.gameObject.SetActive(false);
+        }
     }
 
     public void OnDrag(PointerEventData eventData)
     {
         rect.anchoredPosition += eventData.delta / canvas.scaleFactor;
+
+        //undercurser를 가져와서 밑에있는 인벤토리창에 적용되는곳을 하이라이트 시켜야함
     }
 
     //샵이나 창고에 있는 아이템을 옮길때 사용되는 함수
     public void OnEndDrag(PointerEventData eventData)
     {
-        var underCursor = eventData.pointerCurrentRaycast.gameObject;
-
-        //언더커서의 오브젝트가 인벤슬롯일경우만 실행
-        if (underCursor.GetComponent<InventorySlot>() == null)
-        {
-            rect.anchoredPosition = Vector2.zero;
-            canvasGroup.blocksRaycasts = true;
-            return;
-        }
-
-        var slot = underCursor.GetComponent<InventorySlot>();
-
-        //Debug.Log(slot == null ? "null" : slot.name);
-
         //플레이어가 가지고 있는돈이 아이템의 금액보다 적은지 아닌지
         //플레이어의 금액 감소 -> 데이타의 itemPrice에서 가져오기
         if (GameManager.instance.UseMoney(itemData.itemPrice))
@@ -86,6 +92,29 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
             CantBuyItem();
             return;
         }
+
+        var underCursor = eventData.pointerCurrentRaycast.gameObject;
+
+        if (underCursor.GetComponent<Storage>())
+        {
+            GameManager.instance.storage.GotoStorage(this.gameObject);
+            rect.offsetMin = Vector2.zero;
+            rect.offsetMax = Vector2.zero;
+            canvasGroup.blocksRaycasts = true;
+            return;
+        }
+
+        //언더커서의 오브젝트가 인벤슬롯일경우만 실행
+        if (underCursor.GetComponent<InventorySlot>() == null)
+        {
+            CantBuyItem();
+            return;
+        }
+
+        var slot = underCursor.GetComponent<InventorySlot>();
+
+        //Debug.Log(slot == null ? "null" : slot.name);
+
 
         //내가들고있는 가방이 아이템일경우와 가방일경우를 나눠서 적용
         if (itemData.itemType == ItemData.ItemType.Bag)
@@ -132,6 +161,8 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
     {
         rect.SetParent(parent);
         rect.SetSiblingIndex(siblingIndex);
+        rect.anchoredPosition = Vector2.zero;
+
         canvasGroup.blocksRaycasts = true;
     }
 }

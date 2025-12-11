@@ -56,6 +56,15 @@ public class Weapon : MonoBehaviour
 
         player.BroadcastMessage("ApplyGear", SendMessageOptions.DontRequireReceiver);
     }
+    public void CountDown()
+    {
+        this.count -= 1;
+
+        if (id == 0)
+            Place();
+
+        player.BroadcastMessage("ApplyGear", SendMessageOptions.DontRequireReceiver);
+    }
 
     public void Init(ItemData data)
     {
@@ -68,6 +77,8 @@ public class Weapon : MonoBehaviour
         id = data.itemId;
         damage = data.baseDamage * Character.Damage;
         count = data.baseCount + Character.Count;
+        //개수 초기화
+        data.itemQuantity = 0;
 
         for (int index = 0; index < GameManager.instance.poolManager.prefabs.Length; index++)
         {

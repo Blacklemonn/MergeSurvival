@@ -21,8 +21,10 @@ public class GameManager : MonoBehaviour
     public PoolManager poolManager;
     public Player player;
     public Shop shop;
+    public Storage storage;
     public Result uiResult;
     public GameObject enemyCleaner;
+    public GameObject itemTemp;
 
     private void Awake()
     {
@@ -105,10 +107,23 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+    public void Stop()
+    {
+        isLive = false;
+
+        Time.timeScale = 0;
+    }
+
+    public void Resume()
+    {
+        isLive = true;
+        gameTime = 0;
+        Time.timeScale = 1;
+    }
 
     public void GetMoney(int money)
     {
-        if(!isLive)
+        if (!isLive)
             return;
 
         _money += money;
@@ -123,7 +138,7 @@ public class GameManager : MonoBehaviour
 
     public bool UseMoney(int money)
     {
-        if ((0 > _money-money))
+        if ((0 > _money - money))
         {
             return false;
         }
@@ -132,18 +147,5 @@ public class GameManager : MonoBehaviour
             _money -= money;
             return true;
         }
-    }
-    public void Stop()
-    {
-        isLive = false;
-        
-        Time.timeScale = 0;
-    }
-
-    public void Resume()
-    {
-        isLive =true;
-        gameTime = 0;
-        Time.timeScale = 1;
     }
 }

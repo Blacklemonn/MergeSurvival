@@ -6,6 +6,8 @@ public class Gear : MonoBehaviour
 {
     public ItemData.ItemType type;
     public float rate;
+    
+    private float baseRate;
 
     public void Init(ItemData data)
     {
@@ -16,14 +18,21 @@ public class Gear : MonoBehaviour
 
         //Property Set
         type = data.itemType;
-        rate = data.baseDamage;
+        baseRate = data.baseDamage;
+        rate = baseRate;
+        data.itemQuantity = 0;
 
         ApplyGear();
     }
 
     public void CountUp()
     {
-        this.rate += rate;
+        this.rate += baseRate;
+        ApplyGear();
+    }
+    public void CountDown()
+    {
+        this.rate -= baseRate;
         ApplyGear();
     }
 
@@ -32,15 +41,15 @@ public class Gear : MonoBehaviour
         switch (type)
         {
             case ItemData.ItemType.Glove:
-                RateUp();
+                Rate();
                 break;
             case ItemData.ItemType.Shoe:
-                SpeedUp();
+                Speed();
                 break;
         }
     }
 
-    private void RateUp()
+    private void Rate()
     {
         Weapon[] weapons = transform.parent.GetComponentsInChildren<Weapon>();
 
@@ -59,7 +68,7 @@ public class Gear : MonoBehaviour
             }
         }
     }
-    private void SpeedUp()
+    private void Speed()
     {
         float speed = Character.Speed;
         GameManager.instance.player.speed = speed + speed * rate;

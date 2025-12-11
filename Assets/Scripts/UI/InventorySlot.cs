@@ -3,6 +3,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using static UnityEditor.Progress;
 
 public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
 {
@@ -13,23 +14,18 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     private GameObject itemTemp;
 
     private bool isItem;
+    private Transform itemObj;
 
     private void Awake()
     {
         canvas = GetComponentInParent<Canvas>();
-    }
-
-    private void OnEnable()
-    {
-        itemTemp = GameObject.Find("ItemTemp");
+        itemTemp = GameManager.instance.itemTemp;
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
         if (transform.childCount == 0)
             return;
-
-        Transform itemObj;
 
         isItem = transform.childCount == 2 ? true : false;
 
@@ -58,6 +54,19 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
         var underCursor = eventData.pointerCurrentRaycast.gameObject;
 
+        //언더커서의 오브젝트가 창고창일때 실행
+        if (underCursor.GetComponent<Storage>())
+        {
+            GameManager.instance.storage.GotoStorage(itemObj.gameObject);
+
+            //아이템 효과 제거
+            GameManager.instance.shop.RemoveItem(itemObj.GetComponent<Piece>().itemData);
+            itemRect.offsetMin = Vector2.zero;
+            itemRect.offsetMax = Vector2.zero;
+            itemObj.gameObject.GetComponent<CanvasGroup>().blocksRaycasts = true;
+            return;
+        }
+
         if (!underCursor.GetComponent<InventorySlot>())
         {
             itemRect.transform.SetParent(this.transform);
@@ -65,16 +74,12 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
             return;
         }
 
-        //언더커서의 오브젝트가 창고창일때 실행
-
         //언더커서의 오브젝트가 상점창일때 실행
 
         //Debug.Log(underCursor.name);
 
         if (isItem)
         {
-            //창고 창으로 뒀을때 아이템 효과 제거
-
             //들고있는 오브젝트가 아이템
             //자식이 1개있어야 적용됨
             if (underCursor.transform.childCount == 1)

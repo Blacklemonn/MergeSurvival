@@ -13,8 +13,27 @@ public class Shop : MonoBehaviour
     [SerializeField]
     private GameObject prefab;
 
-    public Weapon weapon;
-    public Gear gear;
+    private Weapon weapon;
+    private Gear gear;
+
+    public GameObject storage;
+    public GameObject shop;
+
+    private void Update()
+    {
+        //상점창과 창고창을 스위치
+        if (Input.GetKeyUp(KeyCode.Tab))
+        {
+            if (!this.gameObject.activeSelf)
+                return;
+
+            storage.SetActive(!storage.activeSelf);
+            shop.SetActive(!shop.activeSelf);
+
+            if (!storage.activeSelf)
+                GameManager.instance.storage.BaseArray();
+        }
+    }
 
     public void Show()
     {
@@ -49,9 +68,9 @@ public class Shop : MonoBehaviour
             int rand = Random.Range(0, itemDatas.Length);
 
             Piece goodsPiece;
-            
+
             //자식으로 게임 오브젝트가 있는지?(piece스크립트
-             if (shopGoods[i].transform.childCount == 0)
+            if (shopGoods[i].transform.childCount == 0)
             {
                 //없을경우 -> 오브젝트 생성후 피스의 아이템 데이타 랜덤 돌린거 넣어주기
                 goodsPiece = Instantiate(prefab, shopGoods[i].transform).GetComponentInChildren<Piece>();
@@ -73,7 +92,6 @@ public class Shop : MonoBehaviour
         ApplyItem(itemDatas[CharNum]);
     }
 
-    //인벤토리슬롯으로 옮겨야하나??
     public void ApplyItem(ItemData itemData)
     {
         switch (itemData.itemType)
@@ -88,15 +106,14 @@ public class Shop : MonoBehaviour
                     if (weapons[i].id == itemData.itemId)
                     {
                         weapon = weapons[i];
+                        break;
                     }
                 }
 
-                if (itemData.itemQuantity == 0)
+                if (weapon == null)
                 {
                     GameObject newWeapon = new GameObject();
                     weapon = newWeapon.AddComponent<Weapon>();
-
-                    Debug.Log(weapon);
 
                     weapon.Init(itemData);
                 }
@@ -108,7 +125,18 @@ public class Shop : MonoBehaviour
                 break;
             case ItemData.ItemType.Glove:
             case ItemData.ItemType.Shoe:
-                if (itemData.itemQuantity == 0)
+                Gear[] gears = GameManager.instance.player.gameObject.GetComponentsInChildren<Gear>();
+
+                for (int i = 0; i < gears.Length; i++)
+                {
+                    if (gears[i].type == itemData.itemType)
+                    {
+                        gear = gears[i];
+                        break;
+                    }
+                }
+
+                if (gear==null)
                 {
                     GameObject newGear = new GameObject();
                     gear = newGear.AddComponent<Gear>();
@@ -125,4 +153,66 @@ public class Shop : MonoBehaviour
                 break;
         }
     }
+
+    public void RemoveItem(ItemData itemData)
+    {
+        switch (itemData.itemType)
+        {
+            case ItemData.ItemType.Melee:
+            case ItemData.ItemType.Range:
+                //플레이어 오브젝트 자식으로 웨폰의 아이템 타입이 있는지 확인
+                Weapon[] weapons = GameManager.instance.player.gameObject.GetComponentsInChildren<Weapon>();
+
+                for (int i = 0; i < weapons.Length; i++)
+                {
+                    if (weapons[i].id == itemData.itemId)
+                    {
+                        weapon = weapons[i];
+                    }
+                }
+
+                if (weapon==null)
+                {
+                    GameObject newWeapon = new GameObject();
+                    weapon = newWeapon.AddComponent<Weapon>();
+
+                    weapon.Init(itemData);
+                }
+                else
+                {
+                    weapon.CountUp();
+                }
+                itemData.itemQuantity--;
+                break;
+            case ItemData.ItemType.Glove:
+            case ItemData.ItemType.Shoe:
+                Gear[] gears = GameManager.instance.player.gameObject.GetComponentsInChildren<Gear>();
+
+                for (int i = 0; i < gears.Length; i++)
+                {
+                    if (gears[i].type == itemData.itemType)
+                    {
+                        gear = gears[i];
+                        break;
+                    }
+                }
+
+                if (gear == null)
+                {
+                    GameObject newGear = new GameObject();
+                    gear = newGear.AddComponent<Gear>();
+                    gear.Init(itemData);
+                }
+                else
+                {
+                    gear.CountDown();
+                }
+                itemData.itemQuantity--;
+                break;
+            case ItemData.ItemType.Heal:
+                GameManager.instance.health = GameManager.instance.maxHealth;
+                break;
+        }
+    }
+
 }
