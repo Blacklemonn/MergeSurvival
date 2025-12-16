@@ -13,9 +13,6 @@ public class Shop : MonoBehaviour
     [SerializeField]
     private GameObject prefab;
 
-    private Weapon weapon;
-    private Gear gear;
-
     public GameObject storage;
     public GameObject shop;
 
@@ -32,6 +29,10 @@ public class Shop : MonoBehaviour
 
             if (!storage.activeSelf)
                 GameManager.instance.storage.BaseArray();
+        }
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            ReRoll();
         }
     }
 
@@ -51,27 +52,26 @@ public class Shop : MonoBehaviour
         AudioManager.instance.EffectBGM(false);
     }
 
-    public void ItemInit()
-    {
-        foreach (var item in itemDatas)
-        {
-            item.itemQuantity = 0;
-        }
-    }
-
     //4개의 게임 오브젝트 하위로 아이템 랜덤생성
     public void ReRoll()
     {
+        //들고있는 아이템이 사라져야함
+        if (GameManager.instance.isDragging)
+            return;
+        //클릭된 설명창이 사라져야함
+
         //상점 슬롯 횟수만큼 반복
         for (int i = 0; i < shopGoods.Length; i++)
         {
             int rand = Random.Range(0, itemDatas.Length);
 
-            Piece goodsPiece;
+            Piece goodsPiece = null;
 
             //자식으로 게임 오브젝트가 있는지?(piece스크립트
             if (shopGoods[i].transform.childCount == 0)
             {
+                if (goodsPiece == null)
+                    return;
                 //없을경우 -> 오브젝트 생성후 피스의 아이템 데이타 랜덤 돌린거 넣어주기
                 goodsPiece = Instantiate(prefab, shopGoods[i].transform).GetComponentInChildren<Piece>();
                 goodsPiece.gameObject.GetComponent<CanvasGroup>().blocksRaycasts = true;
@@ -81,138 +81,12 @@ public class Shop : MonoBehaviour
                 goodsPiece = shopGoods[i].GetComponentInChildren<Piece>();
             }
 
-            //Debug.Log(goodsPiece.gameObject.name);
-
             goodsPiece.ChangeItemData(itemDatas[rand]);
         }
     }
 
     public void Select(int CharNum)
     {
-        ApplyItem(itemDatas[CharNum]);
+        GameManager.instance.inventory.ApplyItem(itemDatas[CharNum], false);
     }
-
-    public void ApplyItem(ItemData itemData)
-    {
-        switch (itemData.itemType)
-        {
-            case ItemData.ItemType.Melee:
-            case ItemData.ItemType.Range:
-                //플레이어 오브젝트 자식으로 웨폰의 아이템 타입이 있는지 확인
-                Weapon[] weapons = GameManager.instance.player.gameObject.GetComponentsInChildren<Weapon>();
-
-                for (int i = 0; i < weapons.Length; i++)
-                {
-                    if (weapons[i].id == itemData.itemId)
-                    {
-                        weapon = weapons[i];
-                        break;
-                    }
-                }
-
-                if (weapon == null)
-                {
-                    GameObject newWeapon = new GameObject();
-                    weapon = newWeapon.AddComponent<Weapon>();
-
-                    weapon.Init(itemData);
-                }
-                else
-                {
-                    weapon.CountUp();
-                }
-                itemData.itemQuantity++;
-                break;
-            case ItemData.ItemType.Glove:
-            case ItemData.ItemType.Shoe:
-                Gear[] gears = GameManager.instance.player.gameObject.GetComponentsInChildren<Gear>();
-
-                for (int i = 0; i < gears.Length; i++)
-                {
-                    if (gears[i].type == itemData.itemType)
-                    {
-                        gear = gears[i];
-                        break;
-                    }
-                }
-
-                if (gear==null)
-                {
-                    GameObject newGear = new GameObject();
-                    gear = newGear.AddComponent<Gear>();
-                    gear.Init(itemData);
-                }
-                else
-                {
-                    gear.CountUp();
-                }
-                itemData.itemQuantity++;
-                break;
-            case ItemData.ItemType.Heal:
-                GameManager.instance.health = GameManager.instance.maxHealth;
-                break;
-        }
-    }
-
-    public void RemoveItem(ItemData itemData)
-    {
-        switch (itemData.itemType)
-        {
-            case ItemData.ItemType.Melee:
-            case ItemData.ItemType.Range:
-                //플레이어 오브젝트 자식으로 웨폰의 아이템 타입이 있는지 확인
-                Weapon[] weapons = GameManager.instance.player.gameObject.GetComponentsInChildren<Weapon>();
-
-                for (int i = 0; i < weapons.Length; i++)
-                {
-                    if (weapons[i].id == itemData.itemId)
-                    {
-                        weapon = weapons[i];
-                    }
-                }
-
-                if (weapon==null)
-                {
-                    GameObject newWeapon = new GameObject();
-                    weapon = newWeapon.AddComponent<Weapon>();
-
-                    weapon.Init(itemData);
-                }
-                else
-                {
-                    weapon.CountUp();
-                }
-                itemData.itemQuantity--;
-                break;
-            case ItemData.ItemType.Glove:
-            case ItemData.ItemType.Shoe:
-                Gear[] gears = GameManager.instance.player.gameObject.GetComponentsInChildren<Gear>();
-
-                for (int i = 0; i < gears.Length; i++)
-                {
-                    if (gears[i].type == itemData.itemType)
-                    {
-                        gear = gears[i];
-                        break;
-                    }
-                }
-
-                if (gear == null)
-                {
-                    GameObject newGear = new GameObject();
-                    gear = newGear.AddComponent<Gear>();
-                    gear.Init(itemData);
-                }
-                else
-                {
-                    gear.CountDown();
-                }
-                itemData.itemQuantity--;
-                break;
-            case ItemData.ItemType.Heal:
-                GameManager.instance.health = GameManager.instance.maxHealth;
-                break;
-        }
-    }
-
 }

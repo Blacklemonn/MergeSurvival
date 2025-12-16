@@ -15,6 +15,7 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     private bool isItem;
     private Transform itemObj;
+    private ItemData data;
 
     private void Awake()
     {
@@ -33,7 +34,7 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         {
             itemRect = itemObj.GetComponent<RectTransform>();
             itemObj.SetParent(itemTemp.transform);
-            //item.gameObject.SetActive(true);
+            data = itemObj.GetComponent<Piece>().itemData;
         }
     }
 
@@ -60,23 +61,31 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
             GameManager.instance.storage.GotoStorage(itemObj.gameObject);
 
             //아이템 효과 제거
-            GameManager.instance.shop.RemoveItem(itemObj.GetComponent<Piece>().itemData);
+            GameManager.instance.inventory.RemoveItem(data);
             itemRect.offsetMin = Vector2.zero;
             itemRect.offsetMax = Vector2.zero;
             itemObj.gameObject.GetComponent<CanvasGroup>().blocksRaycasts = true;
             return;
         }
-
-        if (!underCursor.GetComponent<InventorySlot>())
+        //언더커서의 오브젝트가 상점일 경우
+        else if (underCursor.GetComponent<Shop>())
+        {
+            //금액의 50퍼센트(내림)반환
+            GameManager.instance.GetMoney(data.itemPrice / 2);
+            //아이템 효과 제거
+            GameManager.instance.inventory.RemoveItem(data);
+            //이 게임오브젝트를 파괴
+            Destroy(itemObj.gameObject);
+            return;
+        }
+        else if (!underCursor.GetComponent<InventorySlot>())
         {
             itemRect.transform.SetParent(this.transform);
             itemRect.anchoredPosition = Vector3.zero;
+            data = null;
             return;
         }
-
-        //언더커서의 오브젝트가 상점창일때 실행
-
-        //Debug.Log(underCursor.name);
+        else { }
 
         if (isItem)
         {
@@ -100,6 +109,7 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         }
         itemRect.anchoredPosition = Vector3.zero;
         itemRect = null;
+        data = null;
     }
 
     public void OnPointerClick(PointerEventData eventData)

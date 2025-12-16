@@ -12,7 +12,6 @@ public class ItemData : ScriptableObject
     public int itemId;
     public string itemName;
     public int itemPrice; 
-    public int itemQuantity; //아이템 개수
     public int width; // 가로크기
     public int height; // 세로크기
 

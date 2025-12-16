@@ -7,7 +7,7 @@ public class Gear : MonoBehaviour
     public ItemData.ItemType type;
     public float rate;
     
-    private float baseRate;
+    public float baseRate;
 
     public void Init(ItemData data)
     {
@@ -20,7 +20,6 @@ public class Gear : MonoBehaviour
         type = data.itemType;
         baseRate = data.baseDamage;
         rate = baseRate;
-        data.itemQuantity = 0;
 
         ApplyGear();
     }

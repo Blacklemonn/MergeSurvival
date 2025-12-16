@@ -12174,7 +12174,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4384817005516658789, guid: 51dfb2c0ce5c2a64c9dee3ed17d8ccd8, type: 3}
       propertyPath: m_Name
-      value: InventorySlot (5)
+      value: InventorySlot (1)
       objectReference: {fileID: 0}
     - target: {fileID: 4384817005516658789, guid: 51dfb2c0ce5c2a64c9dee3ed17d8ccd8, type: 3}
       propertyPath: m_IsActive
@@ -12783,7 +12783,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4384817005516658789, guid: 51dfb2c0ce5c2a64c9dee3ed17d8ccd8, type: 3}
       propertyPath: m_Name
-      value: InventorySlot
+      value: InventorySlot (25)
       objectReference: {fileID: 0}
     - target: {fileID: 4384817005516658789, guid: 51dfb2c0ce5c2a64c9dee3ed17d8ccd8, type: 3}
       propertyPath: m_IsActive
@@ -12915,7 +12915,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4384817005516658789, guid: 51dfb2c0ce5c2a64c9dee3ed17d8ccd8, type: 3}
       propertyPath: m_Name
-      value: InventorySlot (4)
+      value: InventorySlot (2)
       objectReference: {fileID: 0}
     - target: {fileID: 4384817005516658789, guid: 51dfb2c0ce5c2a64c9dee3ed17d8ccd8, type: 3}
       propertyPath: m_IsActive
@@ -16974,6 +16974,7 @@ MonoBehaviour:
   player: {fileID: 1372885755}
   shop: {fileID: 669067252}
   storage: {fileID: 2130557960}
+  inventory: {fileID: 1166799397}
   uiResult: {fileID: 307385853}
   enemyCleaner: {fileID: 1603741815}
   itemTemp: {fileID: 918994390}
@@ -17450,6 +17451,7 @@ GameObject:
   - component: {fileID: 1166799396}
   - component: {fileID: 1166799395}
   - component: {fileID: 1166799394}
+  - component: {fileID: 1166799397}
   m_Layer: 5
   m_Name: InventoryPanel
   m_TagString: Untagged
@@ -17563,6 +17565,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1166799392}
   m_CullTransparentMesh: 1
+--- !u!114 &1166799397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1166799392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0956a97ef7edec43b829ec07e57fbef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slotItem: []
+  weaponList: []
+  gearList: []
 --- !u!1001 &1183839166
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19359,7 +19376,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4384817005516658789, guid: 51dfb2c0ce5c2a64c9dee3ed17d8ccd8, type: 3}
       propertyPath: m_Name
-      value: InventorySlot (2)
+      value: InventorySlot (4)
       objectReference: {fileID: 0}
     - target: {fileID: 4384817005516658789, guid: 51dfb2c0ce5c2a64c9dee3ed17d8ccd8, type: 3}
       propertyPath: m_IsActive
@@ -21602,7 +21619,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4384817005516658789, guid: 51dfb2c0ce5c2a64c9dee3ed17d8ccd8, type: 3}
       propertyPath: m_Name
-      value: InventorySlot (1)
+      value: InventorySlot (5)
       objectReference: {fileID: 0}
     - target: {fileID: 4384817005516658789, guid: 51dfb2c0ce5c2a64c9dee3ed17d8ccd8, type: 3}
       propertyPath: m_IsActive

@@ -22,9 +22,12 @@ public class GameManager : MonoBehaviour
     public Player player;
     public Shop shop;
     public Storage storage;
+    public Inventory inventory;
     public Result uiResult;
     public GameObject enemyCleaner;
     public GameObject itemTemp;
+    [HideInInspector]
+    public bool isDragging;
 
     private void Awake()
     {
@@ -36,8 +39,6 @@ public class GameManager : MonoBehaviour
         playerId = id;
         health = maxHealth;
         _money = 0;
-
-        shop.ItemInit();
 
         player.gameObject.SetActive(true);
         shop.Select(playerId % 2);    //무기선택
@@ -136,7 +137,7 @@ public class GameManager : MonoBehaviour
         //}
     }
 
-    public bool UseMoney(int money)
+    public bool UseMoney(int money,bool useMoney)
     {
         if ((0 > _money - money))
         {
@@ -144,8 +145,15 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            _money -= money;
-            return true;
+            if(useMoney)
+            {
+                _money -= money;
+                return true;
+            }
+            else
+            {
+                return true;
+            }
         }
     }
 }

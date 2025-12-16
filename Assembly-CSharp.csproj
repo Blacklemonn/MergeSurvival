@@ -89,6 +89,7 @@
     <Compile Include="Assets\Scripts\UI\Piece.cs" />
     <Compile Include="Assets\Scripts\Manager\Achive Manager.cs" />
     <Compile Include="Assets\Scripts\ScriptableObject\ItemData.cs" />
+    <Compile Include="Assets\Scripts\Inventory.cs" />
     <Compile Include="Assets\Scripts\Manager\PoolManager.cs" />
     <Compile Include="Assets\Scripts\Item\Gear.cs" />
     <Compile Include="Assets\SPUM\Script\SPUM_Prefabs.cs" />
