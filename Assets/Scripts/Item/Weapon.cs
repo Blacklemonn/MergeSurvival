@@ -16,13 +16,18 @@ public class Weapon : MonoBehaviour
     //속도
     public float speed;
 
+    //private List<GameObject> listBullet;
     private float timer;
 
     private Player player;
 
+    private PoolManager poolManager;
+
     private void Awake()
     {
         player = GameManager.instance.player;
+        poolManager = GameManager.instance.poolManager;
+        //listBullet = new List<GameObject>();
     }
 
     void Update()
@@ -49,21 +54,25 @@ public class Weapon : MonoBehaviour
 
     public void CountUp()
     {
-        this.count += 1;
+        count += 1;
 
         if (id == 0)
             Place();
 
-        player.BroadcastMessage("ApplyGear", SendMessageOptions.DontRequireReceiver);
+        //player.BroadcastMessage("ApplyWeapon", SendMessageOptions.DontRequireReceiver);
     }
     public void CountDown()
     {
-        this.count -= 1;
+        count -= 1;
 
         if (id == 0)
-            Place();
+        {
+            poolManager.Deactive(prefabId, count);
 
-        player.BroadcastMessage("ApplyGear", SendMessageOptions.DontRequireReceiver);
+            Place();
+        }
+
+        //player.BroadcastMessage("ApplyWeapon", SendMessageOptions.DontRequireReceiver);
     }
 
     public void Init(ItemData data)
@@ -108,13 +117,16 @@ public class Weapon : MonoBehaviour
 
     private void Place()    //플레이어 기준 돌아가는 무기 로직
     {
+        //자식의 갯수를 가져와서 count의 갯수만큼 활성화
         for (int index = 0; index < count; index++)
         {
             Transform bullet;
 
             if (index < transform.childCount)
             {
-                bullet=transform.GetChild(index);
+                bullet = transform.GetChild(index);
+                
+                bullet.gameObject.SetActive (true);
             }
             else
             {
@@ -130,7 +142,7 @@ public class Weapon : MonoBehaviour
             Vector3 rotVec = Vector3.forward * 360 * index / count;
             bullet.Rotate(rotVec);
             bullet.Translate(bullet.up * 1.5f, Space.World);
-            bullet.GetComponent<Bullet>().Init(damage, -100,Vector3.zero); // -100 is Infinity per
+            bullet.GetComponent<Bullet>().Init(damage, -100, Vector3.zero); // -100 is Infinity per
         }
     }
 

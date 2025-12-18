@@ -110,12 +110,12 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         //시작이 창고이고 놓았을때 오브젝트가 상점일 경우
         if (underCursor.GetComponent<Shop>() && !isShop)
         {
+            Debug.Log("창고 -> 상점");
             //금액의 50퍼센트(내림)반환
-            GameManager.instance.GetMoney(itemData.itemPrice / 2);
-            //아이템 효과 제거
-            GameManager.instance.inventory.RemoveItem(itemData);
+            GameManager.instance._money += itemData.itemPrice / 2;
             //이 게임오브젝트를 파괴
             Destroy(gameObject);
+            return;
         }
         //놓았을때 오브젝트가 인벤슬롯이 아닐경우
         else if (underCursor.GetComponent<InventorySlot>() == null)
@@ -123,6 +123,7 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
             CantBuyItem();
             return;
         }
+        else {  }
 
         var slot = underCursor.GetComponent<InventorySlot>();
 

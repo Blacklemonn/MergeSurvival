@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour
     public Result uiResult;
     public GameObject enemyCleaner;
     public GameObject itemTemp;
-    [HideInInspector]
+    //[HideInInspector]
     public bool isDragging;
 
     private void Awake()
@@ -128,13 +128,6 @@ public class GameManager : MonoBehaviour
             return;
 
         _money += money;
-
-        //if (exp >= nextExp[Mathf.Min(level, nextExp.Length-1)])
-        //{
-        //    level++;
-        //    exp = 0;
-        //    StageClear.Show();
-        //}
     }
 
     public bool UseMoney(int money,bool useMoney)

@@ -71,7 +71,7 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         else if (underCursor.GetComponent<Shop>())
         {
             //금액의 50퍼센트(내림)반환
-            GameManager.instance.GetMoney(data.itemPrice / 2);
+            GameManager.instance._money += data.itemPrice / 2;
             //아이템 효과 제거
             GameManager.instance.inventory.RemoveItem(data);
             //이 게임오브젝트를 파괴

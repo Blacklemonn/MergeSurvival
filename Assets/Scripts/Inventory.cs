@@ -20,6 +20,7 @@ public class Inventory : MonoBehaviour
     //아이템을 플레이어에게 적용시켜주는 함수
     public void ApplyItem(ItemData itemData, bool UseMoney)
     {
+        Debug.Log("ApplyItem");
         GameManager.instance.UseMoney(itemData.itemPrice, UseMoney);
 
         switch (itemData.itemType)
@@ -48,6 +49,9 @@ public class Inventory : MonoBehaviour
                 }
                 else
                 {
+                    if(!weapon.gameObject.activeSelf)
+                        weapon.gameObject.SetActive(true);
+
                     weapon.CountUp();
                 }
                 break;
@@ -74,6 +78,9 @@ public class Inventory : MonoBehaviour
                 }
                 else
                 {
+                    if (!gear.gameObject.activeSelf)
+                        gear.gameObject.SetActive(true);
+
                     gear.CountUp();
                 }
                 break;
@@ -109,15 +116,11 @@ public class Inventory : MonoBehaviour
                     }
                 }
 
-                if (weapon.count > 0)
-                {
-                    weapon.CountDown();
-                }
-                else
-                {
-                    weaponList.Remove(weapon);
-                    Destroy(weapon.gameObject);
-                }
+                weapon.CountDown();
+
+                if (weapon.count == 0)
+                    weapon.gameObject.SetActive(false);
+
                 break;
             case ItemData.ItemType.Glove:
             case ItemData.ItemType.Shoe:
@@ -136,15 +139,10 @@ public class Inventory : MonoBehaviour
                     }
                 }
 
-                if (gear.rate > gear.baseRate)
-                {
-                    gear.CountDown();
-                }
-                else
-                {
-                    gearList.Remove(gear);
-                    Destroy(gear.gameObject);
-                }
+                gear.CountDown();
+
+                if (gear.rate <= gear.baseRate)
+                    gear.gameObject.SetActive(false);
                 break;
         }
     }

@@ -20,6 +20,7 @@ public class Gear : MonoBehaviour
         type = data.itemType;
         baseRate = data.baseDamage;
         rate = baseRate;
+        data.baseCount = 1;
 
         ApplyGear();
     }
