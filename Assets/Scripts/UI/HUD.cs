@@ -6,7 +6,7 @@ using static Cinemachine.DocumentationSortingAttribute;
 
 public class HUD : MonoBehaviour
 {
-    public enum InfoType { Money, Kill, Time, Health}
+    public enum InfoType { Money, Time, Health}
     public InfoType type;
 
     Text myText;
@@ -38,13 +38,16 @@ public class HUD : MonoBehaviour
                 int sec = Mathf.FloorToInt(remainTime % 60);
                 myText.text = string.Format("{0:D2}:{1:D2}", min, sec);
                 break;
-            case InfoType.Kill:
-                myText.text = string.Format("{0:F0}", GameManager.instance.kill);
-                break;
+            //case InfoType.Kill:
+            //    myText.text = string.Format("{0:F0}", GameManager.instance.health);
+            //    break;
             case InfoType.Health:
                 float curHealth = GameManager.instance.health;
                 float maxHealth = GameManager.instance.maxHealth;
-                mySlider.value = curHealth / maxHealth;
+                if (myText != null)
+                    myText.text = string.Format("{0:F0}", curHealth);
+                if (mySlider != null)
+                    mySlider.value = curHealth / maxHealth;
                 break;
         }
     }

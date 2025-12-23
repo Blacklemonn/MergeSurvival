@@ -65,7 +65,7 @@ public class AchiveManager : MonoBehaviour
         switch (achive)
         {
             case Achive.UnlockBarley:
-                isAchive = GameManager.instance.kill >= 10;
+                isAchive = GameManager.instance._money >= 10;
                 break;
             case Achive.UnlockSweetPotato:
                 isAchive = GameManager.instance.gameTime == GameManager.instance.maxGameTime;

@@ -20,7 +20,6 @@ public class Inventory : MonoBehaviour
     //아이템을 플레이어에게 적용시켜주는 함수
     public void ApplyItem(ItemData itemData, bool UseMoney)
     {
-        Debug.Log("ApplyItem");
         GameManager.instance.UseMoney(itemData.itemPrice, UseMoney);
 
         switch (itemData.itemType)

@@ -50,18 +50,6 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        //플레이어의 금액 감소 -> 데이타의 itemPrice에서 가져오기
-        if (!GameManager.instance.UseMoney(itemData.itemPrice,false))
-        {
-            GameManager.instance.isDragging = false;
-            return;
-        }
-        else
-            GameManager.instance.isDragging = true;
-
-        if (!GameManager.instance.isDragging)
-            return;
-
         //지금 드래그하는 창이 상점인지 창고인지
         if (GetComponentInParent<Storage>() != null)
         {
@@ -71,6 +59,18 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         {
             isShop = true;
         }
+
+        //플레이어의 금액 감소 -> 데이타의 itemPrice에서 가져오기
+        if (!GameManager.instance.UseMoney(itemData.itemPrice,false) && isShop)
+        {
+            GameManager.instance.isDragging = false;
+            return;
+        }
+        else
+            GameManager.instance.isDragging = true;
+
+        if (!GameManager.instance.isDragging)
+            return;
 
         itemdesc.gameObject.SetActive(false);
 
@@ -110,7 +110,6 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         //시작이 창고이고 놓았을때 오브젝트가 상점일 경우
         if (underCursor.GetComponent<Shop>() && !isShop)
         {
-            Debug.Log("창고 -> 상점");
             //금액의 50퍼센트(내림)반환
             GameManager.instance._money += itemData.itemPrice / 2;
             //이 게임오브젝트를 파괴

@@ -72,9 +72,11 @@ public class Player : MonoBehaviour
         if(!GameManager.instance.isLive)
             return;
 
-        //if(collision.)
+        if (collision.collider.tag == "Enemy")
+        {
+            GameManager.instance.health -= Time.deltaTime * 10;
+        }
 
-        GameManager.instance.health -= Time.deltaTime * 10;
 
         if(GameManager.instance.health<0)
         {

@@ -33,7 +33,7 @@ public class PoolManager : MonoBehaviour
             {
                 select = item;
                 select.SetActive(true);
-                Debug.Log("비활성화된 게임오브젝트 찾음");
+                //Debug.Log("비활성화된 게임오브젝트 찾음");
                 break;
             }
         }
@@ -43,7 +43,7 @@ public class PoolManager : MonoBehaviour
         {
             select = Instantiate(prefabs[index], transform);
             pools[index].Add(select);
-            Debug.Log("비활성화된 게임오브젝트 없음 추가함");
+            //Debug.Log("비활성화된 게임오브젝트 없음 추가함");
         }
 
         //활성화된 게임오브젝트 반환

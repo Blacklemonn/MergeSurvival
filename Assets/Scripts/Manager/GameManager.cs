@@ -14,7 +14,6 @@ public class GameManager : MonoBehaviour
     public int playerId;
     public float health;
     public float maxHealth = 100;
-    public int kill;
     public int _money;
     //public int[] nextExp = { 10, 30, 60, 100, 150, 120, 280, 360, 450, 600 };
     [Header("# Game Object")]
@@ -132,6 +131,7 @@ public class GameManager : MonoBehaviour
 
     public bool UseMoney(int money,bool useMoney)
     {
+        //아이템을 살 수 있을경우 True
         if ((0 > _money - money))
         {
             return false;
