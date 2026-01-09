@@ -13,9 +13,15 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     [SerializeField]
     private GameObject itemTemp;
 
-    private bool isItem;
+    private bool hasItem = false;
+    private bool hasBag = false;
     private Transform itemObj;
     private ItemData data;
+
+    public int gridX;
+    public int gridY;
+
+    public Vector2Int ItemGridPos;
 
     private void Awake()
     {
@@ -23,12 +29,24 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         itemTemp = GameManager.instance.itemTemp;
     }
 
+    public bool HasItem
+    {
+        get => hasItem;
+        set => hasItem = value;
+    }
+
+    public bool HasBag
+    {
+        get => hasBag;
+        set => hasBag = value;
+    }
+
     public void OnBeginDrag(PointerEventData eventData)
     {
         if (transform.childCount == 0)
             return;
 
-        isItem = transform.childCount == 2 ? true : false;
+        hasItem = transform.childCount == 2 ? true : false;
 
         if (itemObj = transform.GetChild(transform.childCount - 1) as Transform)
         {
@@ -58,6 +76,8 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         //언더커서의 오브젝트가 창고창일때 실행
         if (underCursor.GetComponent<Storage>())
         {
+            slotState();
+
             GameManager.instance.storage.GotoStorage(itemObj.gameObject);
 
             //아이템 효과 제거
@@ -70,6 +90,8 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         //언더커서의 오브젝트가 상점일 경우
         else if (underCursor.GetComponent<Shop>())
         {
+            slotState();
+
             //금액의 50퍼센트(내림)반환
             GameManager.instance._money += data.itemPrice / 2;
             //아이템 효과 제거
@@ -87,7 +109,7 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         }
         else { }
 
-        if (isItem)
+        if (hasItem)
         {
             //들고있는 오브젝트가 아이템
             //자식이 1개있어야 적용됨
@@ -119,5 +141,13 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
             transform.GetChild(1).GetComponent<Piece>().OnPointerClick(eventData);
         }
         else { }
+    }
+
+    private void slotState()
+    {
+        if (data.itemType == ItemData.ItemType.Bag)
+            hasBag = false;
+        else
+            hasItem = false;
     }
 }

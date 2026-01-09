@@ -330,23 +330,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnData:
-  - spawnTime: 1
+  - spawnTime: 0
     spriteType: 0
-    health: 10
-    speed: 1.5
-    bounty: 0
-  - spawnTime: 0.8
+    health: 15
+    speed: 1
+    bounty: 1
+  - spawnTime: 0
     spriteType: 1
     health: 10
     speed: 2
-    bounty: 0
-  - spawnTime: 0.5
+    bounty: 1
+  - spawnTime: 0
     spriteType: 2
-    health: 10
-    speed: 2.5
-    bounty: 0
-  warningTime: 5
-  warningPrefab: {fileID: 4282664712129680204, guid: ee0f620508623914abc31a9a0ed3bdcc, type: 3}
+    health: 30
+    speed: 1.5
+    bounty: 3
+  warningTime: 2
+  warningPrefab: {fileID: 1990579047928541899, guid: 8a6f4217441a4704380d6d004bbae6f6, type: 3}
+  level: 0
 --- !u!61 &58609858
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -7533,8 +7534,8 @@ MonoBehaviour:
   m_ChildAlignment: 4
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 12, y: 12}
-  m_Spacing: {x: 8, y: 8}
+  m_CellSize: {x: 1, y: 1}
+  m_Spacing: {x: 20, y: 20}
   m_Constraint: 1
   m_ConstraintCount: 2
 --- !u!114 &428789329
@@ -7600,8 +7601,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 2c4dc6f4ed05cf443afff43e6685304c, type: 2}
   - {fileID: 11400000, guid: c0a629a08fae87f45a55a02d7e0bf31f, type: 2}
   prefab: {fileID: 4384817005516658789, guid: f8f52c127c2c0e44baa1e63ba93469aa, type: 3}
-  storage: {fileID: 0}
-  shop: {fileID: 0}
+  storage: {fileID: 1373690185}
+  shop: {fileID: 1935694030}
 --- !u!1001 &439746981
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8819,6 +8820,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1166799393}
+  - {fileID: 674458630}
   - {fileID: 1935694031}
   - {fileID: 1373690186}
   - {fileID: 966680940}
@@ -8962,6 +8964,41 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1 &674458629
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 674458630}
+  m_Layer: 5
+  m_Name: ItemRoot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &674458630
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 674458629}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 669067251}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &684377883
 GameObject:
   m_ObjectHideFlags: 0
@@ -11803,7 +11840,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isLive: 0
   gameTime: 0
-  maxGameTime: 50
+  maxGameTime: 2
   playerId: 0
   health: 0
   maxHealth: 100
@@ -11816,6 +11853,7 @@ MonoBehaviour:
   uiResult: {fileID: 307385853}
   enemyCleaner: {fileID: 1603741815}
   itemTemp: {fileID: 918994390}
+  gameLevel: 0
   isDragging: 0
 --- !u!4 &1008736941
 Transform:
@@ -12419,6 +12457,8 @@ MonoBehaviour:
   slotItem: []
   weaponList: []
   gearList: []
+  itemRoot: {fileID: 674458630}
+  placeGrid: {x: 0, y: 0}
 --- !u!1001 &1183839166
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17073,6 +17113,18 @@ MonoBehaviour:
       - m_Target: {fileID: 669067252}
         m_TargetAssemblyTypeName: EndStage, Assembly-CSharp
         m_MethodName: Hide
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1008736940}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: LvlUp
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -11,10 +11,62 @@ public class Inventory : MonoBehaviour
     public List<Weapon> weaponList;
     //플레이어의 기어를 저장할 변수
     public List<Gear> gearList;
-    
+
+    public RectTransform itemRoot;
+
+    public InventorySlot[,] grid;
+
+    public Vector2Int placeGrid;
+
+    private const int GridX = 5;
+    private const int GridY = 5;
+
     private void Awake()
     {
         slotItem = new ItemData[transform.childCount];
+        grid = new InventorySlot[GridX,GridX];
+        placeGrid = Vector2Int.zero;
+
+        for (int i = 0; i <GridX; i++)
+        {
+            for (int j = 0; j < GridY; j++)
+            {
+                grid[i,j] = gameObject.transform.GetChild(i+(j*5)).GetComponent<InventorySlot>();
+                grid[i,j].gridX = i;
+                grid[i,j].gridY = j;
+            }
+        }
+    }
+
+    public InventorySlot GetPlaceGrid
+    {
+        get { return grid[placeGrid.x, placeGrid.y]; }
+    }
+
+    public void OccupySlots(Vector2Int start, ItemData item)
+    {
+        for (int y = 0; y < item.height; y++)
+        {
+            for (int x = 0; x < item.width; x++)
+            {
+                grid[start.x + x, start.y + y].HasItem = true;
+            }
+        }
+    }
+
+    public bool TryGetPlacePosition(InventorySlot hoverSlot, Vector2Int offset, ItemData item, out Vector2Int placePos)
+    {
+        int startX = hoverSlot.gridX - offset.x;
+        int startY = hoverSlot.gridY - offset.y;
+
+        placePos = new Vector2Int(startX, startY);
+
+        // 범위 체크
+        if (startX < 0 || startY < 0) return false;
+        if (startX + item.width > GridX) return false;
+        if (startY + item.height > GridY) return false;
+
+        return true;
     }
 
     //아이템을 플레이어에게 적용시켜주는 함수
@@ -146,5 +198,34 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    //
+    public bool CanPlaceItem(Vector2Int start, ItemData item)
+    {
+        for (int y = 0; y < item.height; y++)
+        {
+            for (int x = 0; x < item.width; x++)
+            {
+                int checkX = start.x + x;
+                int checkY = start.y + y;
+
+                InventorySlot slot = grid[checkX, checkY];
+
+                if (item.itemType == ItemData.ItemType.Bag)
+                {
+                    if (slot.HasBag) return false;
+                }
+                else
+                {
+                    if (slot.HasItem || !slot.HasBag) return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public Vector2 GetSlotWorldPosition(int gridX, int gridY)
+    {
+        RectTransform slotRect = grid[gridX, gridY].GetComponent<RectTransform>();
+        return slotRect.anchoredPosition;
+    }
 }

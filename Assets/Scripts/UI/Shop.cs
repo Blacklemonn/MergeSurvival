@@ -71,8 +71,9 @@ public class Shop : MonoBehaviour
             //자식으로 게임 오브젝트가 있는지?(piece스크립트
             if (goodPiece == null)
             {
+                GameObject piece = Instantiate(prefab, shopGoods[i].transform);
                 //없을경우 -> 오브젝트 생성후 피스의 아이템 데이타 랜덤 돌린거 넣어주기
-                goodPiece = Instantiate(prefab, shopGoods[i].transform).GetComponentInChildren<Piece>();
+                goodPiece = piece.GetComponentInChildren<Piece>();
                 goodPiece.gameObject.GetComponent<CanvasGroup>().blocksRaycasts = true;
             }
             else

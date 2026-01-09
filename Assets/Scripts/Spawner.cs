@@ -12,8 +12,7 @@ public class Spawner : MonoBehaviour
 
     public GameObject warningPrefab;
 
-    private Vector2 spawnPos;
-    private int level;
+    public int level;
     private float timer;
 
     private void Awake()
@@ -28,7 +27,7 @@ public class Spawner : MonoBehaviour
 
         timer += Time.deltaTime;
 
-        if (timer > spawnData[level].spawnTime)
+        if (timer > spawnData[GameManager.instance.gameLevel].spawnTime)
         {
             if (timer > 0.2f)
             {
@@ -39,7 +38,7 @@ public class Spawner : MonoBehaviour
     }
     
     //표식이 사라지고 몬스터 소환
-    private void Spawn()
+    private void Spawn(Vector2 spawnPos)
     {
         if (IsPlayerInSpawnArea(spawnPos))
         {
@@ -47,7 +46,7 @@ public class Spawner : MonoBehaviour
             return;
         }
 
-        SpawnEnemy();
+        SpawnEnemy(spawnPos);
     }
 
     private bool IsPlayerInSpawnArea(Vector2 pos)
@@ -58,7 +57,7 @@ public class Spawner : MonoBehaviour
         return Physics2D.OverlapCircle(pos, checkRadius, playerLayer);
     }
 
-    private void SpawnEnemy()
+    private void SpawnEnemy(Vector2 spawnPos)
     {
         GameObject enemy = GameManager.instance.poolManager.Get(0);
         enemy.transform.position = spawnPos;
@@ -66,7 +65,7 @@ public class Spawner : MonoBehaviour
     }
 
     //박스 콜라이더 크기를 가져와서 그 안에서 스폰되게 지정
-    private void GetRandomPositionInArea()
+    private Vector2 GetRandomPositionInArea()
     {
         Vector2 center = spawnArea.bounds.center;
         Vector2 size = spawnArea.bounds.size;
@@ -74,22 +73,21 @@ public class Spawner : MonoBehaviour
         float x = Random.Range(center.x - size.x / 2f, center.x + size.x / 2f);
         float y = Random.Range(center.y - size.y / 2f, center.y + size.y / 2f);
 
-        spawnPos = new Vector2(x, y);
+        return new Vector2(x, y);
     }
 
     private IEnumerator MarkSpawn()
     {
-        GetRandomPositionInArea();
+        Vector2 spawnPos =  GetRandomPositionInArea();
 
         GameObject warning = Instantiate(warningPrefab, spawnPos, Quaternion.identity);
 
         yield return new WaitForSeconds(warningTime);
 
-        Spawn();
+        Spawn(spawnPos);
 
         Destroy(warning);
     }
-    
 }
 
 [System.Serializable]

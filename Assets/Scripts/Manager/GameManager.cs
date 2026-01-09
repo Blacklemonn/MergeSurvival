@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static Cinemachine.DocumentationSortingAttribute;
 
 public class GameManager : MonoBehaviour
 {
@@ -25,6 +26,7 @@ public class GameManager : MonoBehaviour
     public Result uiResult;
     public GameObject enemyCleaner;
     public GameObject itemTemp;
+    public int gameLevel;
     //[HideInInspector]
     public bool isDragging;
 
@@ -148,5 +150,14 @@ public class GameManager : MonoBehaviour
                 return true;
             }
         }
+    }
+
+    public void LvlUp()
+    {
+        gameLevel++;
+        if (maxGameTime < 60)
+            maxGameTime += 5;
+
+
     }
 }

@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b95465e336fc6764eade68d7ce09a3a6, type: 3}
-  m_Name: Item 1
+  m_Name: Item 5
   m_EditorClassIdentifier: 
   itemType: 1
-  itemId: 1
-  itemName: "\uC5FD\uCD1D"
-  itemPrice: 0
+  itemId: 5
+  itemName: "\uC0F7\uAC74"
+  itemPrice: 1
   width: 2
-  height: 2
-  itemDesc: "\uB370\uBBF8\uC9C0 {0}% \uC99D\uAC00\n\uAD00\uD1B5\uB825 {1} \uCD94\uAC00"
-  itemIcon: {fileID: -205726582, guid: d71a3dc7aa20fad4f9a99fc76a9254ba, type: 3}
-  displayIcon: {fileID: -205726582, guid: d71a3dc7aa20fad4f9a99fc76a9254ba, type: 3}
+  height: 1
+  itemDesc: "\uD55C \uBC88\uC5D0 \uC5EC\uB7EC\uBC1C \uBC1C\uC0AC"
+  itemIcon: {fileID: -762074860, guid: d71a3dc7aa20fad4f9a99fc76a9254ba, type: 3}
+  displayIcon: {fileID: -762074860, guid: d71a3dc7aa20fad4f9a99fc76a9254ba, type: 3}
   baseDamage: 3
-  baseCount: 1
+  baseCount: 0
   projectile: {fileID: 5991548659052982044, guid: 0c7be0b485d932a4c9b7af9baf42e022, type: 3}
-  hand: {fileID: -353751291, guid: 0d5e657ee5a074e4baa53d5b248a01d2, type: 3}
+  hand: {fileID: 1772703093, guid: 0d5e657ee5a074e4baa53d5b248a01d2, type: 3}
