@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Inventory : MonoBehaviour
 {
@@ -63,8 +64,8 @@ public class Inventory : MonoBehaviour
 
         // 범위 체크
         if (startX < 0 || startY < 0) return false;
-        if (startX + item.width > GridX) return false;
-        if (startY + item.height > GridY) return false;
+        if (startX + item.width-1 > GridX) return false;
+        if (startY + item.height-1 > GridY) return false;
 
         return true;
     }
@@ -227,5 +228,27 @@ public class Inventory : MonoBehaviour
     {
         RectTransform slotRect = grid[gridX, gridY].GetComponent<RectTransform>();
         return slotRect.anchoredPosition;
+    }
+
+    public void Highlight(Vector2Int start, ItemData item, bool canPlace)
+    {
+        ClearHighlight();
+
+        for (int y = 0; y < item.height; y++)
+        {
+            for (int x = 0; x < item.width; x++)
+            {
+                int px = start.x + x;
+                int py = start.y + y;
+
+                grid[px, py].SetHighlight(canPlace);
+            }
+        }
+    }
+
+    public void ClearHighlight()
+    {
+        Image image = GetComponent<Image>();
+        image.color = Color.white; // 기본색
     }
 }

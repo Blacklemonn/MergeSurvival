@@ -150,4 +150,10 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         else
             hasItem = false;
     }
+
+    public void SetHighlight(bool canPlace)
+    {
+        Image image = GetComponent<Image>();
+        image.color = canPlace ? Color.green : Color.red;
+    }
 }

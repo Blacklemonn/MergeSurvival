@@ -1017,8 +1017,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 25.779999, y: -61.59456}
-  m_SizeDelta: {x: 12, y: 12}
+  m_AnchoredPosition: {x: 25.279999, y: -61.09456}
+  m_SizeDelta: {x: 1, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &188763766
 GameObject:
@@ -8354,8 +8354,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 25.779999, y: -81.59456}
-  m_SizeDelta: {x: 12, y: 12}
+  m_AnchoredPosition: {x: 25.279999, y: -82.09456}
+  m_SizeDelta: {x: 1, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &598878289
 GameObject:
@@ -12327,7 +12327,6 @@ GameObject:
   - component: {fileID: 1166799393}
   - component: {fileID: 1166799396}
   - component: {fileID: 1166799395}
-  - component: {fileID: 1166799394}
   - component: {fileID: 1166799397}
   m_Layer: 5
   m_Name: InventoryPanel
@@ -12380,30 +12379,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1166799394
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1166799392}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
-  m_ChildAlignment: 4
-  m_StartCorner: 0
-  m_StartAxis: 0
-  m_CellSize: {x: 12, y: 12}
-  m_Spacing: {x: 0, y: 0}
-  m_Constraint: 1
-  m_ConstraintCount: 5
 --- !u!114 &1166799395
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13973,8 +13948,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 45.78, y: -61.59456}
-  m_SizeDelta: {x: 12, y: 12}
+  m_AnchoredPosition: {x: 46.28, y: -61.09456}
+  m_SizeDelta: {x: 1, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &1500385907
 PrefabInstance:
@@ -15831,8 +15806,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 45.78, y: -81.59456}
-  m_SizeDelta: {x: 12, y: 12}
+  m_AnchoredPosition: {x: 46.28, y: -82.09456}
+  m_SizeDelta: {x: 1, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &1751123191 stripped
 RectTransform:
