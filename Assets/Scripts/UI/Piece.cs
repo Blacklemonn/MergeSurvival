@@ -100,10 +100,15 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
 {
     rect.anchoredPosition += eventData.delta / canvas.scaleFactor;
 
-    var go = eventData.pointerCurrentRaycast.gameObject;
-    InventorySlot slot = go?.GetComponentInParent<InventorySlot>();
+    var obj = eventData.pointerCurrentRaycast.gameObject;
+    InventorySlot slot = obj?.GetComponentInParent<InventorySlot>();
 
-    if (slot == null) return;
+    if (slot == null)
+        {
+            inventory.ClearHighlight();
+            return;
+        }
+
 
     Vector2Int placePos;
 
@@ -121,6 +126,8 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
     //샵이나 창고에 있는 아이템을 옮길때 사용되는 함수
     public void OnEndDrag(PointerEventData eventData)
     {
+        inventory.ClearHighlight();
+
         if (!GameManager.instance.isDragging)
             return;
 
@@ -134,13 +141,14 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         }
 
         Vector2Int placePos;
-
+        //둘수 없는곳에 있을때
         if (!inventory.TryGetPlacePosition(slot, offsetVector, itemData, out placePos))
         {
             CantBuyItem();
             return;
         }
 
+        //조건이 맞지 않을때
         if (!inventory.CanPlaceItem(placePos, itemData))
         {
             CantBuyItem();
@@ -153,9 +161,12 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
 
         Vector2 uiPos = inventory.GetSlotWorldPosition(placePos.x, placePos.y);
         rect.anchoredPosition = uiPos;
+
+        //가방일 경우 슬롯의 스프라이트를 바꿀까?
         GetComponent<Image>().sprite = panel;
 
-        inventory.CanPlaceItem(placePos, itemData);
+        //슬롯의 상태를 변경해줘야됨
+        //inventory.CanPlaceItem(placePos, itemData);
 
         GameManager.instance.isDragging = false;
     }
@@ -180,7 +191,6 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
 
     public void GetOffset(PointerEventData eventData)
     {
-        //piece의 어떤 그리드를 잡았는지 offsetVector를 통하여 알려줌
         Vector2 localMousePos;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
             rect,
@@ -189,12 +199,22 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
             out localMousePos
         );
 
-        // 0~1 normalized position → 그리드 인덱스 변환
-        float normalizedX = (localMousePos.x + rect.rect.width / 2f) / rect.rect.width;
-        float normalizedY = (localMousePos.y + rect.rect.height / 2f) / rect.rect.height;
+        Rect r = rect.rect;
+
+        float normalizedX = (localMousePos.x - r.xMin) / r.width;
+        float normalizedY = (localMousePos.y - r.yMin) / r.height;
+
+        // 0~1 clamp
+        normalizedX = Mathf.Clamp01(normalizedX);
+        normalizedY = Mathf.Clamp01(normalizedY);
 
         int offsetX = Mathf.FloorToInt(normalizedX * itemData.width);
         int offsetY = Mathf.FloorToInt(normalizedY * itemData.height);
+
+        // 인덱스 안전 보정
+        offsetX = Mathf.Clamp(offsetX, 0, itemData.width - 1);
+        offsetY = Mathf.Clamp(offsetY, 0, itemData.height - 1);
+        offsetY = itemData.height - 1 - offsetY;
 
         offsetVector = new Vector2Int(offsetX, offsetY);
     }

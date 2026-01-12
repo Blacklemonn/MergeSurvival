@@ -22,8 +22,11 @@ public class Inventory : MonoBehaviour
     private const int GridX = 5;
     private const int GridY = 5;
 
+    private List<InventorySlot> highlightSlot;
+
     private void Awake()
     {
+        highlightSlot = new List<InventorySlot>();
         slotItem = new ItemData[transform.childCount];
         grid = new InventorySlot[GridX,GridX];
         placeGrid = Vector2Int.zero;
@@ -240,15 +243,23 @@ public class Inventory : MonoBehaviour
             {
                 int px = start.x + x;
                 int py = start.y + y;
-
+                if (px < 0 || py < 0) continue;
+                if (px > 4 || py > 4) continue;
+                //하이트된 슬롯 저장
                 grid[px, py].SetHighlight(canPlace);
+                highlightSlot.Add(grid[px, py]);
             }
         }
     }
 
     public void ClearHighlight()
     {
-        Image image = GetComponent<Image>();
-        image.color = Color.white; // 기본색
+        //이전에 하이라이트 되었던 슬롯 리셋
+        foreach (var slot in highlightSlot)
+        {
+            Image image = grid[slot.gridX, slot.gridY].GetComponent<Image>();
+            image.color = Color.white; // 기본색
+        }
+        highlightSlot.Clear();
     }
 }

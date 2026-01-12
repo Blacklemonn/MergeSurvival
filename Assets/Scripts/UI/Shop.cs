@@ -72,6 +72,7 @@ public class Shop : MonoBehaviour
             if (goodPiece == null)
             {
                 GameObject piece = Instantiate(prefab, shopGoods[i].transform);
+                piece.GetComponent<RectTransform>().anchoredPosition = Vector3.zero;
                 //없을경우 -> 오브젝트 생성후 피스의 아이템 데이타 랜덤 돌린거 넣어주기
                 goodPiece = piece.GetComponentInChildren<Piece>();
                 goodPiece.gameObject.GetComponent<CanvasGroup>().blocksRaycasts = true;
