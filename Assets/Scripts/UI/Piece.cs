@@ -33,7 +33,10 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
     private Inventory inventory;
     //내가 잡은 아이템 위치
     private Vector2Int offsetVector;
-    
+
+    public bool canMerge;
+    private Piece[] mergeItem;
+
     void Awake()
     {
         rect = GetComponent<RectTransform>();
@@ -269,6 +272,9 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
             foreach (InventorySlot sl in arrangeSlot)
             {
                 sl.itemObj = this;
+
+                //아이템이 다른슬롯에 있는 아이템과 합쳐질 수 있는지 확인
+                sl.CheckMerge();
             }
             //아이템 캐릭터에 적용
             inventory.ApplyItem(itemData, state == ItemBelongState.Shop ? true : false);
