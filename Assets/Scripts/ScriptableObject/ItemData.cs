@@ -18,15 +18,15 @@ public class ItemData : ScriptableObject
     [TextArea]
     public string itemDesc;
     public Sprite itemIcon;
-    public Sprite displayIcon;
 
     [Header("# Level Data")]
     public float baseDamage;
     public int baseCount;
-    //public float[] damages;
-    //public int[] counts;
 
     [Header("# Weapon")]
     public GameObject projectile;
     public Sprite hand;
+
+    [Header("# Merge")]
+    public ItemType[] mergeType;
 }

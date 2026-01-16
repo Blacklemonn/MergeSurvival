@@ -27,7 +27,10 @@ public class Spawner : MonoBehaviour
 
         timer += Time.deltaTime;
 
-        if (timer > spawnData[GameManager.instance.gameLevel].spawnTime)
+        //임시로 오류안나게
+        int gamelevel = GameManager.instance.gameLevel % 3;
+
+        if (timer > spawnData[gamelevel].spawnTime)
         {
             if (timer > 0.2f)
             {

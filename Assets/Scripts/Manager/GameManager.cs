@@ -157,7 +157,7 @@ public class GameManager : MonoBehaviour
         gameLevel++;
         if (maxGameTime < 60)
             maxGameTime += 5;
-
-
+        //체력 초기화
+        health = maxHealth;
     }
 }

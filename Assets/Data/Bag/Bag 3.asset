@@ -15,14 +15,12 @@ MonoBehaviour:
   itemType: 5
   itemId: 0
   itemName: StandardBag
+  itemPrice: 0
   width: 2
   height: 2
   itemDesc: "2*2 \uB808\uC5B4\uAC00\uBC29"
-  itemIcon: {fileID: -8390244, guid: d71a3dc7aa20fad4f9a99fc76a9254ba, type: 3}
-  displayIcon: {fileID: -38345435, guid: 0d5e657ee5a074e4baa53d5b248a01d2, type: 3}
+  itemIcon: {fileID: -38345435, guid: 0d5e657ee5a074e4baa53d5b248a01d2, type: 3}
   baseDamage: 0
   baseCount: 0
-  damages: []
-  counts: 
   projectile: {fileID: 0}
   hand: {fileID: 0}

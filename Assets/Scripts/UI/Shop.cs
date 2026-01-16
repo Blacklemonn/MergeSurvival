@@ -32,6 +32,8 @@ public class Shop : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Space))
         {
+            if (!shop.activeSelf)
+                return;
             ReRoll();
         }
     }
@@ -59,7 +61,7 @@ public class Shop : MonoBehaviour
         if (GameManager.instance.isDragging)
             return;
         //클릭된 설명창이 사라져야함
-
+        
         //상점 슬롯 횟수만큼 반복
         for (int i = 0; i < shopGoods.Length; i++)
         {
@@ -81,6 +83,9 @@ public class Shop : MonoBehaviour
             {
                 goodPiece = shopGoods[i].GetComponentInChildren<Piece>();
             }
+
+            if(!goodPiece.gameObject.activeSelf)
+                goodPiece.gameObject.SetActive(true);
 
             goodPiece.ChangeItemData(itemDatas[rand]);
         }

@@ -1,0 +1,294 @@
+using System.Collections;
+using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class Inventory : MonoBehaviour
+{
+    //플레이어의 무기를 저장할 변수
+    public List<Weapon> weaponList;
+    //플레이어의 기어를 저장할 변수
+    public List<Gear> gearList;
+
+    public RectTransform itemRoot;
+
+    public InventorySlot[,] grid;
+
+    public Vector2Int placeGrid;
+
+    private const int GridX = 5;
+    private const int GridY = 5;
+
+    private const int AddMaxHealth = 50;
+
+    private List<InventorySlot> highlightSlot;
+
+    public Sprite[] slotSprite = new Sprite[2];
+
+    private void Awake()
+    {
+        highlightSlot = new List<InventorySlot>();
+        grid = new InventorySlot[GridX,GridX];
+        placeGrid = Vector2Int.zero;
+
+        for (int i = 0; i <GridX; i++)
+        {
+            for (int j = 0; j < GridY; j++)
+            {
+                grid[i,j] = gameObject.transform.GetChild(i+(j*5)).GetComponent<InventorySlot>();
+                grid[i,j].gridX = i;
+                grid[i,j].gridY = j;
+            }
+        }
+    }
+
+    public InventorySlot GetPlaceGrid
+    {
+        get { return grid[placeGrid.x, placeGrid.y]; }
+    }
+
+    public void OccupySlots(Vector2Int start, ItemData item)
+    {
+        for (int y = 0; y < item.height; y++)
+        {
+            for (int x = 0; x < item.width; x++)
+            {
+                grid[start.x + x, start.y + y].HasItem = true;
+            }
+        }
+    }
+
+    public bool TryGetPlacePosition(InventorySlot hoverSlot, Vector2Int offset, ItemData item, out Vector2Int placePos)
+    {
+        int startX = hoverSlot.gridX - offset.x;
+        int startY = hoverSlot.gridY - offset.y;
+
+        placePos = new Vector2Int(startX, startY);
+
+        // 범위 체크
+        if (startX < 0 || startY < 0) return false;
+        if (startX + item.width > GridX) return false;
+        if (startY + item.height > GridY) return false;
+
+        return true;
+    }
+
+    //아이템을 플레이어에게 적용시켜주는 함수
+    public void ApplyItem(ItemData itemData, bool UseMoney)
+    {
+        GameManager.instance.UseMoney(itemData.itemPrice, UseMoney);
+
+        switch (itemData.itemType)
+        {
+            case ItemData.ItemType.Melee:
+            case ItemData.ItemType.Range:
+                //플레이어 오브젝트 자식으로 웨폰의 아이템 타입이 있는지 확인
+                
+                Weapon weapon = null;
+
+                for (int i = 0; i < weaponList.Count; i++)
+                {
+                    if (weaponList[i].id == itemData.itemId)
+                    {
+                        weapon = weaponList[i];
+                        break;
+                    }
+                }
+
+                if (weapon == null)
+                {
+                    GameObject newWeapon = new();
+                    weapon = newWeapon.AddComponent<Weapon>();
+                    weapon.Init(itemData);
+                    weaponList.Add(weapon);
+                }
+                else
+                {
+                    if(!weapon.gameObject.activeSelf)
+                        weapon.gameObject.SetActive(true);
+
+                    weapon.CountUp();
+                }
+                break;
+            case ItemData.ItemType.Glove:
+            case ItemData.ItemType.Shoe:
+
+                Gear gear = null;
+
+                for (int i = 0; i < gearList.Count; i++)
+                {
+                    if (gearList[i].type == itemData.itemType)
+                    {
+                        gear = gearList[i];
+                        break;
+                    }
+                }
+
+                if (gear == null)
+                {
+                    GameObject newGear = new GameObject();
+                    gear = newGear.AddComponent<Gear>();
+                    gear.Init(itemData);
+                    gearList.Add(gear);
+                }
+                else
+                {
+                    if (!gear.gameObject.activeSelf)
+                        gear.gameObject.SetActive(true);
+
+                    gear.CountUp();
+                }
+                break;
+            case ItemData.ItemType.Heal:
+                GameManager.instance.maxHealth += AddMaxHealth;
+                break;
+        }
+    }
+
+    //플레이어의 아이템을 제거하는 함수
+    public void RemoveItem(ItemData itemData)
+    {
+        switch (itemData.itemType)
+        {
+            case ItemData.ItemType.Melee:
+            case ItemData.ItemType.Range:
+                //플레이어 오브젝트 자식으로 웨폰의 아이템 타입이 있는지 확인
+
+                Weapon weapon = new();
+
+                for (int i = 0; i < weaponList.Count; i++)
+                {
+                    if (weaponList[i].id == itemData.itemId)
+                    {
+                        weapon = weaponList[i];
+                        break;
+                    }
+                    else
+                    {
+                        weapon = null;
+                    }
+                }
+
+                weapon.CountDown();
+
+                if (weapon.count == 0)
+                    weapon.gameObject.SetActive(false);
+
+                break;
+            case ItemData.ItemType.Glove:
+            case ItemData.ItemType.Shoe:
+                Gear gear = new();
+
+                for (int i = 0; i < gearList.Count; i++)
+                {
+                    if (gearList[i].type == itemData.itemType)
+                    {
+                        gear = gearList[i];
+                        break;
+                    }
+                    else
+                    {
+                        gear = null;
+                    }
+                }
+
+                gear.CountDown();
+
+                if (gear.rate <= gear.baseRate)
+                    gear.gameObject.SetActive(false);
+                break;
+            case ItemData.ItemType.Heal:
+                //캐릭터의 최대 체력을 늘려주기
+                GameManager.instance.maxHealth -= AddMaxHealth;
+                break;
+        }
+    }
+
+    public bool CanPlaceItem(Vector2Int start, ItemData item)
+    {
+        for (int y = 0; y < item.height; y++)
+        {
+            for (int x = 0; x < item.width; x++)
+            {
+                int checkX = start.x + x;
+                int checkY = start.y + y;
+
+                
+                InventorySlot slot = grid[checkX, checkY];
+
+                if (item.itemType == ItemData.ItemType.Bag)
+                {
+                    if (slot.HasBag) return false;
+                }
+                else
+                {
+                    if (slot.HasItem || !slot.HasBag) return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public void PlaceItem(Vector2Int start, ItemData item, out List<InventorySlot> slots)
+    {
+        slots = new List<InventorySlot>();
+        for (int y = 0; y < item.height; y++)
+        {
+            for (int x = 0; x < item.width; x++)
+            {
+                int checkX = start.x + x;
+                int checkY = start.y + y;
+
+                InventorySlot slot = grid[checkX, checkY];
+
+                if (item.itemType == ItemData.ItemType.Bag)
+                {
+                    //슬롯의 sprite를 panel로 변경
+                    slot.GetComponent<Image>().sprite = slotSprite[1];
+                    //슬롯의 hasBag를 true로 변경
+                    slot.HasBag = true;
+                    //슬롯에 스택으로 저장해놓기
+                    slots.Add(slot);
+                }
+                else
+                {
+                    //슬롯의 hasItem을 true로 변경
+                    slot.HasItem = true;
+                    slots.Add(slot);
+                }
+            }
+        }
+    }
+    
+    public void Highlight(Vector2Int start, ItemData item, bool canPlace)
+    {
+        ClearHighlight();
+
+        for (int y = 0; y < item.height; y++)
+        {
+            for (int x = 0; x < item.width; x++)
+            {
+                int px = start.x + x;
+                int py = start.y + y;
+                if (px < 0 || py < 0) continue;
+                if (px > 4 || py > 4) continue;
+                //하이라이트된 슬롯 저장
+                grid[px, py].SetHighlight(canPlace);
+                highlightSlot.Add(grid[px, py]);
+            }
+        }
+    }
+
+    public void ClearHighlight()
+    {
+        //이전에 하이라이트 되었던 슬롯 리셋
+        foreach (var slot in highlightSlot)
+        {
+            Image image = grid[slot.gridX, slot.gridY].GetComponent<Image>();
+            image.color = Color.white; // 기본색
+        }
+        highlightSlot.Clear();
+    }
+}

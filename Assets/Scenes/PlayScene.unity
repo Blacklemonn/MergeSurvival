@@ -8859,8 +8859,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 2c4dc6f4ed05cf443afff43e6685304c, type: 2}
   - {fileID: 11400000, guid: c0a629a08fae87f45a55a02d7e0bf31f, type: 2}
   prefab: {fileID: 1771673708}
-  storage: {fileID: 1935694030}
-  shop: {fileID: 1373690185}
+  storage: {fileID: 1373690185}
+  shop: {fileID: 1935694030}
 --- !u!1 &670044724
 GameObject:
   m_ObjectHideFlags: 0
@@ -12429,11 +12429,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0956a97ef7edec43b829ec07e57fbef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slotItem: []
   weaponList: []
   gearList: []
   itemRoot: {fileID: 674458630}
   placeGrid: {x: 0, y: 0}
+  slotSprite:
+  - {fileID: -1010605625, guid: d71a3dc7aa20fad4f9a99fc76a9254ba, type: 3}
+  - {fileID: -8390244, guid: d71a3dc7aa20fad4f9a99fc76a9254ba, type: 3}
 --- !u!1001 &1183839166
 PrefabInstance:
   m_ObjectHideFlags: 0

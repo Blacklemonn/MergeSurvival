@@ -1,38 +1,47 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using System.Collections.Generic;
+
+public enum ItemBelongState
+{
+    Shop,
+    Storage,
+    Inventory
+}
 
 public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
 {
+    public const float SLOT_SIZE = 12f;
+
     public ItemData itemData;
+    public ItemBelongState state;
 
     private CanvasGroup canvasGroup;
     private Canvas canvas;
 
     private RectTransform rect;
     private Transform parent;
-    private int siblingIndex;
-    private Sprite display;
-    private Sprite panel;
     private GameObject itemTemp;
-    private float slotSize;
+    private Vector2 prevAnchorPos;
 
-    private bool isShop;
+    private List<InventorySlot> arrangeSlot;
 
     [SerializeField]
     private ItemDesc itemdesc;
 
     private Inventory inventory;
-    //테스트
+    //내가 잡은 아이템 위치
     private Vector2Int offsetVector;
-
+    
     void Awake()
     {
         rect = GetComponent<RectTransform>();
         canvasGroup = GetComponent<CanvasGroup>();
         canvas = GetComponentInParent<Canvas>();
         itemTemp = GameManager.instance.itemTemp;
-        slotSize = 12f;
+        arrangeSlot = new List<InventorySlot>();
+        state = 0;
     }
 
     private void Start()
@@ -47,27 +56,15 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
     {
         itemData = data;
         //크기에 맞게 리사이징
-        var size = new Vector2(itemData.width * slotSize, itemData.height * slotSize);
+        var size = new Vector2(itemData.width * SLOT_SIZE, itemData.height * SLOT_SIZE);
         rect.sizeDelta = size;
-        panel = itemData.itemIcon;
-        display = itemData.displayIcon;
-        GetComponent<Image>().sprite = display;
+        GetComponent<Image>().sprite = itemData.itemIcon;
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        //지금 드래그하는 창이 상점인지 창고인지
-        if (GetComponentInParent<Storage>() != null)
-        {
-            isShop = false;
-        }
-        else
-        {
-            isShop = true;
-        }
-
-        //플레이어의 금액 감소 -> 데이타의 itemPrice에서 가져오기
-        if (!GameManager.instance.UseMoney(itemData.itemPrice,false) && isShop)
+        //플레이어의 자금으로 살수 있는지 -> 데이타의 itemPrice에서 가져오기
+        if (!GameManager.instance.UseMoney(itemData.itemPrice,false) && state == ItemBelongState.Shop)
         {
             GameManager.instance.isDragging = false;
             return;
@@ -83,45 +80,57 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         //내가 인벤토리의 어느 부분을 드래그 했는지 가져와야함
         GetOffset(eventData);
 
+        //슬롯에서 꺼낼때 아이템을 가지고있던 슬롯의 상태를 수정해야함
+        foreach (InventorySlot sl in arrangeSlot)
+        {
+            if(itemData.itemType == ItemData.ItemType.Bag)
+            {
+                sl.HasBag = false;
+                sl.GetComponent<Image>().sprite = inventory.slotSprite[0];
+            }
+            else
+            {
+                sl.HasItem = false;
+            }
+        }
+
+
         parent = rect.parent;
-        siblingIndex = rect.GetSiblingIndex();
+        prevAnchorPos = rect.anchoredPosition;
         gameObject.transform.SetParent(itemTemp.transform);
 
         canvasGroup.blocksRaycasts = false;
-
-        //창고에서 인벤토리창이나 상점창으로 옮길때
-        if (GetComponentInParent<Storage>())
-        {
-            transform.parent.gameObject.SetActive(false);
-        }
     }
 
- public void OnDrag(PointerEventData eventData)
-{
-    rect.anchoredPosition += eventData.delta / canvas.scaleFactor;
+    public void OnDrag(PointerEventData eventData)
+    {
+        if (!GameManager.instance.isDragging)
+            return;
 
-    var obj = eventData.pointerCurrentRaycast.gameObject;
-    InventorySlot slot = obj?.GetComponentInParent<InventorySlot>();
+        rect.anchoredPosition += eventData.delta / canvas.scaleFactor;
 
-    if (slot == null)
+        var obj = eventData.pointerCurrentRaycast.gameObject;
+        InventorySlot slot = obj?.GetComponentInParent<InventorySlot>();
+
+        if (slot == null)
         {
             inventory.ClearHighlight();
             return;
         }
 
 
-    Vector2Int placePos;
+        Vector2Int placePos;
 
-    if (!inventory.TryGetPlacePosition(slot, offsetVector, itemData, out placePos))
-    {
-        inventory.ClearHighlight();
-        return;
+        if (!inventory.TryGetPlacePosition(slot, offsetVector, itemData, out placePos))
+        {
+            inventory.ClearHighlight();
+            return;
+        }
+
+        bool canPlace = inventory.CanPlaceItem(placePos, itemData);
+
+        inventory.Highlight(placePos, itemData, canPlace);
     }
-
-    bool canPlace = inventory.CanPlaceItem(placePos, itemData);
-
-    inventory.Highlight(placePos, itemData, canPlace);
-}
 
     //샵이나 창고에 있는 아이템을 옮길때 사용되는 함수
     public void OnEndDrag(PointerEventData eventData)
@@ -131,9 +140,69 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         if (!GameManager.instance.isDragging)
             return;
 
-        GameObject obj = eventData.pointerCurrentRaycast.gameObject;
-        InventorySlot slot = obj?.GetComponentInParent<InventorySlot>();
+        GameObject underCurserObj = eventData.pointerCurrentRaycast.gameObject;
 
+        //창고에 뒀을때
+        if (underCurserObj.GetComponent<Storage>())
+        {
+            switch(state)
+            {
+                case ItemBelongState.Storage:
+                    CantBuyItem();
+                    return;
+                case ItemBelongState.Inventory:
+                    underCurserObj.GetComponent<Storage>().GotoStorage(this.gameObject);
+
+                    if (itemData.itemType == ItemData.ItemType.Bag)
+                    {
+                        foreach (InventorySlot sl in arrangeSlot)
+                        {
+                            sl.bagObj = null;
+                        }
+                        arrangeSlot.Clear();
+                    }
+                    else
+                    {
+                        foreach(InventorySlot sl in arrangeSlot)
+                        {
+                            sl.itemObj = null;
+                        }
+                        arrangeSlot.Clear();
+                        inventory.RemoveItem(itemData);
+                    }
+
+                    Init();
+                    return;
+                case ItemBelongState.Shop:
+                    underCurserObj.GetComponent<Storage>().GotoStorage(this.gameObject);
+
+                    GameManager.instance._money -= itemData.itemPrice;
+                    state = ItemBelongState.Storage;
+                    Init();
+                    return;
+            }
+        }
+        //상점에 뒀을때
+        else if (underCurserObj.GetComponent<Shop>())
+        {
+            if (state == ItemBelongState.Shop)
+            {
+                CantBuyItem();
+                return;
+            }
+            else if (state == ItemBelongState.Inventory)
+                inventory.RemoveItem(itemData);
+            GameManager.instance._money -= Mathf.FloorToInt(itemData.itemPrice / 2);
+            Init();
+            Destroy(this.gameObject);
+            return;
+        }
+
+
+
+        InventorySlot slot = underCurserObj?.GetComponentInParent<InventorySlot>();
+
+        //슬롯이 아닌곳에 둘때
         if (slot == null)
         {
             CantBuyItem();
@@ -141,7 +210,7 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         }
 
         Vector2Int placePos;
-        //둘수 없는곳에 있을때
+        //아이템이 외곽으로 튀어나올때
         if (!inventory.TryGetPlacePosition(slot, offsetVector, itemData, out placePos))
         {
             CantBuyItem();
@@ -155,41 +224,76 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
             return;
         }
 
-        // === 여기부터 성공 ===
+        //------------------여기부터 성공
+        if (itemData.itemType == ItemData.ItemType.Bag)
+        {
+            //이전 slot의 데이터를 지워줌
+            foreach (InventorySlot sl in arrangeSlot)
+            {
+                sl.bagObj = null;
+            }
 
+            arrangeSlot.Clear();
+        }
+        else
+        {
+            //이전 slot의 데이터를 지워줌
+            foreach (InventorySlot sl in arrangeSlot)
+            {
+                sl.itemObj = null;
+            }
+
+            arrangeSlot.Clear();
+        }
+
+        //itemRoot로 이동
         rect.SetParent(inventory.itemRoot);
 
-        Vector2 uiPos = inventory.GetSlotWorldPosition(placePos.x, placePos.y);
-        rect.anchoredPosition = uiPos;
+        //슬롯의 상태를 변경해줘야됨 , 현재 이 아이템이 적용되고 있는 슬롯 저장
+        inventory.PlaceItem(placePos, itemData, out arrangeSlot);
 
-        //가방일 경우 슬롯의 스프라이트를 바꿀까?
-        GetComponent<Image>().sprite = panel;
+        //아이템이 가방일 경우
+        if (itemData.itemType == ItemData.ItemType.Bag)
+        {
+            //slot의 bagObj에 이 오브젝트를 저장해줘야함
+            foreach(InventorySlot sl in arrangeSlot)
+            {
+                sl.bagObj = this;
+            }
+            //가방의 오브젝트를 꺼줘야됨
+            gameObject.SetActive(false);
+        }
+        else
+        {
+            //slot의 itemObj에 이 오브젝트를 저장해줘야함
+            foreach (InventorySlot sl in arrangeSlot)
+            {
+                sl.itemObj = this;
+            }
+            //아이템 캐릭터에 적용
+            inventory.ApplyItem(itemData, state == ItemBelongState.Shop ? true : false);
+        }
 
-        //슬롯의 상태를 변경해줘야됨
-        //inventory.CanPlaceItem(placePos, itemData);
+        //아이템을 슬롯의 위치로 이동
+        rect.anchoredPosition = inventory.grid[placePos.x, placePos.y].GetComponent<RectTransform>().anchoredPosition;
 
-        GameManager.instance.isDragging = false;
+        //아이템의 위치를 보정
+        rect.anchoredPosition += new Vector2(itemData.width == 1 ? 0 : SLOT_SIZE * itemData.width / 4, itemData.height == 1 ? 0 : -SLOT_SIZE * itemData.height / 4);
+
+        state = ItemBelongState.Inventory;
+
+        Init();
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (itemdesc.gameObject.activeSelf)
-            itemdesc.gameObject.SetActive(false);
-        else
-            itemdesc.ShowDesc();
+        //if (itemdesc.gameObject.activeSelf)
+        //    itemdesc.gameObject.SetActive(false);
+        //else
+        //    itemdesc.ShowDesc();
     }
 
-    public void CantBuyItem()
-    {
-        rect.SetParent(parent);
-        rect.SetSiblingIndex(siblingIndex);
-        rect.anchoredPosition = Vector2.zero;
-        GameManager.instance.isDragging = false;
-
-        canvasGroup.blocksRaycasts = true;
-    }
-
-    public void GetOffset(PointerEventData eventData)
+    private void GetOffset(PointerEventData eventData)
     {
         Vector2 localMousePos;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
@@ -203,7 +307,7 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
 
         float normalizedX = (localMousePos.x - r.xMin) / r.width;
         float normalizedY = (localMousePos.y - r.yMin) / r.height;
-
+        
         // 0~1 clamp
         normalizedX = Mathf.Clamp01(normalizedX);
         normalizedY = Mathf.Clamp01(normalizedY);
@@ -217,5 +321,22 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         offsetY = itemData.height - 1 - offsetY;
 
         offsetVector = new Vector2Int(offsetX, offsetY);
+    }
+
+    public void CantBuyItem()
+    {
+        rect.SetParent(parent);
+        rect.anchoredPosition = prevAnchorPos;
+        GameManager.instance.isDragging = false;
+
+        canvasGroup.blocksRaycasts = true;
+    }
+
+    private void Init()
+    {
+        //다시 아이템을 집을 수 있게 수정 -> 문제발생
+        canvasGroup.blocksRaycasts = true;
+        
+        GameManager.instance.isDragging = false;
     }
 }
