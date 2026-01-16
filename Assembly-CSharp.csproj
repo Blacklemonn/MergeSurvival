@@ -82,6 +82,7 @@
     <Compile Include="Assets\Scripts\ScriptableObject\ItemData.cs" />
     <Compile Include="Assets\Scripts\Manager\PoolManager.cs" />
     <Compile Include="Assets\Scripts\Item\Gear.cs" />
+    <Compile Include="Assets\Scripts\BagPieceSpawner.cs" />
     <Compile Include="Assets\Scripts\UI\Shop.cs" />
     <Compile Include="Assets\Scripts\UI\Inventory.cs" />
   </ItemGroup>
