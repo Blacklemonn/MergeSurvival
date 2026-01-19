@@ -65,6 +65,8 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     private void CheckSlot(InventorySlot sl)
     {
+        //슬롯의 근처에 아이템이 있을때만 실행
+        if (!sl.hasItem) return;
         //슬롯의 근처 아이템이 들고있는 아이템 오브젝트와 같은 오브젝트일 경우 return;
         if (itemObj == sl.itemObj) return;
         //슬롯의 근처 아이템이 합쳐질수 있는 상태인지 확인 후 불가능하면 return;
