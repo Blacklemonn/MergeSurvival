@@ -21,19 +21,10 @@ public class Shop : MonoBehaviour
         //상점창과 창고창을 스위치
         if (Input.GetKeyUp(KeyCode.Tab))
         {
-            if (!this.gameObject.activeSelf)
-                return;
-
-            storage.SetActive(!storage.activeSelf);
-            shop.SetActive(!shop.activeSelf);
-
-            if (!storage.activeSelf)
-                GameManager.instance.storage.BaseArray();
+            SwitchWindow();
         }
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (!shop.activeSelf)
-                return;
             ReRoll();
         }
     }
@@ -41,6 +32,8 @@ public class Shop : MonoBehaviour
     public void Show()
     {
         this.gameObject.SetActive(true);
+        if (!shop.activeSelf)
+            SwitchWindow();
         ReRoll();
         GameManager.instance.Stop();
         AudioManager.instance.PlaySfx(AudioManager.Sfx.LevelUp);
@@ -94,5 +87,14 @@ public class Shop : MonoBehaviour
     public void Select(int CharNum)
     {
         GameManager.instance.inventory.ApplyItem(itemDatas[CharNum], false);
+    }
+
+    public void SwitchWindow()
+    {
+        storage.SetActive(!storage.activeSelf);
+        shop.SetActive(!shop.activeSelf);
+
+        if (!storage.activeSelf)
+            GameManager.instance.storage.BaseArray();
     }
 }

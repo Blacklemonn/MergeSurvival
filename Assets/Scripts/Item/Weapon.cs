@@ -102,6 +102,9 @@ public class Weapon : MonoBehaviour
                 speed = 150 * Character.WeaponSpeed;
                 Place();
                 break;
+            case 5:
+                speed = 0.9f * Character.WeaponSpeed;
+                break;
             default:
                 speed = 0.3f * Character.WeaponSpeed;
                 break;
@@ -155,11 +158,20 @@ public class Weapon : MonoBehaviour
         Vector3 dir = targetPos - transform.position;
         dir = dir.normalized;
 
-        Transform bullet = GameManager.instance.poolManager.Get(prefabId).transform;
-        bullet.position = transform.position;
-        bullet.rotation = Quaternion.FromToRotation(Vector3.up, dir);
-        bullet.GetComponent<Bullet>().Init(damage, count, dir);
-
+        for (int i = id == 5 ? 0 : 9; i < 10; i++)
+        {
+            Transform bullet = GameManager.instance.poolManager.Get(prefabId).transform;
+            float randX = id == 5 ? Random.Range(-0.1f, 0.1f) : 0;
+            float randY = id == 5 ? Random.Range(-0.1f, 0.1f) : 0;
+            if (randX + dir.x > 1 || randX + dir.x < -1)
+                randX = -randX;
+            if (randY + dir.y> 1 || randY + dir.y < -1)
+                randY = -randY;
+            bullet.position = transform.position;
+            dir = new Vector3(dir.x + randX, dir.y + randY + dir.z);
+            bullet.rotation = Quaternion.FromToRotation(Vector3.up, dir);
+            bullet.GetComponent<Bullet>().Init(damage, count, dir);
+        }
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Range);
     }
 }

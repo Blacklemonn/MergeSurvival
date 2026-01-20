@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b95465e336fc6764eade68d7ce09a3a6, type: 3}
-  m_Name: Item 4
+  m_Name: Health
   m_EditorClassIdentifier: 
   itemType: 4
   itemId: 4
   itemName: "\uC74C\uB8CC\uC218"
-  itemPrice: 0
+  itemPrice: 5
   width: 2
   height: 1
-  itemDesc: "\uC0DD\uBA85\uB825 \uC804\uCCB4 \uD68C\uBCF5"
+  itemDesc: "\uCD5C\uB300\uCCB4\uB825 {0}\uC99D\uAC00"
   itemIcon: {fileID: 927338625, guid: d71a3dc7aa20fad4f9a99fc76a9254ba, type: 3}
-  displayIcon: {fileID: 927338625, guid: d71a3dc7aa20fad4f9a99fc76a9254ba, type: 3}
-  baseDamage: 0
+  baseDamage: 25
   baseCount: 0
   projectile: {fileID: 0}
   hand: {fileID: 0}
+  mergeType: 

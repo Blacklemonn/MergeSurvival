@@ -6,7 +6,6 @@ using UnityEngine;
 public class MergeRecipe : ScriptableObject
 {
     public ItemData result;
-    public int resultTier;
 
     public List<Ingredient> inputs;
 }
@@ -15,6 +14,5 @@ public class MergeRecipe : ScriptableObject
 public class Ingredient
 {
     public ItemData item;
-    public int tier;
     public int count;
 }

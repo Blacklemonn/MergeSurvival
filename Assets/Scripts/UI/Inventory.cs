@@ -140,7 +140,7 @@ public class Inventory : MonoBehaviour
                     gear.CountUp();
                 }
                 break;
-            case ItemData.ItemType.Heal:
+            case ItemData.ItemType.Health:
                 GameManager.instance.maxHealth += AddMaxHealth;
                 break;
         }
@@ -198,7 +198,7 @@ public class Inventory : MonoBehaviour
                 if (gear.rate <= gear.baseRate)
                     gear.gameObject.SetActive(false);
                 break;
-            case ItemData.ItemType.Heal:
+            case ItemData.ItemType.Health:
                 //캐릭터의 최대 체력을 늘려주기
                 GameManager.instance.maxHealth -= AddMaxHealth;
                 break;

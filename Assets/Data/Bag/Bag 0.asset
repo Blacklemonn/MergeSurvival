@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b95465e336fc6764eade68d7ce09a3a6, type: 3}
   m_Name: Bag 0
   m_EditorClassIdentifier: 
-  itemType: 5
+  itemType: 6
   itemId: 0
   itemName: CommonBag
   itemPrice: 0
@@ -24,3 +24,4 @@ MonoBehaviour:
   baseCount: 0
   projectile: {fileID: 0}
   hand: {fileID: 0}
+  mergeType: 

@@ -7481,7 +7481,6 @@ GameObject:
   - component: {fileID: 428789330}
   - component: {fileID: 428789329}
   - component: {fileID: 428789328}
-  - component: {fileID: 428789331}
   m_Layer: 5
   m_Name: SpawnPanel
   m_TagString: Untagged
@@ -7576,33 +7575,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 428789326}
   m_CullTransparentMesh: 1
---- !u!114 &428789331
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 428789326}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a4c653ede6a1d54983d8cf29acbac1a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  shopGoods:
-  - {fileID: 177772019}
-  - {fileID: 1489786065}
-  - {fileID: 598330191}
-  - {fileID: 1730107576}
-  itemDatas:
-  - {fileID: 11400000, guid: 8ef9aa1f2397f0c49acfe2902a0f1b1c, type: 2}
-  - {fileID: 11400000, guid: 1f7642fcc2340974cba04e71db71730d, type: 2}
-  - {fileID: 11400000, guid: 3cfcc61446b154641a70ab743d031c09, type: 2}
-  - {fileID: 11400000, guid: 42251e9518ba1624b94342ee3428ecac, type: 2}
-  - {fileID: 11400000, guid: 2c4dc6f4ed05cf443afff43e6685304c, type: 2}
-  - {fileID: 11400000, guid: c0a629a08fae87f45a55a02d7e0bf31f, type: 2}
-  prefab: {fileID: 4384817005516658789, guid: f8f52c127c2c0e44baa1e63ba93469aa, type: 3}
-  storage: {fileID: 1373690185}
-  shop: {fileID: 1935694030}
 --- !u!1001 &439746981
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8858,6 +8830,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 42251e9518ba1624b94342ee3428ecac, type: 2}
   - {fileID: 11400000, guid: 2c4dc6f4ed05cf443afff43e6685304c, type: 2}
   - {fileID: 11400000, guid: c0a629a08fae87f45a55a02d7e0bf31f, type: 2}
+  - {fileID: 11400000, guid: 5ea43a7917b21e84787740c294e0223a, type: 2}
   prefab: {fileID: 1771673708}
   storage: {fileID: 1373690185}
   shop: {fileID: 1935694030}

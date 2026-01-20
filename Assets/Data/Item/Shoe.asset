@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b95465e336fc6764eade68d7ce09a3a6, type: 3}
-  m_Name: Item 2
+  m_Name: Shoe
   m_EditorClassIdentifier: 
-  itemType: 2
-  itemId: 2
-  itemName: "\uD14C\uD06C\uB2C8\uCEEC \uC7A5\uAC11"
-  itemPrice: 0
+  itemType: 3
+  itemId: 3
+  itemName: "\uC804\uD22C\uC7A5\uD654"
+  itemPrice: 10
   width: 1
-  height: 2
-  itemDesc: "\uC5F0\uC0AC\uC18D\uB3C4 {0}% \uC99D\uAC00"
-  itemIcon: {fileID: -201829820, guid: d71a3dc7aa20fad4f9a99fc76a9254ba, type: 3}
-  displayIcon: {fileID: -201829820, guid: d71a3dc7aa20fad4f9a99fc76a9254ba, type: 3}
-  baseDamage: 0.05
-  baseCount: 1
+  height: 1
+  itemDesc: "\uC774\uB3D9\uC18D\uB3C4 {0}% \uC99D\uAC00"
+  itemIcon: {fileID: -966295699, guid: d71a3dc7aa20fad4f9a99fc76a9254ba, type: 3}
+  baseDamage: 0.1
+  baseCount: 0
   projectile: {fileID: 0}
   hand: {fileID: 0}
+  mergeType: 

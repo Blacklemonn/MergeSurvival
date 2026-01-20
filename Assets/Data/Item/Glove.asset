@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b95465e336fc6764eade68d7ce09a3a6, type: 3}
-  m_Name: Bag 1
+  m_Name: Glove
   m_EditorClassIdentifier: 
-  itemType: 6
-  itemId: 0
-  itemName: TallBag
-  itemPrice: 0
+  itemType: 2
+  itemId: 2
+  itemName: "\uD14C\uD06C\uB2C8\uCEEC \uC7A5\uAC11"
+  itemPrice: 10
   width: 1
   height: 2
-  itemDesc: "1*2 \uC5B8\uCEE4\uBA3C\uAC00\uBC29"
-  itemIcon: {fileID: -38345435, guid: 0d5e657ee5a074e4baa53d5b248a01d2, type: 3}
-  baseDamage: 0
-  baseCount: 0
+  itemDesc: "\uC5F0\uC0AC\uC18D\uB3C4 {0}% \uC99D\uAC00"
+  itemIcon: {fileID: -201829820, guid: d71a3dc7aa20fad4f9a99fc76a9254ba, type: 3}
+  baseDamage: 0.05
+  baseCount: 1
   projectile: {fileID: 0}
   hand: {fileID: 0}
   mergeType: 
