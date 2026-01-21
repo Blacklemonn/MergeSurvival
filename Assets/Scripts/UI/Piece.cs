@@ -34,9 +34,6 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
     //내가 잡은 아이템 위치
     private Vector2Int offsetVector;
 
-    public bool canMerge;
-    private Piece[] mergeItem;
-
     void Awake()
     {
         rect = GetComponent<RectTransform>();
@@ -133,6 +130,7 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         bool canPlace = inventory.CanPlaceItem(placePos, itemData);
 
         inventory.Highlight(placePos, itemData, canPlace);
+
     }
 
     //샵이나 창고에 있는 아이템을 옮길때 사용되는 함수

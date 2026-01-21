@@ -38,6 +38,8 @@ public class Weapon : MonoBehaviour
         switch (id)
         {
             case 0:
+            case 7:
+            case 8:
                 transform.Rotate(Vector3.back * speed * Time.deltaTime);
                 break;
             default:
@@ -99,14 +101,13 @@ public class Weapon : MonoBehaviour
         switch (id)
         {
             case 0:
-                speed = 150 * Character.WeaponSpeed;
+            case 7:
+            case 8:
+                speed = data.baseRate * Character.WeaponSpeed;
                 Place();
                 break;
-            case 5:
-                speed = 0.9f * Character.WeaponSpeed;
-                break;
             default:
-                speed = 0.3f * Character.WeaponSpeed;
+                speed = data.baseRate * Character.WeaponSpeed;
                 break;
         }
 
@@ -161,6 +162,7 @@ public class Weapon : MonoBehaviour
         for (int i = id == 5 ? 0 : 9; i < 10; i++)
         {
             Transform bullet = GameManager.instance.poolManager.Get(prefabId).transform;
+            //id°¡ 5ÀÏ°æ¿ì ÅºÈ¯ÀÌ ÆÛÁü
             float randX = id == 5 ? Random.Range(-0.1f, 0.1f) : 0;
             float randY = id == 5 ? Random.Range(-0.1f, 0.1f) : 0;
             if (randX + dir.x > 1 || randX + dir.x < -1)

@@ -22,6 +22,7 @@ MonoBehaviour:
   itemIcon: {fileID: -181907988, guid: d71a3dc7aa20fad4f9a99fc76a9254ba, type: 3}
   baseDamage: 4.5
   baseCount: 1
+  baseRate: 180
   projectile: {fileID: 9122624840232509333, guid: 24a4aa413a59ce04995f654e8807d413, type: 3}
   hand: {fileID: 143021600, guid: 0d5e657ee5a074e4baa53d5b248a01d2, type: 3}
   mergeType: 

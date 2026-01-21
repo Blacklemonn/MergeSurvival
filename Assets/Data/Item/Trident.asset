@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Trident
   m_EditorClassIdentifier: 
   itemType: 0
-  itemId: 0
+  itemId: 7
   itemName: "\uC0BC\uC9C0\uCC3D"
   itemPrice: 15
   width: 4
@@ -22,6 +22,7 @@ MonoBehaviour:
   itemIcon: {fileID: -1786786079, guid: d71a3dc7aa20fad4f9a99fc76a9254ba, type: 3}
   baseDamage: 10
   baseCount: 1
+  baseRate: 180
   projectile: {fileID: 9122624840232509333, guid: 05a140b304cad794eb36bfed4d9f74cd, type: 3}
   hand: {fileID: -1972582131, guid: 0d5e657ee5a074e4baa53d5b248a01d2, type: 3}
   mergeType: 0000000000000000

@@ -50,6 +50,8 @@ public class Shop : MonoBehaviour
     //4개의 게임 오브젝트 하위로 아이템 랜덤생성
     public void ReRoll()
     {
+        if (!shop.activeSelf)
+            return;
         //들고있는 아이템이 사라져야함
         if (GameManager.instance.isDragging)
             return;

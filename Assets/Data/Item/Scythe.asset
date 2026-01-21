@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Scythe
   m_EditorClassIdentifier: 
   itemType: 0
-  itemId: 0
+  itemId: 8
   itemName: "\uB0AB"
   itemPrice: 20
   width: 2
@@ -22,6 +22,7 @@ MonoBehaviour:
   itemIcon: {fileID: -344242777, guid: d71a3dc7aa20fad4f9a99fc76a9254ba, type: 3}
   baseDamage: 20
   baseCount: 1
+  baseRate: 180
   projectile: {fileID: 9122624840232509333, guid: 8639b14a272690048a546becde145183, type: 3}
   hand: {fileID: 1349035616, guid: 0d5e657ee5a074e4baa53d5b248a01d2, type: 3}
   mergeType: 060000000200000000000000

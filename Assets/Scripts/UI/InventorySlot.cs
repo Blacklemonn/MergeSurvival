@@ -56,8 +56,8 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     {
         InventorySlot sl;
         //왼쪽 슬롯확인
-        sl = GameManager.instance.inventory.grid[gridX - 1, gridY];
-        CheckSlot(sl);
+        //sl = GameManager.instance.inventory.grid[gridX - 1, gridY];
+        //CheckSlot(sl);
         //오른쪽 슬롯 확인
         //위쪽 슬롯 확인
         //아래쪽 슬롯 확인
@@ -70,7 +70,7 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         //슬롯의 근처 아이템이 들고있는 아이템 오브젝트와 같은 오브젝트일 경우 return;
         if (itemObj == sl.itemObj) return;
         //슬롯의 근처 아이템이 합쳐질수 있는 상태인지 확인 후 불가능하면 return;
-        if (!sl.itemObj.canMerge) return;
+        //if (!sl.itemObj.canMerge) return;
         //슬롯의 근처 슬롯이 갖고있는 아이템의 itemdata에서 합쳐지는 변수인지 검사
         for (int i = 0; i < itemObj.itemData.mergeType.Length; i++)
         {
