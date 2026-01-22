@@ -15,7 +15,7 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
     public const float SLOT_SIZE = 12f;
 
     public ItemData itemData;
-    public ItemBelongState state;
+    public ItemBelongState state = 0;
 
     private CanvasGroup canvasGroup;
     private Canvas canvas;
@@ -30,7 +30,7 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
     [SerializeField]
     private ItemDesc itemdesc;
 
-    private Inventory inventory;
+    private InventoryManager inventory;
     //내가 잡은 아이템 위치
     private Vector2Int offsetVector;
 
@@ -41,15 +41,13 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         canvas = GetComponentInParent<Canvas>();
         itemTemp = GameManager.instance.itemTemp;
         arrangeSlot = new List<InventorySlot>();
-        state = 0;
+        inventory = GameManager.instance.inventory;
     }
 
     private void Start()
     {
         if (itemData != null)
             ChangeItemData(itemData);
-
-        inventory = GameManager.instance.inventory;
     }
 
     public void ChangeItemData(ItemData data)
@@ -99,6 +97,8 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         prevAnchorPos = rect.anchoredPosition;
         gameObject.transform.SetParent(itemTemp.transform);
 
+        inventory.HighlightItem(itemData);
+
         canvasGroup.blocksRaycasts = false;
     }
 
@@ -114,7 +114,7 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
 
         if (slot == null)
         {
-            inventory.ClearHighlight();
+            inventory.ClearHighlightSlot();
             return;
         }
 
@@ -123,20 +123,20 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
 
         if (!inventory.TryGetPlacePosition(slot, offsetVector, itemData, out placePos))
         {
-            inventory.ClearHighlight();
+            inventory.ClearHighlightSlot();
             return;
         }
 
         bool canPlace = inventory.CanPlaceItem(placePos, itemData);
 
-        inventory.Highlight(placePos, itemData, canPlace);
+        inventory.HighlightSlot(placePos, itemData, canPlace);
 
     }
 
     //샵이나 창고에 있는 아이템을 옮길때 사용되는 함수
     public void OnEndDrag(PointerEventData eventData)
     {
-        inventory.ClearHighlight();
+        inventory.ClearHighlightSlot();
 
         if (!GameManager.instance.isDragging)
             return;
@@ -331,6 +331,7 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
     {
         rect.SetParent(parent);
         rect.anchoredPosition = prevAnchorPos;
+        inventory.ClearHighlightItem();
         GameManager.instance.isDragging = false;
 
         canvasGroup.blocksRaycasts = true;
@@ -340,6 +341,8 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
     {
         //다시 아이템을 집을 수 있게 수정 -> 문제발생
         canvasGroup.blocksRaycasts = true;
+
+        inventory.ClearHighlightItem();
         
         GameManager.instance.isDragging = false;
     }

@@ -72,7 +72,7 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         //슬롯의 근처 아이템이 합쳐질수 있는 상태인지 확인 후 불가능하면 return;
         //if (!sl.itemObj.canMerge) return;
         //슬롯의 근처 슬롯이 갖고있는 아이템의 itemdata에서 합쳐지는 변수인지 검사
-        for (int i = 0; i < itemObj.itemData.mergeType.Length; i++)
+        for (int i = 0; i < itemObj.itemData.resultRecipe.Length; i++)
         {
             //itemObj.itemData.mergeType[i]로 합쳐지기 위한 필요 타입을 검사
             //foreach (ItemData.ItemType type in itemObj.itemData.mergeType[i])

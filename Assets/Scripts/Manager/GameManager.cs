@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
     public Player player;
     public Shop shop;
     public Storage storage;
-    public Inventory inventory;
+    public InventoryManager inventory;
     public Result uiResult;
     public GameObject enemyCleaner;
     public GameObject itemTemp;

@@ -25,4 +25,6 @@ MonoBehaviour:
   baseRate: 180
   projectile: {fileID: 9122624840232509333, guid: 24a4aa413a59ce04995f654e8807d413, type: 3}
   hand: {fileID: 143021600, guid: 0d5e657ee5a074e4baa53d5b248a01d2, type: 3}
-  mergeType: 
+  resultRecipe:
+  - {fileID: 11400000, guid: 2985446f35fedf648992e80c9bbae80c, type: 2}
+  - {fileID: 11400000, guid: 10e4bc0a0b54ea246a0efcf208d15655, type: 2}

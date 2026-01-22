@@ -25,4 +25,4 @@ MonoBehaviour:
   baseRate: 180
   projectile: {fileID: 9122624840232509333, guid: 8639b14a272690048a546becde145183, type: 3}
   hand: {fileID: 1349035616, guid: 0d5e657ee5a074e4baa53d5b248a01d2, type: 3}
-  mergeType: 060000000200000000000000
+  evolveItem: []

@@ -29,8 +29,6 @@ public class ItemData : ScriptableObject
     public Sprite hand;
 
     [Header("# Merge")]
-    //합치기 위해 필요한 아이템
-    public ItemType[] mergeType;
-    //테이블
-    
+    //될 수 있는 아이템의 레시피
+    public MergeRecipe[] resultRecipe;
 }

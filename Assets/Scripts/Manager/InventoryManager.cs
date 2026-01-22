@@ -1,43 +1,51 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEditor.Progress;
 
-public class Inventory : MonoBehaviour
+public class InventoryManager : MonoBehaviour
 {
     //플레이어의 무기를 저장할 변수
-    public List<Weapon> weaponList;
+    private List<Weapon> weaponList;
     //플레이어의 기어를 저장할 변수
-    public List<Gear> gearList;
+    private List<Gear> gearList;
 
-    public RectTransform itemRoot;
-
-    public InventorySlot[,] grid;
-
-    public Vector2Int placeGrid;
+    private List<InventorySlot> highlightSlot;
 
     private const int GridX = 5;
     private const int GridY = 5;
 
     private const int AddMaxHealth = 50;
 
-    private List<InventorySlot> highlightSlot;
+    [HideInInspector]
+    public InventorySlot[,] grid;
+    [HideInInspector]
+    public Vector2Int placeGrid;
+    [Header("#Slot")]
+    public RectTransform itemRoot;
+    public GameObject inventory;
 
     public Sprite[] slotSprite = new Sprite[2];
+    [Header("#MergeData")]
+    public MergeRecipe[] mergeRecipes;
 
     private void Awake()
     {
         highlightSlot = new List<InventorySlot>();
         grid = new InventorySlot[GridX,GridX];
         placeGrid = Vector2Int.zero;
+        weaponList = new List<Weapon>();
+        gearList = new List<Gear>();
 
         for (int i = 0; i <GridX; i++)
         {
             for (int j = 0; j < GridY; j++)
             {
-                grid[i,j] = gameObject.transform.GetChild(i+(j*5)).GetComponent<InventorySlot>();
+                grid[i,j] = inventory.transform.GetChild(i+(j*5)).GetComponent<InventorySlot>();
                 grid[i,j].gridX = i;
                 grid[i,j].gridY = j;
             }
@@ -263,9 +271,9 @@ public class Inventory : MonoBehaviour
         }
     }
     
-    public void Highlight(Vector2Int start, ItemData item, bool canPlace)
+    public void HighlightSlot(Vector2Int start, ItemData item, bool canPlace)
     {
-        ClearHighlight();
+        ClearHighlightSlot();
 
         for (int y = 0; y < item.height; y++)
         {
@@ -282,7 +290,7 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    public void ClearHighlight()
+    public void ClearHighlightSlot()
     {
         //이전에 하이라이트 되었던 슬롯 리셋
         foreach (var slot in highlightSlot)
@@ -293,4 +301,71 @@ public class Inventory : MonoBehaviour
         highlightSlot.Clear();
     }
 
+    public void HighlightItem(ItemData data)
+    {
+        foreach(GameObject obj in GetMergeItem(data))
+        {
+            obj.GetComponent<Image>().color = Color.red;
+        }
+    }
+
+    public void ClearHighlightItem()
+    {
+        for (int i = 0; i < itemRoot.childCount; i++)
+        {
+            //가방일경우 넘기기
+            if (itemRoot.GetChild(i).GetComponent<Piece>().itemData.itemType == ItemData.ItemType.Bag)
+                continue;
+
+            itemRoot.GetChild(i).GetComponent<Image>().color = Color.white;
+        }
+    }
+
+    private List<GameObject> GetMergeItem(ItemData data)
+    {
+        //현재 내가 가지고 있는 아이템
+        List<GameObject> items = new List<GameObject>();
+        //이 아이템이 될 아이템의 필요 재료들
+        List<ItemData> itemIngredients = new List<ItemData>();
+        //최종적으로 합쳐질 수 있는 아이템들
+        List<GameObject> mergeItems = new List<GameObject>();
+            
+        //현재 어떤 아이템을 갖고 있는지
+        for (int i = 0; i < itemRoot.childCount; i++)
+        {
+            //가방일경우 넘기기
+            if (itemRoot.GetChild(i).GetComponent<Piece>().itemData.itemType == ItemData.ItemType.Bag)
+                continue;
+            
+            items.Add(itemRoot.GetChild(i).gameObject);
+        }
+
+        //레시피에서 이 아이템이 될 수 있는것의 재료 가져오기
+        for (int i = 0; i < data.resultRecipe.Length; i++)
+        {
+            foreach (Ingredient ingredient in data.resultRecipe[i].inputs)
+            {
+                for (int j = 0; j < ingredient.count; j++)
+                {
+                    itemIngredients.Add(ingredient.item);
+                }
+            }
+            itemIngredients.Remove(data);
+        }
+
+        //내가 들고있는 아이템 중에서 합쳐질 수 있는 아이템들
+        foreach (GameObject obj in items)
+        {
+            foreach (ItemData ingredient in itemIngredients)
+            {
+                if (obj.GetComponent<Piece>().itemData == ingredient)
+                {
+                    mergeItems.Add(obj);
+                    break;
+                }
+            }
+        }
+
+        return mergeItems;
+    }
 }

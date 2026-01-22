@@ -22,6 +22,9 @@ MonoBehaviour:
   itemIcon: {fileID: -201829820, guid: d71a3dc7aa20fad4f9a99fc76a9254ba, type: 3}
   baseDamage: 0.05
   baseCount: 1
+  baseRate: 0
   projectile: {fileID: 0}
   hand: {fileID: 0}
-  mergeType: 
+  resultRecipe:
+  - {fileID: 11400000, guid: f3b4835a8c8ebef4d91a7f23e9d44f8f, type: 2}
+  - {fileID: 11400000, guid: 2985446f35fedf648992e80c9bbae80c, type: 2}
