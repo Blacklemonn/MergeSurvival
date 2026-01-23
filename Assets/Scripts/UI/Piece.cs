@@ -225,7 +225,7 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
             return;
         }
 
-        //------------------여기부터 성공
+        //------------------여기부터 슬롯에 두기 성공
         if (itemData.itemType == ItemData.ItemType.Bag)
         {
             //이전 slot의 데이터를 지워줌
@@ -270,12 +270,16 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
             foreach (InventorySlot sl in arrangeSlot)
             {
                 sl.itemObj = this;
-
-                //아이템이 다른슬롯에 있는 아이템과 합쳐질 수 있는지 확인
-                sl.CheckMerge();
             }
+
             //아이템 캐릭터에 적용
             inventory.ApplyItem(itemData, state == ItemBelongState.Shop ? true : false);
+
+            //아이템 근처의 슬롯을 가져옴
+            foreach (InventorySlot s in GetNearSlots())
+            {
+                Debug.Log(s.name);
+            }
         }
 
         //아이템을 슬롯의 위치로 이동
@@ -345,5 +349,17 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         inventory.ClearHighlightItem();
         
         GameManager.instance.isDragging = false;
+    }
+
+    private List<InventorySlot> GetNearSlots()
+    {
+        List<InventorySlot> slots = new List<InventorySlot>();
+        //이 아이템이 차지하고 있는 공간 근처에 있는 아이템을 들고있는 슬롯을 가져옴
+        foreach (InventorySlot slot in arrangeSlot)
+        {
+            slot.NearSlots(slots);
+        }
+
+        return slots;
     }
 }

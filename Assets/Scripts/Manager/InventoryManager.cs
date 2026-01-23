@@ -321,6 +321,7 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
+    //인벤토리 안의 아이템들 중 data와 합쳐질 수 있는 아이템 반환
     private List<GameObject> GetMergeItem(ItemData data)
     {
         //현재 내가 가지고 있는 아이템
@@ -343,14 +344,23 @@ public class InventoryManager : MonoBehaviour
         //레시피에서 이 아이템이 될 수 있는것의 재료 가져오기
         for (int i = 0; i < data.resultRecipe.Length; i++)
         {
-            foreach (Ingredient ingredient in data.resultRecipe[i].inputs)
+            //내가 주 재료일때 레시피에서 자신을 제외한 모든 데이터 추가
+            if (data.resultRecipe[i].inputs[0].item == data)
             {
-                for (int j = 0; j < ingredient.count; j++)
+                foreach (Ingredient ingredient in data.resultRecipe[i].inputs)
                 {
-                    itemIngredients.Add(ingredient.item);
+                    for (int j = 0; j < ingredient.count; j++)
+                    {
+                        itemIngredients.Add(ingredient.item);
+                    }
                 }
+                itemIngredients.Remove(data);
             }
-            itemIngredients.Remove(data);
+            //내가 부 재료일때 레시피의 주 재료만 추가
+            else
+            {
+                itemIngredients.Add(data.resultRecipe[i].inputs[0].item);
+            }
         }
 
         //내가 들고있는 아이템 중에서 합쳐질 수 있는 아이템들
@@ -367,5 +377,23 @@ public class InventoryManager : MonoBehaviour
         }
 
         return mergeItems;
+    }
+
+    private void CanMergeItem(ItemData data)
+    {
+        for (int i = 0; i < data.resultRecipe.Length; i++)
+        {
+            //내가 주 재료일때
+            if (data.resultRecipe[i].inputs[0].item == data)
+            {
+                //주변에 합칠 수 있는 재료가 다 있는지
+                
+            }
+            //내가 부 재료일때
+            else
+            {
+                //주변에 주 재료가 있는지
+            }
+        }
     }
 }
