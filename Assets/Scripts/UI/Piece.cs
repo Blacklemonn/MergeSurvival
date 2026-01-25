@@ -275,11 +275,32 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
             //아이템 캐릭터에 적용
             inventory.ApplyItem(itemData, state == ItemBelongState.Shop ? true : false);
 
-            //아이템 근처의 슬롯을 가져옴
+            //임시로 슬롯을 저장할 리스트
+            List<InventorySlot> nearSlot = new List<InventorySlot>();
+
+            //내가 아이템을 둔 근처의 아이템을 갖고있는 슬롯을 가져옴
             foreach (InventorySlot s in GetNearSlots())
             {
-                Debug.Log(s.name);
+                nearSlot.Add(s);
             }
+
+            //내가 둔 아이템 근처의 아이템목록
+            List<ItemData> nearItem = new List<ItemData>();
+
+            //아이템 근처에 있는 아이템
+            foreach (InventorySlot s in nearSlot)
+            {
+                foreach (ItemData itemData in nearItem)
+                {
+                    if (itemData == s.itemObj)
+                        continue;
+
+                    nearItem.Add(itemData);
+                    break;
+                }
+            }
+
+            inventory.CanMergeItem(itemData, nearItem);
         }
 
         //아이템을 슬롯의 위치로 이동

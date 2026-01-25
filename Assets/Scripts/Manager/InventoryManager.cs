@@ -379,7 +379,7 @@ public class InventoryManager : MonoBehaviour
         return mergeItems;
     }
 
-    private void CanMergeItem(ItemData data)
+    public void CanMergeItem(ItemData data, List<ItemData> nearItemDatas)
     {
         for (int i = 0; i < data.resultRecipe.Length; i++)
         {
@@ -387,12 +387,25 @@ public class InventoryManager : MonoBehaviour
             if (data.resultRecipe[i].inputs[0].item == data)
             {
                 //주변에 합칠 수 있는 재료가 다 있는지
-                
+                foreach (Ingredient recipe in data.resultRecipe[i].inputs)
+                {
+                    foreach (ItemData item in nearItemDatas)
+                    {
+
+                    }
+                }
             }
             //내가 부 재료일때
             else
             {
                 //주변에 주 재료가 있는지
+                foreach (ItemData item in nearItemDatas)
+                {
+                    if (data.resultRecipe[i].inputs[0].item == item)
+                    {
+                        //주 재료가 있음
+                    }
+                }
             }
         }
     }
