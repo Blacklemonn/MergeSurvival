@@ -21,6 +21,8 @@ public class InventoryManager : MonoBehaviour
 
     private const int AddMaxHealth = 50;
 
+    private List<List<Piece>> mergePieceList;
+
     [HideInInspector]
     public InventorySlot[,] grid;
     [HideInInspector]
@@ -40,6 +42,7 @@ public class InventoryManager : MonoBehaviour
         placeGrid = Vector2Int.zero;
         weaponList = new List<Weapon>();
         gearList = new List<Gear>();
+        mergePieceList = new List<List<Piece>>();
 
         for (int i = 0; i <GridX; i++)
         {
@@ -379,9 +382,10 @@ public class InventoryManager : MonoBehaviour
         return mergeItems;
     }
 
-    public MergeRecipe CanMergeItem(ItemData data, Dictionary<ItemData,List<Piece>> nearItemDatas, bool Second)
+    public void MergeItem(ItemData data, Dictionary<ItemData,List<Piece>> nearItemDatas, bool Second)
     {
         bool canMerge = true;
+        List<Piece> items = new List<Piece>();
         //data의 recipe개수만큼 반복
         foreach (MergeRecipe recipe in data.resultRecipe)
         {
@@ -393,7 +397,10 @@ public class InventoryManager : MonoBehaviour
                 {
                     if (recipe.inputs[i].count <= nearItemDatas[recipe.inputs[i].item].Count)
                     {
-                        continue;
+                        for (int j = 0; j < recipe.inputs[i].count; j++)
+                        {
+                            items.Add(nearItemDatas[recipe.inputs[i].item][j]);
+                        }
                     }
                     else
                     {
@@ -402,7 +409,7 @@ public class InventoryManager : MonoBehaviour
                     }
                 }
                 if (canMerge)
-                    return recipe;
+                     mergePieceList.Add(items);
             }
             else if(!Second)
             {
@@ -415,6 +422,5 @@ public class InventoryManager : MonoBehaviour
                 else { }
             }
         }
-        return null;
     }
 }

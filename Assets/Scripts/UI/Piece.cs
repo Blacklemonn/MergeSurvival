@@ -281,7 +281,7 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
 
             //아이템 캐릭터에 적용
             inventory.ApplyItem(itemData, state == ItemBelongState.Shop ? true : false);
-
+            //주변에 합칠 수 있는게 있는지 확인
             TryItemMerge(false);
         }
 
@@ -386,14 +386,16 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
             if (isOverlap)
                 continue;
 
-            nearPieces[slot.itemObj.itemData] = new();
+            if (nearPieces[slot.itemObj.itemData] == null)
+                nearPieces[slot.itemObj.itemData] = new();
             nearPieces[slot.itemObj.itemData].Add(slot.itemObj);
         }
 
         //본인도 저장
-        nearPieces[itemData] = new();
+        if (nearPieces[itemData] == null)
+            nearPieces[itemData] = new();
         nearPieces[itemData].Add(this);
 
-        Debug.Log(inventory.CanMergeItem(itemData, nearPieces, Second));
+        inventory.MergeItem(itemData, nearPieces, Second);
     }
 }
