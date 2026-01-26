@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
 
 public enum ItemBelongState
 {
@@ -62,7 +64,7 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
     public void OnBeginDrag(PointerEventData eventData)
     {
         //플레이어의 자금으로 살수 있는지 -> 데이타의 itemPrice에서 가져오기
-        if (!GameManager.instance.UseMoney(itemData.itemPrice,false) && state == ItemBelongState.Shop)
+        if (!GameManager.instance.UseMoney(itemData.itemPrice, false) && state == ItemBelongState.Shop)
         {
             GameManager.instance.isDragging = false;
             return;
@@ -81,7 +83,7 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         //슬롯에서 꺼낼때 아이템을 가지고있던 슬롯의 상태를 수정해야함
         foreach (InventorySlot sl in arrangeSlot)
         {
-            if(itemData.itemType == ItemData.ItemType.Bag)
+            if (itemData.itemType == ItemData.ItemType.Bag)
             {
                 sl.HasBag = false;
                 sl.GetComponent<Image>().sprite = inventory.slotSprite[0];
@@ -146,7 +148,7 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         //창고에 뒀을때
         if (underCurserObj.GetComponent<Storage>())
         {
-            switch(state)
+            switch (state)
             {
                 case ItemBelongState.Storage:
                     CantBuyItem();
@@ -164,7 +166,7 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
                     }
                     else
                     {
-                        foreach(InventorySlot sl in arrangeSlot)
+                        foreach (InventorySlot sl in arrangeSlot)
                         {
                             sl.itemObj = null;
                         }
@@ -225,7 +227,10 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
             return;
         }
 
-        //------------------여기부터 슬롯에 두기 성공
+        //------------------------------------------------------------------------------
+        //                          여기부터 슬롯에 두기 성공
+        //------------------------------------------------------------------------------
+
         if (itemData.itemType == ItemData.ItemType.Bag)
         {
             //이전 slot의 데이터를 지워줌
@@ -257,7 +262,7 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         if (itemData.itemType == ItemData.ItemType.Bag)
         {
             //slot의 bagObj에 이 오브젝트를 저장해줘야함
-            foreach(InventorySlot sl in arrangeSlot)
+            foreach (InventorySlot sl in arrangeSlot)
             {
                 sl.bagObj = this;
             }
@@ -272,35 +277,12 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
                 sl.itemObj = this;
             }
 
+
+
             //아이템 캐릭터에 적용
             inventory.ApplyItem(itemData, state == ItemBelongState.Shop ? true : false);
 
-            //임시로 슬롯을 저장할 리스트
-            List<InventorySlot> nearSlot = new List<InventorySlot>();
-
-            //내가 아이템을 둔 근처의 아이템을 갖고있는 슬롯을 가져옴
-            foreach (InventorySlot s in GetNearSlots())
-            {
-                nearSlot.Add(s);
-            }
-
-            //내가 둔 아이템 근처의 아이템목록
-            List<ItemData> nearItem = new List<ItemData>();
-
-            //아이템 근처에 있는 아이템
-            foreach (InventorySlot s in nearSlot)
-            {
-                foreach (ItemData itemData in nearItem)
-                {
-                    if (itemData == s.itemObj)
-                        continue;
-
-                    nearItem.Add(itemData);
-                    break;
-                }
-            }
-
-            inventory.CanMergeItem(itemData, nearItem);
+            TryItemMerge(false);
         }
 
         //아이템을 슬롯의 위치로 이동
@@ -336,7 +318,7 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
 
         float normalizedX = (localMousePos.x - r.xMin) / r.width;
         float normalizedY = (localMousePos.y - r.yMin) / r.height;
-        
+
         // 0~1 clamp
         normalizedX = Mathf.Clamp01(normalizedX);
         normalizedY = Mathf.Clamp01(normalizedY);
@@ -368,19 +350,50 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         canvasGroup.blocksRaycasts = true;
 
         inventory.ClearHighlightItem();
-        
+
         GameManager.instance.isDragging = false;
     }
 
-    private List<InventorySlot> GetNearSlots()
+    public void TryItemMerge(bool Second)
     {
-        List<InventorySlot> slots = new List<InventorySlot>();
+        List<InventorySlot> nearSlots = new List<InventorySlot>();
+        Dictionary<ItemData, List<Piece>> nearPieces = new Dictionary<ItemData, List<Piece>>();
         //이 아이템이 차지하고 있는 공간 근처에 있는 아이템을 들고있는 슬롯을 가져옴
         foreach (InventorySlot slot in arrangeSlot)
         {
-            slot.NearSlots(slots);
+            slot.NearSlots(nearSlots);
         }
 
-        return slots;
+        //중복 검사를 하기 위한 list변수
+        List<Piece> pieces = new();
+        //중복인지
+        //슬롯의 아이템이 중복 되는지 확인 하면서 dictionary에 아이템과 갯수저장
+        foreach (InventorySlot slot in nearSlots)
+        {
+            bool isOverlap = false;
+
+            if (nearPieces.ContainsKey(slot.itemObj.itemData))
+            {
+                //이미 저장한 아이템과 같은 아이템인지
+                foreach (Piece piece in nearPieces[slot.itemObj.itemData])
+                {
+                    if (piece == slot.itemObj)
+                        isOverlap = true;
+                    else
+                        isOverlap = false;
+                }
+            }
+            if (isOverlap)
+                continue;
+
+            nearPieces[slot.itemObj.itemData] = new();
+            nearPieces[slot.itemObj.itemData].Add(slot.itemObj);
+        }
+
+        //본인도 저장
+        nearPieces[itemData] = new();
+        nearPieces[itemData].Add(this);
+
+        Debug.Log(inventory.CanMergeItem(itemData, nearPieces, Second));
     }
 }

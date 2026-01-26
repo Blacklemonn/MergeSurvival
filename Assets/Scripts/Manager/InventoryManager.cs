@@ -379,34 +379,42 @@ public class InventoryManager : MonoBehaviour
         return mergeItems;
     }
 
-    public void CanMergeItem(ItemData data, List<ItemData> nearItemDatas)
+    public MergeRecipe CanMergeItem(ItemData data, Dictionary<ItemData,List<Piece>> nearItemDatas, bool Second)
     {
-        for (int i = 0; i < data.resultRecipe.Length; i++)
+        bool canMerge = true;
+        //data의 recipe개수만큼 반복
+        foreach (MergeRecipe recipe in data.resultRecipe)
         {
-            //내가 주 재료일때
-            if (data.resultRecipe[i].inputs[0].item == data)
+            //아이템이 recipe의 주 재료인지 부재료인지
+            if (recipe.inputs[0].item == data || recipe.inputs.Count <= 2)
             {
-                //주변에 합칠 수 있는 재료가 다 있는지
-                foreach (Ingredient recipe in data.resultRecipe[i].inputs)
+                //재료의 개수가 충분한지 확인
+                for (int i = 0; i < recipe.inputs.Count; i++)
                 {
-                    foreach (ItemData item in nearItemDatas)
+                    if (recipe.inputs[i].count <= nearItemDatas[recipe.inputs[i].item].Count)
                     {
-
+                        continue;
+                    }
+                    else
+                    {
+                        canMerge = false;
+                        break;
                     }
                 }
+                if (canMerge)
+                    return recipe;
             }
-            //내가 부 재료일때
-            else
+            else if(!Second)
             {
-                //주변에 주 재료가 있는지
-                foreach (ItemData item in nearItemDatas)
+                //근처아이템에 주 재료가 되는 아이템이 있는지
+                if (nearItemDatas.ContainsKey(recipe.inputs[0].item))
                 {
-                    if (data.resultRecipe[i].inputs[0].item == item)
-                    {
-                        //주 재료가 있음
-                    }
+                    //근처의 메인 재료의 Piece를 가져와서 그것의 TryItemMerge을 실행
+                    nearItemDatas[recipe.inputs[0].item][0].TryItemMerge(true);
                 }
+                else { }
             }
         }
+        return null;
     }
 }
