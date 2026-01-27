@@ -38,11 +38,15 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     public void OnDrag(PointerEventData eventData)
     {
+        if(bagObj == null) return;
+
         bagObj.OnDrag(eventData);
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        if (bagObj == null) return;
+
         bagObj.OnEndDrag(eventData);
     }
 

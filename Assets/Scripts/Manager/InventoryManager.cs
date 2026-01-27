@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Net.Security;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,7 +22,7 @@ public class InventoryManager : MonoBehaviour
 
     private const int AddMaxHealth = 50;
 
-    private List<List<Piece>> mergePieceList;
+    private List<MergePieces> mergePieceList;
 
     [HideInInspector]
     public InventorySlot[,] grid;
@@ -42,7 +43,7 @@ public class InventoryManager : MonoBehaviour
         placeGrid = Vector2Int.zero;
         weaponList = new List<Weapon>();
         gearList = new List<Gear>();
-        mergePieceList = new List<List<Piece>>();
+        mergePieceList = new List<MergePieces>();
 
         for (int i = 0; i <GridX; i++)
         {
@@ -386,21 +387,26 @@ public class InventoryManager : MonoBehaviour
     {
         bool canMerge = true;
         List<Piece> items = new List<Piece>();
+        //선언 확인용
+        List<Piece> checkOut;
         //data의 recipe개수만큼 반복
         foreach (MergeRecipe recipe in data.resultRecipe)
         {
             //아이템이 recipe의 주 재료인지 부재료인지
-            if (recipe.inputs[0].item == data || recipe.inputs.Count <= 2)
+            if (recipe.inputs[0].item == data || recipe.inputs.Count <= 1)
             {
                 //재료의 개수가 충분한지 확인
                 for (int i = 0; i < recipe.inputs.Count; i++)
                 {
-                    if (recipe.inputs[i].count <= nearItemDatas[recipe.inputs[i].item].Count)
+                    if (!nearItemDatas.TryGetValue(recipe.inputs[i].item,out checkOut))
+                    {
+                        canMerge = false;
+                        break;
+                    }
+                    else if (recipe.inputs[i].count <= nearItemDatas[recipe.inputs[i].item].Count)
                     {
                         for (int j = 0; j < recipe.inputs[i].count; j++)
-                        {
                             items.Add(nearItemDatas[recipe.inputs[i].item][j]);
-                        }
                     }
                     else
                     {
@@ -409,7 +415,14 @@ public class InventoryManager : MonoBehaviour
                     }
                 }
                 if (canMerge)
-                     mergePieceList.Add(items);
+                {
+                    MergePieces mp;
+                    mp = new MergePieces();
+                    mp.pieces =items;
+                    mp.resultData = recipe.result;
+                    mergePieceList.Add(mp);
+                    return;
+                }
             }
             else if(!Second)
             {
@@ -423,4 +436,79 @@ public class InventoryManager : MonoBehaviour
             }
         }
     }
+
+    public void RemoveMergeList(Piece piece)
+    {
+        for (int i = 0; i < mergePieceList.Count; i++)
+        {
+            MergePieces mp = mergePieceList[i];
+
+            if (mp.pieces.Contains(piece))
+                mergePieceList.Remove(mp);
+        }
+    }
+
+    public void MergePiecesList()
+    {
+        if (mergePieceList.Count == 0)
+            return;
+
+        //메인 아이템 위치로 이동
+        for (int i = 1; i < mergePieceList[0].pieces.Count; i++)
+        {
+
+            mergePieceList[0].pieces[i].GetComponent<RectTransform>().anchoredPosition = mergePieceList[0].pieces[0].GetComponent<RectTransform>().anchoredPosition;
+        }
+        //재료 아이템 제거
+        for (int i = 1; i < mergePieceList[0].pieces.Count; i++)
+        {
+            Destroy(mergePieceList[0].pieces[i].gameObject);
+        }
+        //합쳐진 아이템으로 변경
+        mergePieceList[0].pieces[0].ChangeItemData(mergePieceList[0].resultData);
+
+        //Vector2Int placePos;
+        //if (!TryGetPlacePosition(mergePieceList[0].pieces[0].getFirstSlot(), new Vector2Int(0, 0), mergePieceList[0].resultData, out placePos))
+        //{
+            
+        //}
+
+
+        //합쳐진 아이템이 기존 위치에 있을 수 있는지 확인
+        //if ()
+        //가능한경우 위치 보정
+
+        //불가능한 경우 창고로 이동
+    }
+
+    IEnumerator MergeItems()
+    {
+        //나머지 pieces가 메인 아이템 쪽으로 이동
+        for (int i = 1; i < mergePieceList[0].pieces.Count; i++)
+        {
+            Debug.Log(mergePieceList[0].pieces[i].GetComponent<RectTransform>().anchoredPosition);
+            Debug.Log(mergePieceList[0].pieces[0].GetComponent<RectTransform>().anchoredPosition);
+
+            
+        }
+
+        yield return new WaitForSeconds(1.5f);
+
+        mergePieceList.RemoveAt(0);
+        /*
+        //합쳐진 아이템으로 변경
+
+        //기존 슬롯위치에 둘 수 있는경우
+        //안되는경우
+        //창고쪽으로 날라감
+        yield return new WaitForSeconds(1.5f);
+        //창고쪽으로 아이템 이동
+        */
+    }
+}
+
+public class MergePieces
+{
+    public ItemData resultData;
+    public List<Piece> pieces;
 }

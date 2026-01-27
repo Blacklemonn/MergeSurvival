@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
+using System.Xml;
 
 public enum ItemBelongState
 {
@@ -61,6 +62,11 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         GetComponent<Image>().sprite = itemData.itemIcon;
     }
 
+    public InventorySlot getFirstSlot()
+    {
+        return arrangeSlot[0];
+    }
+
     public void OnBeginDrag(PointerEventData eventData)
     {
         //플레이어의 자금으로 살수 있는지 -> 데이타의 itemPrice에서 가져오기
@@ -94,6 +100,8 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
             }
         }
 
+        //내가 들었을때 인벤토리에 조합목록에 이 아이템이 들어있을경우 없애줘야함
+        inventory.RemoveMergeList(this);
 
         parent = rect.parent;
         prevAnchorPos = rect.anchoredPosition;
@@ -289,7 +297,7 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         rect.anchoredPosition = inventory.grid[placePos.x, placePos.y].GetComponent<RectTransform>().anchoredPosition;
 
         //아이템의 위치를 보정
-        rect.anchoredPosition += new Vector2(itemData.width == 1 ? 0 : SLOT_SIZE * itemData.width / 4, itemData.height == 1 ? 0 : -SLOT_SIZE * itemData.height / 4);
+        rect.anchoredPosition += new Vector2(itemData.width == 1 ? 0 : (SLOT_SIZE/2) * (itemData.width-1), itemData.height == 1 ? 0 : -(SLOT_SIZE/2) * (itemData.height-1));
 
         state = ItemBelongState.Inventory;
 
@@ -358,6 +366,7 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
     {
         List<InventorySlot> nearSlots = new List<InventorySlot>();
         Dictionary<ItemData, List<Piece>> nearPieces = new Dictionary<ItemData, List<Piece>>();
+;
         //이 아이템이 차지하고 있는 공간 근처에 있는 아이템을 들고있는 슬롯을 가져옴
         foreach (InventorySlot slot in arrangeSlot)
         {
@@ -365,7 +374,19 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         }
 
         //중복 검사를 하기 위한 list변수
-        List<Piece> pieces = new();
+        List<Piece> checkOut;
+
+        //본인을 제일 처음 저장
+        if (!nearPieces.TryGetValue(itemData, out checkOut))
+        {
+            nearPieces[itemData] = new()
+            {
+                this
+            };
+        }
+        else
+            nearPieces[itemData].Add(this);
+
         //중복인지
         //슬롯의 아이템이 중복 되는지 확인 하면서 dictionary에 아이템과 갯수저장
         foreach (InventorySlot slot in nearSlots)
@@ -386,15 +407,22 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
             if (isOverlap)
                 continue;
 
-            if (nearPieces[slot.itemObj.itemData] == null)
-                nearPieces[slot.itemObj.itemData] = new();
-            nearPieces[slot.itemObj.itemData].Add(slot.itemObj);
+
+
+            if (!nearPieces.TryGetValue(slot.itemObj.itemData, out checkOut))
+            {
+                nearPieces[slot.itemObj.itemData] = new()
+                {
+                    slot.itemObj
+                };
+            }
+            else
+            {
+                nearPieces[slot.itemObj.itemData].Add(slot.itemObj);
+            }
         }
 
-        //본인도 저장
-        if (nearPieces[itemData] == null)
-            nearPieces[itemData] = new();
-        nearPieces[itemData].Add(this);
+
 
         inventory.MergeItem(itemData, nearPieces, Second);
     }

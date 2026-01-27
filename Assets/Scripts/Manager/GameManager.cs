@@ -16,7 +16,6 @@ public class GameManager : MonoBehaviour
     public float health;
     public float maxHealth = 100;
     public int _money;
-    //public int[] nextExp = { 10, 30, 60, 100, 150, 120, 280, 360, 450, 600 };
     [Header("# Game Object")]
     public PoolManager poolManager;
     public Player player;
@@ -105,6 +104,7 @@ public class GameManager : MonoBehaviour
             if (gameTime > maxGameTime)
             {
                 shop.Show();
+                inventory.MergePiecesList();
                 gameTime = maxGameTime;
             }
         }
