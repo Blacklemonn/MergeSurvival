@@ -104,7 +104,7 @@ public class GameManager : MonoBehaviour
             if (gameTime > maxGameTime)
             {
                 shop.Show();
-                inventory.MergePiecesList();
+                inventory.Merge();
                 gameTime = maxGameTime;
             }
         }

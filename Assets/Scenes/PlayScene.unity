@@ -1230,11 +1230,6 @@ MonoBehaviour:
   slotSprite:
   - {fileID: -1010605625, guid: d71a3dc7aa20fad4f9a99fc76a9254ba, type: 3}
   - {fileID: -8390244, guid: d71a3dc7aa20fad4f9a99fc76a9254ba, type: 3}
-  mergeRecipes:
-  - {fileID: 11400000, guid: f3b4835a8c8ebef4d91a7f23e9d44f8f, type: 2}
-  - {fileID: 11400000, guid: 2985446f35fedf648992e80c9bbae80c, type: 2}
-  - {fileID: 11400000, guid: 0461b21e2a5481a4ea3f11f7633da2ec, type: 2}
-  - {fileID: 11400000, guid: 10e4bc0a0b54ea246a0efcf208d15655, type: 2}
 --- !u!1 &270310091
 GameObject:
   m_ObjectHideFlags: 0
@@ -7542,7 +7537,7 @@ GameObject:
   - component: {fileID: 428789328}
   m_Layer: 5
   m_Name: SpawnPanel
-  m_TagString: Untagged
+  m_TagString: Shop
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8889,7 +8884,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 42251e9518ba1624b94342ee3428ecac, type: 2}
   - {fileID: 11400000, guid: 2c4dc6f4ed05cf443afff43e6685304c, type: 2}
   - {fileID: 11400000, guid: c0a629a08fae87f45a55a02d7e0bf31f, type: 2}
-  prefab: {fileID: 1771673708}
+  prefab: {fileID: 4384817005516658789, guid: f8f52c127c2c0e44baa1e63ba93469aa, type: 3}
   storage: {fileID: 1373690185}
   shop: {fileID: 1935694030}
 --- !u!1 &670044724
@@ -15874,11 +15869,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 7564924924979253657, guid: f8f52c127c2c0e44baa1e63ba93469aa, type: 3}
   m_PrefabInstance: {fileID: 1753208372}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1771673708 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4384817005516658789, guid: f8f52c127c2c0e44baa1e63ba93469aa, type: 3}
-  m_PrefabInstance: {fileID: 2078135826}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &1786521921 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7564924924979253657, guid: 51dfb2c0ce5c2a64c9dee3ed17d8ccd8, type: 3}
@@ -16264,7 +16254,7 @@ GameObject:
   - component: {fileID: 1935694031}
   m_Layer: 5
   m_Name: Shop
-  m_TagString: Untagged
+  m_TagString: Shop
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

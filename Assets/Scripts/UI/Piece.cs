@@ -183,21 +183,25 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
                     underCurserObj.GetComponent<Storage>().GotoStorage(this.gameObject);
 
                     GameManager.instance._money -= itemData.itemPrice;
-                    state = ItemBelongState.Storage;
                     Init();
                     return;
             }
         }
         //상점에 뒀을때
-        else if (underCurserObj.GetComponent<Shop>())
+        else if (underCurserObj.tag == "Shop")
         {
-            if (state == ItemBelongState.Shop)
+            switch(state)
             {
+                case ItemBelongState.Shop:
                 CantBuyItem();
-                return;
+                    return;
+                case ItemBelongState.Inventory:
+                    inventory.RemoveItem(itemData);
+                    break;
+                case ItemBelongState.Storage:
+                    break;
             }
-            else if (state == ItemBelongState.Inventory)
-                inventory.RemoveItem(itemData);
+                
             GameManager.instance._money -= Mathf.FloorToInt(itemData.itemPrice / 2);
             Init();
             Destroy(this.gameObject);
@@ -230,6 +234,7 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
             return;
         }
 
+
         //------------------------------------------------------------------------------
         //                          여기부터 슬롯에 두기 성공
         //------------------------------------------------------------------------------
@@ -247,7 +252,12 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         else
         {
             //이전 slot의 데이터를 지워줌
-            ClearSlotsItem();
+            foreach (InventorySlot sl in arrangeSlot)
+            {
+                sl.itemObj = null;
+            }
+
+            arrangeSlot.Clear();
         }
 
         //itemRoot로 이동
@@ -277,8 +287,10 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
 
 
 
-            //아이템 캐릭터에 적용
-            inventory.ApplyItem(itemData, state == ItemBelongState.Shop ? true : false);
+            //인벤토리상태가 아닐경우 캐릭터에 적용
+            if (state != ItemBelongState.Inventory)
+                inventory.ApplyItem(itemData, state == ItemBelongState.Shop ? true : false);
+
             //주변에 합칠 수 있는게 있는지 확인
             TryItemMerge(false);
         }
@@ -419,9 +431,37 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
     {
         foreach (InventorySlot sl in arrangeSlot)
         {
-            sl.bagObj = null;
+            sl.itemObj = null;
+            sl.HasItem = false;
         }
 
         arrangeSlot.Clear();
+    }
+
+    public void MoveTo(Vector2 pos)
+    {
+        Debug.Log(pos);
+        Debug.Log(rect.anchoredPosition);
+        float elapsdTime = 0;
+        float t = elapsdTime / 2;
+        float easedT = Mathf.Pow(t, 3); // EaseInCubic: t*t*t
+
+        while (elapsdTime < 2)
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                return;
+            }
+
+            elapsdTime += Time.deltaTime;
+            float currentValX = Mathf.Lerp(rect.anchoredPosition.x, pos.x, easedT);
+            float currentValY = Mathf.Lerp(rect.anchoredPosition.y, pos.y, easedT);
+
+            Debug.Log(t);
+
+            rect.anchoredPosition = new Vector2(currentValX, currentValY);
+
+
+        }
     }
 }

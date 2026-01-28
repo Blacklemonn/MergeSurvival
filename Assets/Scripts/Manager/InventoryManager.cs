@@ -33,8 +33,6 @@ public class InventoryManager : MonoBehaviour
     public GameObject inventory;
 
     public Sprite[] slotSprite = new Sprite[2];
-    [Header("#MergeData")]
-    public MergeRecipe[] mergeRecipes;
 
     private void Awake()
     {
@@ -389,6 +387,7 @@ public class InventoryManager : MonoBehaviour
         List<Piece> items = new List<Piece>();
         //선언 확인용
         List<Piece> checkOut;
+
         //data의 recipe개수만큼 반복
         foreach (MergeRecipe recipe in data.resultRecipe)
         {
@@ -398,6 +397,7 @@ public class InventoryManager : MonoBehaviour
                 //재료의 개수가 충분한지 확인
                 for (int i = 0; i < recipe.inputs.Count; i++)
                 {
+                    Debug.Log(nearItemDatas[recipe.inputs[i].item].Count);
                     if (!nearItemDatas.TryGetValue(recipe.inputs[i].item,out checkOut))
                     {
                         canMerge = false;
@@ -421,6 +421,7 @@ public class InventoryManager : MonoBehaviour
                     mp.pieces =items;
                     mp.resultData = recipe.result;
                     mergePieceList.Add(mp);
+                    Debug.Log(mp);
                     return;
                 }
             }
@@ -448,6 +449,29 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
+    public void Merge()
+    {
+        if (mergePieceList.Count == 0)
+            return;
+        StartCoroutine(MergeCoroutine());
+    }
+
+    IEnumerator MergeCoroutine()
+    {
+        //메인 아이템 위치로 이동
+        for (int j = 0; j < mergePieceList.Count; j++)
+        {
+            for (int i = 1; i < mergePieceList[j].pieces.Count; i++)
+            {
+                mergePieceList[j].pieces[i].MoveTo(mergePieceList[0].pieces[0].GetComponent<RectTransform>().anchoredPosition);
+            }
+        }
+        //기다림
+        yield return new WaitForSeconds(2f);
+        //합치기
+        MergePiecesList();
+    }
+
     public void MergePiecesList()
     {
         if (mergePieceList.Count == 0)
@@ -464,55 +488,73 @@ public class InventoryManager : MonoBehaviour
         //재료 아이템 제거
         for (int j = 0; j < mergePieceList.Count; j++)
         { 
-            for (int i = 1; i < mergePieceList[0].pieces.Count; i++)
+            for (int i = 1; i < mergePieceList[j].pieces.Count; i++)
             {
                 //기존 아이템 효과 제거
                 RemoveItem(mergePieceList[j].pieces[i].itemData);
+                mergePieceList[j].pieces[i].ClearSlotsItem();
                 Destroy(mergePieceList[j].pieces[i].gameObject);
             }
         }
 
         for (int i = 0; i < mergePieceList.Count; i++)
         {
-            //합쳐진 아이템으로 변경
-            mergePieceList[i].pieces[0].ChangeItemData(mergePieceList[i].resultData);
             //기존아이템 효과 제거
             RemoveItem(mergePieceList[i].pieces[0].itemData);
+            //합쳐진 아이템으로 변경
+            mergePieceList[i].pieces[0].ChangeItemData(mergePieceList[i].resultData);
         }
 
         //합쳐진 아이템의 왼쪽위 슬롯 위치가 어딘지 확인
-        InventorySlot firstsl = mergePieceList[0].pieces[0].arrangeSlot[0];
-
-        Vector2Int placePos;
-        //
-        if (!TryGetPlacePosition(firstsl, new Vector2Int(0,0), mergePieceList[0].resultData, out placePos))
+        for (int i = 0; i < mergePieceList.Count; i++)
         {
-            //창고로 이동
-            GameManager.instance.storage.GotoStorage(mergePieceList[0].pieces[0].gameObject);
-            return;
+            Piece piece = mergePieceList[i].pieces[0];
+
+            InventorySlot firstsl = piece.arrangeSlot[0];
+
+            RectTransform rect = piece.GetComponent<RectTransform>();
+
+            //이전 slot의 데이터를 지워줌
+            piece.ClearSlotsItem();
+            Vector2Int placePos;
+            //
+            if (!TryGetPlacePosition(firstsl, new Vector2Int(0, 0), mergePieceList[i].resultData, out placePos))
+            {
+                //창고로 이동
+                GameManager.instance.storage.GotoStorage(piece.gameObject);
+                mergePieceList.RemoveAt(i);
+                return;
+            }
+
+            //조건이 맞지 않을때
+            if (!CanPlaceItem(placePos, mergePieceList[i].resultData))
+            {
+                //창고로 이동
+                GameManager.instance.storage.GotoStorage(piece.gameObject);
+                mergePieceList.RemoveAt(i);
+                return;
+            }
+
+            //slot의 itemObj에 이 오브젝트를 저장해줘야함
+            foreach (InventorySlot sl in piece.arrangeSlot)
+            {
+                sl.itemObj = piece;
+            }
+
+            //아이템 캐릭터에 적용
+            ApplyItem(piece.itemData, false);
+
+            //아이템을 슬롯의 위치로 이동
+            rect.anchoredPosition = grid[placePos.x, placePos.y].GetComponent<RectTransform>().anchoredPosition;
+
+            //아이템의 위치를 보정
+            rect.anchoredPosition += new Vector2(piece.itemData.width == 1 ? 0 :(Piece.SLOT_SIZE / 2) * (piece.itemData.width - 1), piece.itemData.height == 1 ? 0 : -(Piece.SLOT_SIZE / 2) * (piece.itemData.height - 1));
+
+            //주변에 합칠 수 있는게 있는지 확인
+            piece.TryItemMerge(false);
+
+            mergePieceList.RemoveAt(i);
         }
-
-        //조건이 맞지 않을때
-        if (!CanPlaceItem(placePos, mergePieceList[0].resultData))
-        {
-            //창고로 이동
-            GameManager.instance.storage.GotoStorage(mergePieceList[0].pieces[0].gameObject);
-            return;
-        }
-
-        //이전 slot의 데이터를 지워줌
-        mergePieceList[0].pieces[0].ClearSlotsItem();
-
-        //slot의 itemObj에 이 오브젝트를 저장해줘야함
-        foreach (InventorySlot sl in mergePieceList[0].pieces[0].arrangeSlot)
-        {
-            sl.itemObj = mergePieceList[0].pieces[0];
-        }
-
-        //아이템 캐릭터에 적용
-        ApplyItem(mergePieceList[0].pieces[0].itemData,false);
-        //주변에 합칠 수 있는게 있는지 확인
-        mergePieceList[0].pieces[0].TryItemMerge(false);
     }
 
     IEnumerator MergeItems()

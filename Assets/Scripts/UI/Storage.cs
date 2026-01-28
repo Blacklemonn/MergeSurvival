@@ -9,6 +9,8 @@ public class Storage : MonoBehaviour
     //아이템 인자를 받아오면 그 아이템을 오브젝트의 자식으로 이동
     public void GotoStorage(GameObject item)
     {
+        item.GetComponent<Piece>().state = ItemBelongState.Storage;
+
         ItemData data = item.GetComponent<Piece>().itemData;
 
         Vector2 lerpPos = new Vector2(data.width == 1 ? Piece.SLOT_SIZE/2 : Piece.SLOT_SIZE * data.width / 4, data.height == 1 ? -Piece.SLOT_SIZE/2 : -Piece.SLOT_SIZE * data.height / 4);
