@@ -134,22 +134,20 @@ public class GameManager : MonoBehaviour
     public bool UseMoney(int money,bool useMoney)
     {
         //아이템을 살 수 있을경우 True
-        if ((0 > _money - money))
+        if (useMoney)
         {
-            return false;
-        }
-        else
-        {
-            if(useMoney)
+            if ((0 > _money - money))
+            {
+                return false;
+            }
+            else
             {
                 _money -= money;
                 return true;
             }
-            else
-            {
-                return true;
-            }
         }
+        else
+            return true;
     }
 
     public void LvlUp()

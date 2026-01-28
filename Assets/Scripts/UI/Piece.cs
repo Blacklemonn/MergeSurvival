@@ -28,7 +28,7 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
     private GameObject itemTemp;
     private Vector2 prevAnchorPos;
 
-    private List<InventorySlot> arrangeSlot;
+    public List<InventorySlot> arrangeSlot;
 
     [SerializeField]
     private ItemDesc itemdesc;
@@ -62,10 +62,6 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         GetComponent<Image>().sprite = itemData.itemIcon;
     }
 
-    public InventorySlot getFirstSlot()
-    {
-        return arrangeSlot[0];
-    }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
@@ -143,7 +139,6 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
 
     }
 
-    //샵이나 창고에 있는 아이템을 옮길때 사용되는 함수
     public void OnEndDrag(PointerEventData eventData)
     {
         inventory.ClearHighlightSlot();
@@ -252,12 +247,7 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         else
         {
             //이전 slot의 데이터를 지워줌
-            foreach (InventorySlot sl in arrangeSlot)
-            {
-                sl.itemObj = null;
-            }
-
-            arrangeSlot.Clear();
+            ClearSlotsItem();
         }
 
         //itemRoot로 이동
@@ -422,8 +412,16 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
             }
         }
 
-
-
         inventory.MergeItem(itemData, nearPieces, Second);
+    }
+
+    public void ClearSlotsItem()
+    {
+        foreach (InventorySlot sl in arrangeSlot)
+        {
+            sl.bagObj = null;
+        }
+
+        arrangeSlot.Clear();
     }
 }

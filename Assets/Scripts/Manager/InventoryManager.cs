@@ -454,31 +454,65 @@ public class InventoryManager : MonoBehaviour
             return;
 
         //메인 아이템 위치로 이동
-        for (int i = 1; i < mergePieceList[0].pieces.Count; i++)
+        for (int j = 0; j < mergePieceList.Count; j++)
         {
-
-            mergePieceList[0].pieces[i].GetComponent<RectTransform>().anchoredPosition = mergePieceList[0].pieces[0].GetComponent<RectTransform>().anchoredPosition;
+            for (int i = 1; i < mergePieceList[j].pieces.Count; i++)
+            {
+                mergePieceList[j].pieces[i].GetComponent<RectTransform>().anchoredPosition = mergePieceList[0].pieces[0].GetComponent<RectTransform>().anchoredPosition;
+            }
         }
         //재료 아이템 제거
-        for (int i = 1; i < mergePieceList[0].pieces.Count; i++)
-        {
-            Destroy(mergePieceList[0].pieces[i].gameObject);
+        for (int j = 0; j < mergePieceList.Count; j++)
+        { 
+            for (int i = 1; i < mergePieceList[0].pieces.Count; i++)
+            {
+                //기존 아이템 효과 제거
+                RemoveItem(mergePieceList[j].pieces[i].itemData);
+                Destroy(mergePieceList[j].pieces[i].gameObject);
+            }
         }
-        //합쳐진 아이템으로 변경
-        mergePieceList[0].pieces[0].ChangeItemData(mergePieceList[0].resultData);
 
-        //Vector2Int placePos;
-        //if (!TryGetPlacePosition(mergePieceList[0].pieces[0].getFirstSlot(), new Vector2Int(0, 0), mergePieceList[0].resultData, out placePos))
-        //{
-            
-        //}
+        for (int i = 0; i < mergePieceList.Count; i++)
+        {
+            //합쳐진 아이템으로 변경
+            mergePieceList[i].pieces[0].ChangeItemData(mergePieceList[i].resultData);
+            //기존아이템 효과 제거
+            RemoveItem(mergePieceList[i].pieces[0].itemData);
+        }
 
+        //합쳐진 아이템의 왼쪽위 슬롯 위치가 어딘지 확인
+        InventorySlot firstsl = mergePieceList[0].pieces[0].arrangeSlot[0];
 
-        //합쳐진 아이템이 기존 위치에 있을 수 있는지 확인
-        //if ()
-        //가능한경우 위치 보정
+        Vector2Int placePos;
+        //
+        if (!TryGetPlacePosition(firstsl, new Vector2Int(0,0), mergePieceList[0].resultData, out placePos))
+        {
+            //창고로 이동
+            GameManager.instance.storage.GotoStorage(mergePieceList[0].pieces[0].gameObject);
+            return;
+        }
 
-        //불가능한 경우 창고로 이동
+        //조건이 맞지 않을때
+        if (!CanPlaceItem(placePos, mergePieceList[0].resultData))
+        {
+            //창고로 이동
+            GameManager.instance.storage.GotoStorage(mergePieceList[0].pieces[0].gameObject);
+            return;
+        }
+
+        //이전 slot의 데이터를 지워줌
+        mergePieceList[0].pieces[0].ClearSlotsItem();
+
+        //slot의 itemObj에 이 오브젝트를 저장해줘야함
+        foreach (InventorySlot sl in mergePieceList[0].pieces[0].arrangeSlot)
+        {
+            sl.itemObj = mergePieceList[0].pieces[0];
+        }
+
+        //아이템 캐릭터에 적용
+        ApplyItem(mergePieceList[0].pieces[0].itemData,false);
+        //주변에 합칠 수 있는게 있는지 확인
+        mergePieceList[0].pieces[0].TryItemMerge(false);
     }
 
     IEnumerator MergeItems()
