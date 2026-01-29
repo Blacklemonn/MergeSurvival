@@ -1,10 +1,12 @@
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Xml;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using System.Collections.Generic;
-using System.Linq;
-using Unity.VisualScripting;
-using System.Xml;
+using static UnityEditor.PlayerSettings;
 
 public enum ItemBelongState
 {
@@ -18,7 +20,7 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
     public const float SLOT_SIZE = 12f;
 
     public ItemData itemData;
-    public ItemBelongState state = 0;
+    public ItemBelongState state;
 
     private CanvasGroup canvasGroup;
     private Canvas canvas;
@@ -45,6 +47,7 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         itemTemp = GameManager.instance.itemTemp;
         arrangeSlot = new List<InventorySlot>();
         inventory = GameManager.instance.inventory;
+        state = ItemBelongState.Shop;
     }
 
     private void Start()
@@ -190,10 +193,10 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         //상점에 뒀을때
         else if (underCurserObj.tag == "Shop")
         {
-            switch(state)
+            switch (state)
             {
                 case ItemBelongState.Shop:
-                CantBuyItem();
+                    CantBuyItem();
                     return;
                 case ItemBelongState.Inventory:
                     inventory.RemoveItem(itemData);
@@ -201,7 +204,7 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
                 case ItemBelongState.Storage:
                     break;
             }
-                
+
             GameManager.instance._money -= Mathf.FloorToInt(itemData.itemPrice / 2);
             Init();
             Destroy(this.gameObject);
@@ -299,7 +302,7 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         rect.anchoredPosition = inventory.grid[placePos.x, placePos.y].GetComponent<RectTransform>().anchoredPosition;
 
         //아이템의 위치를 보정
-        rect.anchoredPosition += new Vector2(itemData.width == 1 ? 0 : (SLOT_SIZE/2) * (itemData.width-1), itemData.height == 1 ? 0 : -(SLOT_SIZE/2) * (itemData.height-1));
+        rect.anchoredPosition += new Vector2(itemData.width == 1 ? 0 : (SLOT_SIZE / 2) * (itemData.width - 1), itemData.height == 1 ? 0 : -(SLOT_SIZE / 2) * (itemData.height - 1));
 
         state = ItemBelongState.Inventory;
 
@@ -368,7 +371,7 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
     {
         List<InventorySlot> nearSlots = new List<InventorySlot>();
         Dictionary<ItemData, List<Piece>> nearPieces = new Dictionary<ItemData, List<Piece>>();
-;
+        ;
         //이 아이템이 차지하고 있는 공간 근처에 있는 아이템을 들고있는 슬롯을 가져옴
         foreach (InventorySlot slot in arrangeSlot)
         {
@@ -440,28 +443,33 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
 
     public void MoveTo(Vector2 pos)
     {
-        Debug.Log(pos);
-        Debug.Log(rect.anchoredPosition);
-        float elapsdTime = 0;
-        float t = elapsdTime / 2;
-        float easedT = Mathf.Pow(t, 3); // EaseInCubic: t*t*t
 
-        while (elapsdTime < 2)
+        StartCoroutine(MoveRectEaseOut(pos));
+    }
+
+    IEnumerator MoveRectEaseOut(Vector2 pos)
+    {
+        float elapsdTime = 0f;
+        float duration = 2f;
+        Vector2 startPos = rect.anchoredPosition;
+
+        while (elapsdTime < duration)
         {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                return;
-            }
+            if (Input.GetKeyDown(KeyCode.Space)) break;
 
-            elapsdTime += Time.deltaTime;
-            float currentValX = Mathf.Lerp(rect.anchoredPosition.x, pos.x, easedT);
-            float currentValY = Mathf.Lerp(rect.anchoredPosition.y, pos.y, easedT);
+            elapsdTime += Time.unscaledDeltaTime;
+            float t = Mathf.Clamp01(elapsdTime / duration);
 
-            Debug.Log(t);
+            float easedT = 1f - Mathf.Pow(1f - t, 3);
 
-            rect.anchoredPosition = new Vector2(currentValX, currentValY);
+            //Debug.Log(easedT);
 
+            rect.anchoredPosition = Vector2.Lerp(startPos, pos, easedT);
 
+            yield return null;
         }
+
+        rect.anchoredPosition = pos;
+        Debug.Log("Finish");
     }
 }

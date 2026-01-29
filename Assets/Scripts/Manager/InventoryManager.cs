@@ -397,7 +397,6 @@ public class InventoryManager : MonoBehaviour
                 //재료의 개수가 충분한지 확인
                 for (int i = 0; i < recipe.inputs.Count; i++)
                 {
-                    Debug.Log(nearItemDatas[recipe.inputs[i].item].Count);
                     if (!nearItemDatas.TryGetValue(recipe.inputs[i].item,out checkOut))
                     {
                         canMerge = false;
@@ -449,10 +448,12 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
+
     public void Merge()
     {
         if (mergePieceList.Count == 0)
             return;
+
         StartCoroutine(MergeCoroutine());
     }
 
@@ -466,11 +467,11 @@ public class InventoryManager : MonoBehaviour
                 mergePieceList[j].pieces[i].MoveTo(mergePieceList[0].pieces[0].GetComponent<RectTransform>().anchoredPosition);
             }
         }
-        //기다림
-        yield return new WaitForSeconds(2f);
-        //합치기
+        yield return new WaitForSecondsRealtime(2);
         MergePiecesList();
+        yield return null;
     }
+
 
     public void MergePiecesList()
     {

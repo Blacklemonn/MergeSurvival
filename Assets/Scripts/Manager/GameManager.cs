@@ -103,9 +103,9 @@ public class GameManager : MonoBehaviour
         {
             if (gameTime > maxGameTime)
             {
+                gameTime = maxGameTime;
                 shop.Show();
                 inventory.Merge();
-                gameTime = maxGameTime;
             }
         }
     }
@@ -147,7 +147,16 @@ public class GameManager : MonoBehaviour
             }
         }
         else
-            return true;
+        {
+            if ((0 > _money - money))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
     }
 
     public void LvlUp()

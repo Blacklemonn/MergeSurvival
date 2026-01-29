@@ -11870,7 +11870,7 @@ MonoBehaviour:
   playerId: 0
   health: 0
   maxHealth: 100
-  _money: 100
+  _money: 0
   poolManager: {fileID: 316257127}
   player: {fileID: 1372885755}
   shop: {fileID: 669067252}
