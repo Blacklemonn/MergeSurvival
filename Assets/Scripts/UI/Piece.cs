@@ -30,6 +30,9 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
     private GameObject itemTemp;
     private Vector2 prevAnchorPos;
 
+    [HideInInspector]
+    public bool canMerge = true;
+
     public List<InventorySlot> arrangeSlot;
 
     [SerializeField]
@@ -371,7 +374,7 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
     {
         List<InventorySlot> nearSlots = new List<InventorySlot>();
         Dictionary<ItemData, List<Piece>> nearPieces = new Dictionary<ItemData, List<Piece>>();
-        ;
+        
         //이 아이템이 차지하고 있는 공간 근처에 있는 아이템을 들고있는 슬롯을 가져옴
         foreach (InventorySlot slot in arrangeSlot)
         {
@@ -397,12 +400,16 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         foreach (InventorySlot slot in nearSlots)
         {
             bool isOverlap = false;
+            //아이템이 다른 아이템과 합쳐질 예정일 경우 패스
+            if (!slot.itemObj.canMerge)
+                continue;
 
             if (nearPieces.ContainsKey(slot.itemObj.itemData))
             {
                 //이미 저장한 아이템과 같은 아이템인지
                 foreach (Piece piece in nearPieces[slot.itemObj.itemData])
                 {
+
                     if (piece == slot.itemObj)
                         isOverlap = true;
                     else
@@ -411,7 +418,6 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
             }
             if (isOverlap)
                 continue;
-
 
 
             if (!nearPieces.TryGetValue(slot.itemObj.itemData, out checkOut))
@@ -443,15 +449,14 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
 
     public void MoveTo(Vector2 pos)
     {
-
         StartCoroutine(MoveRectEaseOut(pos));
     }
 
     IEnumerator MoveRectEaseOut(Vector2 pos)
     {
         float elapsdTime = 0f;
-        float duration = 2f;
-        Vector2 startPos = rect.anchoredPosition;
+        float duration = 1f;
+        Vector2 startPos = rect.position;
 
         while (elapsdTime < duration)
         {
@@ -462,14 +467,11 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
 
             float easedT = 1f - Mathf.Pow(1f - t, 3);
 
-            //Debug.Log(easedT);
-
-            rect.anchoredPosition = Vector2.Lerp(startPos, pos, easedT);
+            rect.position = Vector2.Lerp(startPos, pos, easedT);
 
             yield return null;
         }
 
         rect.anchoredPosition = pos;
-        Debug.Log("Finish");
     }
 }
