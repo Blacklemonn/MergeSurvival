@@ -470,103 +470,102 @@ public class InventoryManager : MonoBehaviour
 
     IEnumerator MergeCoroutine()
     {
-        //메인 아이템 위치로 이동
         for (int j = 0; j < mergePieceList.Count; j++)
         {
+            //메인 아이템 위치로 이동
+            Vector3 targetPos = mergePieceList[j].pieces[0].GetComponent<RectTransform>().position;
+
             for (int i = 1; i < mergePieceList[j].pieces.Count; i++)
             {
-                mergePieceList[j].pieces[i].MoveTo(mergePieceList[0].pieces[0].GetComponent<RectTransform>().position);
+                mergePieceList[j].pieces[i].MoveTo(targetPos);
             }
         }
-        yield return new WaitForSecondsRealtime(1);
+        yield return new WaitForSecondsRealtime(0.3f);
         MergePiecesList();
-        yield return null;
     }
 
 
     public void MergePiecesList()
     {
-        if (mergePieceList.Count == 0)
-            return;
+        if (mergePieceList.Count == 0) return;
 
-        //메인 아이템 위치로 이동
-        for (int j = 0; j < mergePieceList.Count; j++)
+        // .ToList()를 붙여서 복사본으로 루프
+        var processingList = new List<MergePieces>(mergePieceList);
+
+        // 원본 리스트는 바로 비우기 (연쇄 머지로 새로 쌓일 데이터를 위해)
+        mergePieceList.Clear();
+
+        foreach (var mp in processingList)
         {
-            for (int i = 1; i < mergePieceList[j].pieces.Count; i++)
+            // 1. 재료 아이템 제거 로직
+            for (int i = 1; i < mp.pieces.Count; i++)
             {
-                mergePieceList[j].pieces[i].GetComponent<RectTransform>().anchoredPosition = mergePieceList[0].pieces[0].GetComponent<RectTransform>().anchoredPosition;
+                RemoveItem(mp.pieces[i].itemData);
+                mp.pieces[i].ClearSlotsItem();
+                Destroy(mp.pieces[i].gameObject);
             }
-        }
-        //재료 아이템 제거
-        for (int j = 0; j < mergePieceList.Count; j++)
-        { 
-            for (int i = 1; i < mergePieceList[j].pieces.Count; i++)
+
+            // 2. 결과물 변환
+            Piece mainPiece = mp.pieces[0];
+            RemoveItem(mainPiece.itemData);
+            mainPiece.ChangeItemData(mp.resultData);
+
+            // 3. 위치 계산을 위한 슬롯 백업
+            if (mainPiece.arrangeSlot == null || mainPiece.arrangeSlot.Count == 0)
             {
-                //기존 아이템 효과 제거
-                RemoveItem(mergePieceList[j].pieces[i].itemData);
-                mergePieceList[j].pieces[i].ClearSlotsItem();
-                Destroy(mergePieceList[j].pieces[i].gameObject);
+                StartCoroutine(MoveStorage(mainPiece));
+                continue;
             }
-        }
+            InventorySlot firstsl = mainPiece.arrangeSlot[0];
 
-        for (int i = 0; i < mergePieceList.Count; i++)
-        {
-            //기존아이템 효과 제거
-            RemoveItem(mergePieceList[i].pieces[0].itemData);
-            //합쳐진 아이템으로 변경
-            mergePieceList[i].pieces[0].ChangeItemData(mergePieceList[i].resultData);
-        }
+            // 4. 슬롯 정보 갱신
+            mainPiece.ClearSlotsItem();
 
-        //합쳐진 아이템의 왼쪽위 슬롯 위치가 어딘지 확인
-        for (int i = 0; i < mergePieceList.Count; i++)
-        {
-            Piece piece = mergePieceList[i].pieces[0];
-
-            InventorySlot firstsl = piece.arrangeSlot[0];
-
-            RectTransform rect = piece.GetComponent<RectTransform>();
-
-            //이전 slot의 데이터를 지워줌
-            piece.ClearSlotsItem();
             Vector2Int placePos;
-            //
-            if (!TryGetPlacePosition(firstsl, new Vector2Int(0, 0), mergePieceList[i].resultData, out placePos))
+            if (TryGetPlacePosition(firstsl, Vector2Int.zero, mp.resultData, out placePos) &&
+                CanPlaceItem(placePos, mp.resultData))
             {
-                //창고로 이동
-                StartCoroutine(MoveStorage(piece));
-                mergePieceList.RemoveAt(i);
-                return;
-            }
+                UpdatePiecePosition(mainPiece, placePos);
 
-            //조건이 맞지 않을때
-            if (!CanPlaceItem(placePos, mergePieceList[i].resultData))
+                // 5. 연쇄 머지 체크 (여기서 다시 mergePieceList에 Add될 수 있음)
+                mainPiece.canMerge = true;
+                mainPiece.TryItemMerge(false);
+            }
+            else
             {
-                //창고로 이동
-                StartCoroutine(MoveStorage(piece));
-                mergePieceList.RemoveAt(i);
-                return;
+                StartCoroutine(MoveStorage(mainPiece));
             }
-
-            //slot의 itemObj에 이 오브젝트를 저장해줘야함
-            foreach (InventorySlot sl in piece.arrangeSlot)
-            {
-                sl.itemObj = piece;
-            }
-
-            //아이템 캐릭터에 적용
-            ApplyItem(piece.itemData, false);
-
-            //아이템을 슬롯의 위치로 이동
-            rect.anchoredPosition = grid[placePos.x, placePos.y].GetComponent<RectTransform>().anchoredPosition;
-
-            //아이템의 위치를 보정
-            rect.anchoredPosition += new Vector2(piece.itemData.width == 1 ? 0 :(Piece.SLOT_SIZE / 2) * (piece.itemData.width - 1), piece.itemData.height == 1 ? 0 : -(Piece.SLOT_SIZE / 2) * (piece.itemData.height - 1));
-
-            //주변에 합칠 수 있는게 있는지 확인
-            piece.TryItemMerge(false);
-
-            mergePieceList.RemoveAt(i);
         }
+
+        // 만약 연쇄 머지로 인해 새로운 머지 대상이 리스트에 쌓였다면 다시 실행
+        if (mergePieceList.Count > 0)
+        {
+            Merge(); // 다시 코루틴을 태워 연쇄 반응 유도
+        }
+    }
+
+    private void UpdatePiecePosition(Piece piece, Vector2Int placePos)
+    {
+        // 1. 슬롯 데이터 갱신 (아이템이 차지하는 모든 슬롯에 자기 자신을 등록)
+        foreach (InventorySlot sl in piece.arrangeSlot)
+        {
+            sl.itemObj = piece;
+        }
+
+        // 2. 아이템 캐릭터/능력치 효과 적용
+        ApplyItem(piece.itemData, false);
+
+        // 3. UI 위치 설정
+        RectTransform rect = piece.GetComponent<RectTransform>();
+
+        // 기본적으로 슬롯의 좌표로 이동
+        rect.anchoredPosition = grid[placePos.x, placePos.y].GetComponent<RectTransform>().anchoredPosition;
+
+        // 4. 아이템 크기(width, height)에 따른 위치 보정
+        float offsetX = (piece.itemData.width == 1) ? 0 : (Piece.SLOT_SIZE / 2f) * (piece.itemData.width - 1);
+        float offsetY = (piece.itemData.height == 1) ? 0 : -(Piece.SLOT_SIZE / 2f) * (piece.itemData.height - 1);
+
+        rect.anchoredPosition += new Vector2(offsetX, offsetY);
     }
 
     IEnumerator MoveStorage(Piece piece)

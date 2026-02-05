@@ -455,7 +455,7 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
     IEnumerator MoveRectEaseOut(Vector2 pos)
     {
         float elapsdTime = 0f;
-        float duration = 1f;
+        float duration = 0.3f;
         Vector2 startPos = rect.position;
 
         while (elapsdTime < duration)
