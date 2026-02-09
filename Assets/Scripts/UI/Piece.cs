@@ -298,7 +298,7 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
                 inventory.ApplyItem(itemData, state == ItemBelongState.Shop ? true : false);
 
             //주변에 합칠 수 있는게 있는지 확인
-            TryItemMerge(false);
+            TryItemMerge();
         }
 
         //아이템을 슬롯의 위치로 이동
@@ -370,70 +370,36 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         GameManager.instance.isDragging = false;
     }
 
-    public void TryItemMerge(bool Second)
+    public void TryItemMerge() // Second 매개변수 제거
     {
         List<InventorySlot> nearSlots = new List<InventorySlot>();
         Dictionary<ItemData, List<Piece>> nearPieces = new Dictionary<ItemData, List<Piece>>();
-        
-        //이 아이템이 차지하고 있는 공간 근처에 있는 아이템을 들고있는 슬롯을 가져옴
+
+        // 내 주변 슬롯 수집
         foreach (InventorySlot slot in arrangeSlot)
         {
             slot.NearSlots(nearSlots);
         }
 
-        //중복 검사를 하기 위한 list변수
-        List<Piece> checkOut;
+        // 나 자신을 먼저 포함
+        nearPieces[itemData] = new List<Piece> { this };
 
-        //본인을 제일 처음 저장
-        if (!nearPieces.TryGetValue(itemData, out checkOut))
-        {
-            nearPieces[itemData] = new()
-            {
-                this
-            };
-        }
-        else
-            nearPieces[itemData].Add(this);
-
-        //중복인지
-        //슬롯의 아이템이 중복 되는지 확인 하면서 dictionary에 아이템과 갯수저장
+        // 주변 아이템 수집
         foreach (InventorySlot slot in nearSlots)
         {
-            bool isOverlap = false;
-            //아이템이 다른 아이템과 합쳐질 예정일 경우 패스
-            if (!slot.itemObj.canMerge)
-                continue;
-
-            if (nearPieces.ContainsKey(slot.itemObj.itemData))
+            if (slot.itemObj != null && slot.itemObj != this && slot.itemObj.canMerge)
             {
-                //이미 저장한 아이템과 같은 아이템인지
-                foreach (Piece piece in nearPieces[slot.itemObj.itemData])
-                {
+                ItemData data = slot.itemObj.itemData;
+                if (!nearPieces.ContainsKey(data)) nearPieces[data] = new List<Piece>();
 
-                    if (piece == slot.itemObj)
-                        isOverlap = true;
-                    else
-                        isOverlap = false;
+                if (!nearPieces[data].Contains(slot.itemObj))
+                {
+                    nearPieces[data].Add(slot.itemObj);
                 }
-            }
-            if (isOverlap)
-                continue;
-
-
-            if (!nearPieces.TryGetValue(slot.itemObj.itemData, out checkOut))
-            {
-                nearPieces[slot.itemObj.itemData] = new()
-                {
-                    slot.itemObj
-                };
-            }
-            else
-            {
-                nearPieces[slot.itemObj.itemData].Add(slot.itemObj);
             }
         }
 
-        inventory.MergeItem(itemData, nearPieces, Second);
+        inventory.MergeItem(nearPieces);
     }
 
     public void ClearSlotsItem()
@@ -455,7 +421,7 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
     IEnumerator MoveRectEaseOut(Vector2 pos)
     {
         float elapsdTime = 0f;
-        float duration = 0.3f;
+        float duration = 1f;
         Vector2 startPos = rect.position;
 
         while (elapsdTime < duration)

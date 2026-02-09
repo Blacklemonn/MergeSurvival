@@ -383,79 +383,76 @@ public class InventoryManager : MonoBehaviour
         return mergeItems;
     }
 
-    public void MergeItem(ItemData data, Dictionary<ItemData,List<Piece>> nearItemDatas, bool Second)
+    public void MergeItem(Dictionary<ItemData, List<Piece>> nearItemDatas)
     {
-        bool canMerge = true;
-        List<Piece> items = new List<Piece>();
-        //선언 확인용
-        List<Piece> checkOut;
+        // 현재 주변에 존재하는 모든 아이템 종류(ItemData)를 리스트화
+        List<ItemData> allPresentItems = new List<ItemData>(nearItemDatas.Keys);
 
-        //data의 recipe개수만큼 반복
-        foreach (MergeRecipe recipe in data.resultRecipe)
+        foreach (ItemData data in allPresentItems)
         {
-            //아이템이 recipe의 주 재료인지 부재료인지
-            if (recipe.inputs[0].item == data || recipe.inputs.Count <= 1)
+            // 주변에 있는 각 아이템들이 가진 레시피를 하나씩 검사
+            foreach (MergeRecipe recipe in data.resultRecipe)
             {
-                //재료의 개수가 충분한지 확인
-                for (int i = 0; i < recipe.inputs.Count; i++)
+                List<Piece> ingredientsToUse = new List<Piece>();
+                bool canFillRecipe = true;
+
+                // 해당 레시피에 필요한 재료가 nearItemDatas에 다 있는지 확인
+                foreach (Ingredient ingredient in recipe.inputs)
                 {
-                    if (!nearItemDatas.TryGetValue(recipe.inputs[i].item,out checkOut))
+                    if (nearItemDatas.TryGetValue(ingredient.item, out List<Piece> foundPieces))
                     {
-                        canMerge = false;
-                        break;
-                    }
-                    else if (recipe.inputs[i].count <= nearItemDatas[recipe.inputs[i].item].Count)
-                    {
-                        for (int j = 0; j < recipe.inputs[i].count; j++)
-                            items.Add(nearItemDatas[recipe.inputs[i].item][j]);
+                        // 아직 사용되지 않은(canMerge=true) 피스들만 골라냄
+                        var validPieces = foundPieces.FindAll(p => p.canMerge);
+
+                        if (validPieces.Count >= ingredient.count)
+                        {
+                            for (int i = 0; i < ingredient.count; i++)
+                                ingredientsToUse.Add(validPieces[i]);
+                        }
+                        else
+                        {
+                            canFillRecipe = false;
+                            break;
+                        }
                     }
                     else
                     {
-                        canMerge = false;
+                        canFillRecipe = false;
                         break;
                     }
                 }
-                if (canMerge)
+
+                // 조합 조건이 맞다면 즉시 리스트에 추가하고 해당 아이템들 잠금
+                if (canFillRecipe && ingredientsToUse.Count > 0)
                 {
-                    MergePieces mp;
-                    mp = new MergePieces();
-                    mp.pieces =items;
-                    foreach (Piece piece in items)
+                    foreach (Piece p in ingredientsToUse) p.canMerge = false;
+
+                    MergePieces mp = new MergePieces
                     {
-                        piece.canMerge = false;
-                    }
-                    mp.resultData = recipe.result;
+                        pieces = ingredientsToUse,
+                        resultData = recipe.result
+                    };
                     mergePieceList.Add(mp);
-                    
+
+                    // 하나라도 조합이 성사되면 함수 종료
                     return;
                 }
-            }
-            else if(!Second)
-            {
-                //근처아이템에 주 재료가 되는 아이템이 있는지
-                if (nearItemDatas.ContainsKey(recipe.inputs[0].item))
-                {
-                    //근처의 메인 재료의 Piece를 가져와서 그것의 TryItemMerge을 실행
-                    nearItemDatas[recipe.inputs[0].item][0].TryItemMerge(true);
-                }
-                else { }
             }
         }
     }
 
     public void RemoveMergeList(Piece piece)
     {
-        for (int i = 0; i < mergePieceList.Count; i++)
+        for (int i = mergePieceList.Count - 1; i >= 0; i--)
         {
-            MergePieces mp = mergePieceList[i];
-            //piece의 canmerge상태를 true로 변경
-            foreach (Piece p in mergePieceList[i].pieces)
+            if (mergePieceList[i].pieces.Contains(piece))
             {
-                p.canMerge = true;
+                foreach (Piece p in mergePieceList[i].pieces)
+                {
+                    p.canMerge = true;
+                }
+                mergePieceList.RemoveAt(i);
             }
-
-            if (mp.pieces.Contains(piece))
-                mergePieceList.Remove(mp);
         }
     }
 
@@ -480,7 +477,7 @@ public class InventoryManager : MonoBehaviour
                 mergePieceList[j].pieces[i].MoveTo(targetPos);
             }
         }
-        yield return new WaitForSecondsRealtime(0.3f);
+        yield return new WaitForSecondsRealtime(1f);
         MergePiecesList();
     }
 
@@ -489,15 +486,15 @@ public class InventoryManager : MonoBehaviour
     {
         if (mergePieceList.Count == 0) return;
 
-        // .ToList()를 붙여서 복사본으로 루프
+        //복사본으로 루프
         var processingList = new List<MergePieces>(mergePieceList);
 
-        // 원본 리스트는 바로 비우기 (연쇄 머지로 새로 쌓일 데이터를 위해)
+        // 원본 리스트는 바로 비우기
         mergePieceList.Clear();
 
         foreach (var mp in processingList)
         {
-            // 1. 재료 아이템 제거 로직
+            // 재료 아이템 제거
             for (int i = 1; i < mp.pieces.Count; i++)
             {
                 RemoveItem(mp.pieces[i].itemData);
@@ -505,12 +502,12 @@ public class InventoryManager : MonoBehaviour
                 Destroy(mp.pieces[i].gameObject);
             }
 
-            // 2. 결과물 변환
+            // 결과물 변환
             Piece mainPiece = mp.pieces[0];
             RemoveItem(mainPiece.itemData);
             mainPiece.ChangeItemData(mp.resultData);
 
-            // 3. 위치 계산을 위한 슬롯 백업
+            // 위치 계산을 위한 슬롯 백업
             if (mainPiece.arrangeSlot == null || mainPiece.arrangeSlot.Count == 0)
             {
                 StartCoroutine(MoveStorage(mainPiece));
@@ -518,7 +515,7 @@ public class InventoryManager : MonoBehaviour
             }
             InventorySlot firstsl = mainPiece.arrangeSlot[0];
 
-            // 4. 슬롯 정보 갱신
+            // 슬롯 정보 갱신
             mainPiece.ClearSlotsItem();
 
             Vector2Int placePos;
@@ -527,44 +524,36 @@ public class InventoryManager : MonoBehaviour
             {
                 UpdatePiecePosition(mainPiece, placePos);
 
-                // 5. 연쇄 머지 체크 (여기서 다시 mergePieceList에 Add될 수 있음)
+                // 넘겼을 경우 주변에 합쳐질 수 있는 아이템들이 있는지 확인
                 mainPiece.canMerge = true;
-                mainPiece.TryItemMerge(false);
+                mainPiece.TryItemMerge();
             }
             else
             {
                 StartCoroutine(MoveStorage(mainPiece));
             }
         }
-
-        // 만약 연쇄 머지로 인해 새로운 머지 대상이 리스트에 쌓였다면 다시 실행
-        if (mergePieceList.Count > 0)
-        {
-            Merge(); // 다시 코루틴을 태워 연쇄 반응 유도
-        }
     }
 
     private void UpdatePiecePosition(Piece piece, Vector2Int placePos)
     {
-        // 1. 슬롯 데이터 갱신 (아이템이 차지하는 모든 슬롯에 자기 자신을 등록)
+        List<InventorySlot> newSlots;
+        PlaceItem(placePos, piece.itemData, out newSlots);
+        piece.arrangeSlot = newSlots; 
+
         foreach (InventorySlot sl in piece.arrangeSlot)
         {
             sl.itemObj = piece;
+            sl.HasItem = true; 
         }
 
-        // 2. 아이템 캐릭터/능력치 효과 적용
         ApplyItem(piece.itemData, false);
 
-        // 3. UI 위치 설정
         RectTransform rect = piece.GetComponent<RectTransform>();
-
-        // 기본적으로 슬롯의 좌표로 이동
         rect.anchoredPosition = grid[placePos.x, placePos.y].GetComponent<RectTransform>().anchoredPosition;
 
-        // 4. 아이템 크기(width, height)에 따른 위치 보정
         float offsetX = (piece.itemData.width == 1) ? 0 : (Piece.SLOT_SIZE / 2f) * (piece.itemData.width - 1);
         float offsetY = (piece.itemData.height == 1) ? 0 : -(Piece.SLOT_SIZE / 2f) * (piece.itemData.height - 1);
-
         rect.anchoredPosition += new Vector2(offsetX, offsetY);
     }
 

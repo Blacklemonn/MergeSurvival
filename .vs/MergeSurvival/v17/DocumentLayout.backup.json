@@ -60,7 +60,7 @@
       "VerticalTabListWidth": 256,
       "DocumentGroups": [
         {
-          "DockedWidth": 73,
+          "DockedWidth": 151,
           "SelectedChildIndex": 0,
           "Children": [
             {
@@ -71,7 +71,7 @@
               "RelativeDocumentMoniker": "Assets\\Scripts\\UI\\Piece.cs",
               "ToolTip": "C:\\Users\\PC\\Desktop\\MergeSurvival\\Assets\\Scripts\\UI\\Piece.cs",
               "RelativeToolTip": "Assets\\Scripts\\UI\\Piece.cs",
-              "ViewState": "AgIAALwBAAAAAAAAAAAgwMkBAAAcAAAAAAAAAA==",
+              "ViewState": "AgIAAJABAAAAAAAAAAAgwJABAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-10-31T07:43:11.517Z",
               "IsPinned": true,
@@ -146,7 +146,7 @@
               "RelativeDocumentMoniker": "Assets\\Scripts\\Item\\Weapon.cs",
               "ToolTip": "C:\\Users\\PC\\Desktop\\MergeSurvival\\Assets\\Scripts\\Item\\Weapon.cs",
               "RelativeToolTip": "Assets\\Scripts\\Item\\Weapon.cs",
-              "ViewState": "AgIAAEwAAAAAAAAAAAAawEcAAAAYAAAAAAAAAA==",
+              "ViewState": "AgIAAEIAAAAAAAAAAAAwwCgAAAASAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-01-20T07:32:16.562Z"
             },
@@ -188,7 +188,7 @@
           ]
         },
         {
-          "DockedWidth": 300,
+          "DockedWidth": 222,
           "SelectedChildIndex": 0,
           "Children": [
             {
@@ -199,7 +199,7 @@
               "RelativeDocumentMoniker": "Assets\\Scripts\\Manager\\InventoryManager.cs",
               "ToolTip": "C:\\Users\\PC\\Desktop\\MergeSurvival\\Assets\\Scripts\\Manager\\InventoryManager.cs",
               "RelativeToolTip": "Assets\\Scripts\\Manager\\InventoryManager.cs",
-              "ViewState": "AgIAAAwCAAAAAAAAAAAwwCACAAAFAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAgAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-01-22T05:53:49.396Z",
               "EditorCaption": ""

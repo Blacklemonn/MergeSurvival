@@ -8885,6 +8885,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3cfcc61446b154641a70ab743d031c09, type: 2}
   - {fileID: 11400000, guid: 42251e9518ba1624b94342ee3428ecac, type: 2}
   - {fileID: 11400000, guid: 2c4dc6f4ed05cf443afff43e6685304c, type: 2}
+  - {fileID: 11400000, guid: e6fea8d5147a3544b955900e3d495169, type: 2}
   - {fileID: 11400000, guid: c0a629a08fae87f45a55a02d7e0bf31f, type: 2}
   prefab: {fileID: 4384817005516658789, guid: f8f52c127c2c0e44baa1e63ba93469aa, type: 3}
   storage: {fileID: 1373690185}
