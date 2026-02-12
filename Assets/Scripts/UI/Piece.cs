@@ -1,12 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Xml;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using static UnityEditor.PlayerSettings;
 
 public enum ItemBelongState
 {
@@ -66,6 +62,8 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         var size = new Vector2(itemData.width * SLOT_SIZE, itemData.height * SLOT_SIZE);
         rect.sizeDelta = size;
         GetComponent<Image>().sprite = itemData.itemIcon;
+
+        itemdesc.ChangeDes(data);
     }
 
 
@@ -314,10 +312,7 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        //if (itemdesc.gameObject.activeSelf)
-        //    itemdesc.gameObject.SetActive(false);
-        //else
-        //    itemdesc.ShowDesc();
+        itemdesc.gameObject.SetActive(!itemdesc.gameObject.activeSelf);
     }
 
     private void GetOffset(PointerEventData eventData)
@@ -426,8 +421,6 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
 
         while (elapsdTime < duration)
         {
-            if (Input.GetKeyDown(KeyCode.Space)) break;
-
             elapsdTime += Time.unscaledDeltaTime;
             float t = Mathf.Clamp01(elapsdTime / duration);
 

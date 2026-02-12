@@ -16,7 +16,6 @@ public class Weapon : MonoBehaviour
     //¼Óµµ
     public float speed;
 
-    //private List<GameObject> listBullet;
     private float timer;
 
     private Player player;
@@ -27,7 +26,6 @@ public class Weapon : MonoBehaviour
     {
         player = GameManager.instance.player;
         poolManager = GameManager.instance.poolManager;
-        //listBullet = new List<GameObject>();
     }
 
     void Update()

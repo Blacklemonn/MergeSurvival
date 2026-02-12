@@ -18,11 +18,12 @@ MonoBehaviour:
   itemPrice: 20
   width: 2
   height: 3
-  itemDesc: "\uB370\uBBF8\uC9C0 {0}% \uC99D\uAC00\n\uD68C\uC804\uCCB4 {1}\uAC1C \uCD94\uAC00"
+  itemDesc: "\uB370\uBBF8\uC9C0 {0}% \uC99D\uAC00\n\uD68C\uC804\uCCB4 {1}\uAC1C \uCD94\uAC00\n\uD68C\uC804\uC18D\uB3C4
+    {2}"
   itemIcon: {fileID: -344242777, guid: d71a3dc7aa20fad4f9a99fc76a9254ba, type: 3}
   baseDamage: 20
   baseCount: 1
   baseRate: 180
   projectile: {fileID: 9122624840232509333, guid: 8639b14a272690048a546becde145183, type: 3}
   hand: {fileID: 1349035616, guid: 0d5e657ee5a074e4baa53d5b248a01d2, type: 3}
-  evolveItem: []
+  resultRecipe: []
