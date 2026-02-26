@@ -5,6 +5,10 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
+    public float baseSpeed;
+
+    public float baseDamage;
+
     //무기 ID
     public int id;
     //프리펩 ID
@@ -81,11 +85,16 @@ public class Weapon : MonoBehaviour
         name = "Weapon" + data.itemId;
         transform.parent = player.transform;
         transform.localPosition = Vector3.zero;
+        if (baseDamage == 0)
+            baseDamage = data.baseDamage * Character.Damage;
+        if (baseSpeed == 0)
+            baseSpeed = data.baseRate * Character.WeaponRate;
 
         //Property Set
         id = data.itemId;
-        damage = data.baseDamage * Character.Damage;
+        damage = baseDamage;
         count = data.baseCount + Character.Count;
+        speed = baseSpeed;
 
         for (int index = 0; index < GameManager.instance.poolManager.prefabs.Length; index++)
         {
@@ -101,11 +110,9 @@ public class Weapon : MonoBehaviour
             case 0:
             case 7:
             case 8:
-                speed = data.baseRate * Character.WeaponSpeed;
                 Place();
                 break;
             default:
-                speed = data.baseRate * Character.WeaponSpeed;
                 break;
         }
 
@@ -114,7 +121,7 @@ public class Weapon : MonoBehaviour
         hand.spriter.sprite = data.hand;
         hand.gameObject.SetActive(true);
 
-        player.BroadcastMessage("ApplyGear", SendMessageOptions.DontRequireReceiver);
+        //player.BroadcastMessage("ApplyGear", SendMessageOptions.DontRequireReceiver);
     }
 
     private void Place()    //플레이어 기준 돌아가는 무기 로직

@@ -62,6 +62,9 @@ public class ItemDesc : MonoBehaviour
             case ItemData.ItemType.Shoe:
                 textDesc.text = string.Format(data.itemDesc, data.baseDamage);
                 break;
+            case ItemData.ItemType.Bullet:
+                textDesc.text = string.Format(data.itemDesc, data.baseDamage);
+                break;
             default:
                 textDesc.text = data.itemDesc; // 인자가 없는 경우 그냥 출력
                 break;

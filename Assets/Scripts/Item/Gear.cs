@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -46,6 +47,27 @@ public class Gear : MonoBehaviour
             case ItemData.ItemType.Shoe:
                 Speed();
                 break;
+            case ItemData.ItemType.Bullet:
+                Damage();
+                break;
+        }
+    }
+
+    private void Damage()
+    {
+        Weapon[] weapons = transform.parent.GetComponentsInChildren<Weapon>();
+
+        //원거리 무기에만 데미지 변화
+        foreach (Weapon weapon in weapons)
+        {
+            switch (weapon.id)
+            {
+                case 1:
+                case 5:
+                case 6:
+                    
+                    break;
+            }
         }
     }
 
@@ -58,9 +80,12 @@ public class Gear : MonoBehaviour
             switch (weapon.id)
             {
                 case 0:
-                    float speed = 150 * Character.WeaponSpeed;
-                    weapon.speed = 150 + (150 * rate);
+                case 7:
+                case 8:
+                    float speed = weapon.speed * Character.WeaponSpeed;
+                    weapon.speed = weapon.speed + (weapon.speed * rate);
                     break;
+
                 default:
                     speed = 0.5f * Character.WeaponRate;
                     weapon.speed = 0.5f * (1f - rate);

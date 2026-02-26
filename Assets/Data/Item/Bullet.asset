@@ -18,11 +18,11 @@ MonoBehaviour:
   itemPrice: 5
   width: 1
   height: 1
-  itemDesc: "\uCD1D\uC54C \uB370\uBBF8\uC9C0 {0}\uC99D\uAC00"
+  itemDesc: "\uCD1D\uC54C \uB370\uBBF8\uC9C0 {0}% \uC99D\uAC00"
   itemIcon: {fileID: -1002307068, guid: d71a3dc7aa20fad4f9a99fc76a9254ba, type: 3}
-  baseDamage: 1
+  baseDamage: 0
   baseCount: 0
-  baseRate: 0
+  baseRate: 10
   projectile: {fileID: 0}
   hand: {fileID: 0}
   resultRecipe:
