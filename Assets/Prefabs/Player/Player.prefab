@@ -129,8 +129,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputVec: {x: 0, y: 0}
-  speed: 15
+  speed: 0
   scanner: {fileID: 0}
+  hands: []
+  animCon:
+  - {fileID: 9100000, guid: 8dccd323f2e68634e9c3dc4460fef316, type: 2}
+  - {fileID: 22100000, guid: 6373c19eaeb54be43abd3a056ce31483, type: 2}
+  - {fileID: 22100000, guid: da70b46cc8a0cac459245e613e4858e0, type: 2}
 --- !u!114 &1173482155689546455
 MonoBehaviour:
   m_ObjectHideFlags: 0

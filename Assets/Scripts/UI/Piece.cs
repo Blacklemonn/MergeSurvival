@@ -152,6 +152,34 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
 
         GameObject underCurserObj = eventData.pointerCurrentRaycast.gameObject;
 
+        if (underCurserObj == null)
+        {
+            if (itemData.itemType == ItemData.ItemType.Bag)
+            {
+                foreach (InventorySlot sl in arrangeSlot)
+                {
+                    //이전에 있던 슬롯 다시 가방상태로 변경 후 가방 안보이게
+                    sl.GetComponent<Image>().sprite = inventory.slotSprite[1];
+                    sl.HasBag = true;
+                    this.gameObject.SetActive(false);
+                    //원위치로
+
+                    //아이템을 슬롯의 위치로 이동
+                    rect.anchoredPosition = inventory.grid[sl.gridX, sl.gridY].GetComponent<RectTransform>().anchoredPosition;
+
+                    //아이템의 위치를 보정
+                    rect.anchoredPosition += new Vector2(itemData.width == 1 ? 0 : (SLOT_SIZE / 2) * (itemData.width - 1), itemData.height == 1 ? 0 : -(SLOT_SIZE / 2) * (itemData.height - 1));
+
+                    GameManager.instance.isDragging = false;
+
+                    canvasGroup.blocksRaycasts = true;
+                }
+            }
+            else
+                CantBuyItem();
+            return;
+        }
+
         //창고에 뒀을때
         if (underCurserObj.GetComponent<Storage>())
         {
@@ -219,21 +247,6 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         //슬롯이 아닌곳에 둘때
         if (slot == null)
         {
-            CantBuyItem();
-            return;
-        }
-
-        Vector2Int placePos;
-        //아이템이 외곽으로 튀어나올때
-        if (!inventory.TryGetPlacePosition(slot, offsetVector, itemData, out placePos))
-        {
-            CantBuyItem();
-            return;
-        }
-
-        //조건이 맞지 않을때
-        if (!inventory.CanPlaceItem(placePos, itemData))
-        {
             //가방일때
             if (itemData.itemType == ItemData.ItemType.Bag)
             {
@@ -257,6 +270,21 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
                 }
             }
             else
+                CantBuyItem();
+            return;
+        }
+
+        Vector2Int placePos;
+        //아이템이 외곽으로 튀어나올때
+        if (!inventory.TryGetPlacePosition(slot, offsetVector, itemData, out placePos))
+        {
+            CantBuyItem();
+            return;
+        }
+
+        //조건이 맞지 않을때
+        if (!inventory.CanPlaceItem(placePos, itemData))
+        {
                 CantBuyItem();
             return;
         }

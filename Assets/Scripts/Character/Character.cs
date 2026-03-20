@@ -6,7 +6,7 @@ public class Character : MonoBehaviour
 {
     public static float Speed
     {
-        get { return GameManager.instance.playerId == 0 ? 2.2f : 2f; }
+        get { return GameManager.instance.playerId == 0 ? 4f : 3.5f; }
     }
     public static float WeaponSpeed
     {

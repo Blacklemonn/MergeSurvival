@@ -17,8 +17,11 @@ public class ItemDesc : MonoBehaviour
         Text textName = texts[0];
         Text textDesc = texts[1];
         Text textRecipe = texts[2];
+        Text textPrice = texts[3];
 
         textName.text = data.itemName;
+
+        textPrice.text = data.itemPrice.ToString();
 
         // 1. 조합법 문자열 생성 로직
         if (data.resultRecipe != null && data.resultRecipe.Length > 0)
