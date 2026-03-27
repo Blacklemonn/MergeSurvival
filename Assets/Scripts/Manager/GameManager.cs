@@ -38,7 +38,6 @@ public class GameManager : MonoBehaviour
     {
         playerId = id;
         health = maxHealth;
-        _money = 0;
 
         player.gameObject.SetActive(true);
         shop.Select(playerId % 2);    //무기선택

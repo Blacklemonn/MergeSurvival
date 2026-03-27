@@ -3,23 +3,31 @@
   "WorkspaceRootPath": "C:\\Users\\PC\\Desktop\\MergeSurvival\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{75291FBB-51F8-5D9D-617C-A37958067C14}|Assembly-CSharp.csproj|c:\\users\\pc\\desktop\\mergesurvival\\assets\\scripts\\manager\\poolmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{75291FBB-51F8-5D9D-617C-A37958067C14}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\manager\\poolmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{75291FBB-51F8-5D9D-617C-A37958067C14}|Assembly-CSharp.csproj|C:\\Users\\PC\\Desktop\\MergeSurvival\\assets\\scripts\\manager\\inventorymanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{75291FBB-51F8-5D9D-617C-A37958067C14}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\manager\\inventorymanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{75291FBB-51F8-5D9D-617C-A37958067C14}|Assembly-CSharp.csproj|C:\\Users\\PC\\Desktop\\MergeSurvival\\assets\\scripts\\manager\\gamemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{75291FBB-51F8-5D9D-617C-A37958067C14}|Assembly-CSharp.csproj|c:\\users\\pc\\desktop\\mergesurvival\\assets\\scripts\\manager\\gamemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{75291FBB-51F8-5D9D-617C-A37958067C14}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\manager\\gamemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{75291FBB-51F8-5D9D-617C-A37958067C14}|Assembly-CSharp.csproj|c:\\users\\pc\\desktop\\mergesurvival\\assets\\scripts\\ui\\recipedisplay.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{75291FBB-51F8-5D9D-617C-A37958067C14}|Assembly-CSharp.csproj|C:\\Users\\PC\\Desktop\\MergeSurvival\\assets\\scripts\\character\\character.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{75291FBB-51F8-5D9D-617C-A37958067C14}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\character\\character.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{75291FBB-51F8-5D9D-617C-A37958067C14}|Assembly-CSharp.csproj|C:\\Users\\PC\\Desktop\\MergeSurvival\\assets\\scripts\\ui\\shop.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{75291FBB-51F8-5D9D-617C-A37958067C14}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\ui\\shop.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{75291FBB-51F8-5D9D-617C-A37958067C14}|Assembly-CSharp.csproj|C:\\Users\\PC\\Desktop\\MergeSurvival\\assets\\scripts\\manager\\poolmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{75291FBB-51F8-5D9D-617C-A37958067C14}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\manager\\poolmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{75291FBB-51F8-5D9D-617C-A37958067C14}|Assembly-CSharp.csproj|c:\\users\\pc\\desktop\\mergesurvival\\assets\\scripts\\manager\\inventorymanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{75291FBB-51F8-5D9D-617C-A37958067C14}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\manager\\inventorymanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{75291FBB-51F8-5D9D-617C-A37958067C14}|Assembly-CSharp.csproj|C:\\Users\\PC\\Desktop\\MergeSurvival\\assets\\scripts\\ui\\recipedisplay.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{75291FBB-51F8-5D9D-617C-A37958067C14}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\ui\\recipedisplay.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{75291FBB-51F8-5D9D-617C-A37958067C14}|Assembly-CSharp.csproj|c:\\users\\pc\\desktop\\mergesurvival\\assets\\scripts\\spawner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{75291FBB-51F8-5D9D-617C-A37958067C14}|Assembly-CSharp.csproj|C:\\Users\\PC\\Desktop\\MergeSurvival\\assets\\scripts\\spawner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{75291FBB-51F8-5D9D-617C-A37958067C14}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\spawner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
@@ -39,10 +47,6 @@
       "RelativeMoniker": "D:0:0:{75291FBB-51F8-5D9D-617C-A37958067C14}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\item\\weapon.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{75291FBB-51F8-5D9D-617C-A37958067C14}|Assembly-CSharp.csproj|C:\\Users\\PC\\Desktop\\MergeSurvival\\assets\\scripts\\character\\character.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{75291FBB-51F8-5D9D-617C-A37958067C14}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\character\\character.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{75291FBB-51F8-5D9D-617C-A37958067C14}|Assembly-CSharp.csproj|C:\\Users\\PC\\Desktop\\MergeSurvival\\assets\\scripts\\character\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{75291FBB-51F8-5D9D-617C-A37958067C14}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\character\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -59,10 +63,6 @@
       "RelativeMoniker": "D:0:0:{75291FBB-51F8-5D9D-617C-A37958067C14}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\ui\\inventoryslot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{75291FBB-51F8-5D9D-617C-A37958067C14}|Assembly-CSharp.csproj|C:\\Users\\PC\\Desktop\\MergeSurvival\\assets\\scripts\\ui\\shop.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{75291FBB-51F8-5D9D-617C-A37958067C14}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\ui\\shop.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{75291FBB-51F8-5D9D-617C-A37958067C14}|Assembly-CSharp.csproj|C:\\Users\\PC\\Desktop\\MergeSurvival\\assets\\scripts\\ui\\storage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{75291FBB-51F8-5D9D-617C-A37958067C14}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\ui\\storage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
@@ -74,11 +74,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 218,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 13,
               "Title": "Piece.cs",
               "DocumentMoniker": "C:\\Users\\PC\\Desktop\\MergeSurvival\\Assets\\Scripts\\UI\\Piece.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\UI\\Piece.cs",
@@ -91,13 +91,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "GameManager.cs",
               "DocumentMoniker": "C:\\Users\\PC\\Desktop\\MergeSurvival\\Assets\\Scripts\\Manager\\GameManager.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Manager\\GameManager.cs",
               "ToolTip": "C:\\Users\\PC\\Desktop\\MergeSurvival\\Assets\\Scripts\\Manager\\GameManager.cs",
               "RelativeToolTip": "Assets\\Scripts\\Manager\\GameManager.cs",
-              "ViewState": "AgIAAHcAAAAAAAAAAAAgwK8AAAANAAAAAAAAAA==",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAqwCcAAAAbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-01-22T08:07:28.021Z",
               "IsPinned": true,
@@ -105,7 +105,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 3,
               "Title": "PoolManager.cs",
               "DocumentMoniker": "C:\\Users\\PC\\Desktop\\MergeSurvival\\Assets\\Scripts\\Manager\\PoolManager.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Manager\\PoolManager.cs",
@@ -113,12 +113,11 @@
               "RelativeToolTip": "Assets\\Scripts\\Manager\\PoolManager.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-27T06:00:23.722Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-27T06:00:23.722Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 8,
               "Title": "ItemData.cs",
               "DocumentMoniker": "C:\\Users\\PC\\Desktop\\MergeSurvival\\Assets\\Scripts\\ScriptableObject\\ItemData.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\ScriptableObject\\ItemData.cs",
@@ -130,7 +129,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 5,
               "Title": "RecipeDisplay.cs",
               "DocumentMoniker": "C:\\Users\\PC\\Desktop\\MergeSurvival\\Assets\\Scripts\\UI\\RecipeDisplay.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\UI\\RecipeDisplay.cs",
@@ -138,24 +137,23 @@
               "RelativeToolTip": "Assets\\Scripts\\UI\\RecipeDisplay.cs",
               "ViewState": "AgIAAAEAAAAAAAAAAAAuwA0AAAA0AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-23T05:01:05.446Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-23T05:01:05.446Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 1,
               "Title": "Character.cs",
               "DocumentMoniker": "C:\\Users\\PC\\Desktop\\MergeSurvival\\Assets\\Scripts\\Character\\Character.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Character\\Character.cs",
               "ToolTip": "C:\\Users\\PC\\Desktop\\MergeSurvival\\Assets\\Scripts\\Character\\Character.cs",
               "RelativeToolTip": "Assets\\Scripts\\Character\\Character.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAA7AAAAAAAAAA==",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAAwAgAAAA7AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-17T04:19:32.833Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 12,
               "Title": "Gear.cs",
               "DocumentMoniker": "C:\\Users\\PC\\Desktop\\MergeSurvival\\Assets\\Scripts\\Item\\Gear.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Item\\Gear.cs",
@@ -167,7 +165,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 9,
               "Title": "ItemDesc.cs",
               "DocumentMoniker": "C:\\Users\\PC\\Desktop\\MergeSurvival\\Assets\\Scripts\\Item\\ItemDesc.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Item\\ItemDesc.cs",
@@ -179,7 +177,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 10,
               "Title": "Weapon.cs",
               "DocumentMoniker": "C:\\Users\\PC\\Desktop\\MergeSurvival\\Assets\\Scripts\\Item\\Weapon.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Item\\Weapon.cs",
@@ -191,7 +189,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 7,
               "Title": "MergeRecipe.cs",
               "DocumentMoniker": "C:\\Users\\PC\\Desktop\\MergeSurvival\\Assets\\Scripts\\ScriptableObject\\MergeRecipe.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\ScriptableObject\\MergeRecipe.cs",
@@ -215,19 +213,19 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 2,
               "Title": "Shop.cs",
               "DocumentMoniker": "C:\\Users\\PC\\Desktop\\MergeSurvival\\Assets\\Scripts\\UI\\Shop.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\UI\\Shop.cs",
               "ToolTip": "C:\\Users\\PC\\Desktop\\MergeSurvival\\Assets\\Scripts\\UI\\Shop.cs",
               "RelativeToolTip": "Assets\\Scripts\\UI\\Shop.cs",
-              "ViewState": "AgIAABMAAAAAAAAAAAAgwCAAAAAoAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-01-07T02:45:14.594Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 11,
               "Title": "Player.cs",
               "DocumentMoniker": "C:\\Users\\PC\\Desktop\\MergeSurvival\\Assets\\Scripts\\Character\\Player.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Character\\Player.cs",
@@ -245,7 +243,7 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 4,
               "Title": "InventoryManager.cs",
               "DocumentMoniker": "C:\\Users\\PC\\Desktop\\MergeSurvival\\Assets\\Scripts\\Manager\\InventoryManager.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Manager\\InventoryManager.cs",
@@ -258,7 +256,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 6,
               "Title": "Spawner.cs",
               "DocumentMoniker": "C:\\Users\\PC\\Desktop\\MergeSurvival\\Assets\\Scripts\\Spawner.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Spawner.cs",
@@ -266,12 +264,11 @@
               "RelativeToolTip": "Assets\\Scripts\\Spawner.cs",
               "ViewState": "AgIAAAsAAAAAAAAAAAAAwCAAAAAfAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-18T06:06:10.963Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-18T06:06:10.963Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 14,
               "Title": "InventorySlot.cs",
               "DocumentMoniker": "C:\\Users\\PC\\Desktop\\MergeSurvival\\Assets\\Scripts\\UI\\InventorySlot.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\UI\\InventorySlot.cs",
