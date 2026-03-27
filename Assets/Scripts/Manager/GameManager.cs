@@ -167,4 +167,16 @@ public class GameManager : MonoBehaviour
         //체력 초기화
         health = maxHealth;
     }
+
+    public void QuitGame()
+    {
+        // 1. 유니티 에디터에서 실행 중일 때 종료
+        #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+        #else
+            // 2. 실제 빌드된 게임(PC, 안드로이드 등)에서 종료
+            Application.Quit();
+        #endif
+            Debug.Log("게임이 종료되었습니다.");
+    }
 }
