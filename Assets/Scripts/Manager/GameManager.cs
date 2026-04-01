@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
     public int playerId;
     public float health;
     public float maxHealth = 100;
-    public int _money;
+    private int _money = 50;
     [Header("# Game Object")]
     public PoolManager poolManager;
     public Player player;
@@ -120,6 +120,11 @@ public class GameManager : MonoBehaviour
         isLive = true;
         gameTime = 0;
         Time.timeScale = 1;
+    }
+
+    public int CurrentMoney()
+    {
+        return _money;
     }
 
     public void GetMoney(int money)

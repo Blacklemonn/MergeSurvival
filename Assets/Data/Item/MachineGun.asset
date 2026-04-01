@@ -22,7 +22,7 @@ MonoBehaviour:
     \uC8FC\uAE30 {2}"
   itemIcon: {fileID: 563336626, guid: d71a3dc7aa20fad4f9a99fc76a9254ba, type: 3}
   baseDamage: 5
-  baseCount: 2
+  baseCount: 1
   baseRate: 0.1
   projectile: {fileID: 5991548659052982044, guid: e00d29361fb9da94392321fed25ee28b, type: 3}
   hand: {fileID: -144335857, guid: 0d5e657ee5a074e4baa53d5b248a01d2, type: 3}

@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class InventoryManager : MonoBehaviour
 {
+    [SerializeField]
     //플레이어의 무기를 저장할 변수
     private List<Weapon> weaponList;
     //플레이어의 기어를 저장할 변수
@@ -163,7 +164,6 @@ public class InventoryManager : MonoBehaviour
             case ItemData.ItemType.Melee:
             case ItemData.ItemType.Range:
                 //플레이어 오브젝트 자식으로 웨폰의 아이템 타입이 있는지 확인
-
                 Weapon weapon = new();
 
                 for (int i = 0; i < weaponList.Count; i++)
@@ -551,6 +551,8 @@ public class InventoryManager : MonoBehaviour
         float offsetX = (piece.itemData.width == 1) ? 0 : (Piece.SLOT_SIZE / 2f) * (piece.itemData.width - 1);
         float offsetY = (piece.itemData.height == 1) ? 0 : -(Piece.SLOT_SIZE / 2f) * (piece.itemData.height - 1);
         rect.anchoredPosition += new Vector2(offsetX, offsetY);
+
+        piece.state = ItemBelongState.Inventory;
     }
 
     IEnumerator MoveStorage(Piece piece)

@@ -60,7 +60,7 @@ public class Weapon : MonoBehaviour
     {
         count += 1;
 
-        if (id == 0)
+        if (id == 0 || id == 7 || id == 8)
             Place();
 
         //player.BroadcastMessage("ApplyWeapon", SendMessageOptions.DontRequireReceiver);
@@ -69,7 +69,7 @@ public class Weapon : MonoBehaviour
     {
         count -= 1;
 
-        if (id == 0)
+        if (id == 0 || id == 7 || id == 8)
         {
             poolManager.Deactive(prefabId, count);
 
@@ -163,7 +163,7 @@ public class Weapon : MonoBehaviour
         Vector3 targetPos = player.scanner.nearstTarget.position;
         Vector3 dir = targetPos - transform.position;
         dir = dir.normalized;
-
+        //¼¦°ÇÀÏ°æ¿ì
         for (int i = id == 5 ? 0 : 9; i < 10; i++)
         {
             Transform bullet = GameManager.instance.poolManager.Get(prefabId).transform;

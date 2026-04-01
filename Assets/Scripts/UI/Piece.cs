@@ -152,6 +152,7 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
 
         GameObject underCurserObj = eventData.pointerCurrentRaycast.gameObject;
 
+        //아무것도 없는 장소에 뒀을경우
         if (underCurserObj == null)
         {
             if (itemData.itemType == ItemData.ItemType.Bag)
@@ -214,11 +215,12 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
                 case ItemBelongState.Shop:
                     underCurserObj.GetComponent<Storage>().GotoStorage(this.gameObject);
 
-                    GameManager.instance._money -= itemData.itemPrice;
+                    GameManager.instance.GetMoney(-itemData.itemPrice);
                     Init();
                     return;
             }
         }
+
         //상점에 뒀을때
         else if (underCurserObj.tag == "Shop")
         {
@@ -231,10 +233,11 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
                     inventory.RemoveItem(itemData);
                     break;
                 case ItemBelongState.Storage:
+                    inventory.RemoveItem(itemData);
                     break;
             }
 
-            GameManager.instance._money -= Mathf.FloorToInt(itemData.itemPrice / 2);
+            GameManager.instance.GetMoney(Mathf.FloorToInt(itemData.itemPrice / 2));
             Init();
             Destroy(this.gameObject);
             return;
@@ -482,6 +485,7 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
             yield return null;
         }
 
+        state = ItemBelongState.Storage;
         rect.anchoredPosition = pos;
     }
 }

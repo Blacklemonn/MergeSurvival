@@ -29,8 +29,8 @@ public class HUD : MonoBehaviour
             //    //mySlider.value = curExp / maxExp;
             //    break;
             case InfoType.Money:
-                float curMoney = GameManager.instance._money;
-                myText.text = string.Format("{0:F0}", GameManager.instance._money);
+                float curMoney = GameManager.instance.CurrentMoney();
+                myText.text = string.Format("{0:F0}", GameManager.instance.CurrentMoney());
                 break;
             case InfoType.Time:
                 float remainTime = GameManager.instance.maxGameTime - GameManager.instance.gameTime;
